@@ -90,9 +90,10 @@ native recovery succeeds. Measurement summaries and agent artifacts remain in
 
 `native_memory_peak_bytes` is cgroup charged-memory accounting under the declared
 cache policy. `enforced_budget_bytes` is observed survival at a limit, not an
-exact minimum requirement. Champions remain experimental: `sealed: not_run`,
-`production: not_accepted`. Sealed grading, isolated compilation, normal-hardware
-acceptance and controlled AI comparison remain separate work.
+exact minimum requirement. Public retention leaves `sealed: not_run` and
+`production: not_accepted`. An optional [owner-operated sealed gate](sealed-acceptance.md)
+can subsequently mark a policy-verified champion. Isolated compilation, broader
+normal-hardware reproduction and controlled AI comparison remain separate work.
 
 ## Reproduce the integration fixture
 

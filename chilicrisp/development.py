@@ -111,6 +111,8 @@ def _plan(path):
         raise ValueError("Development sessions require explicit protected correctness files")
     if evaluation.native(plan):
         plan["evaluation"]["manifest"] = str((path.parent / plan["evaluation"]["manifest"]).resolve())
+    elif "acceptance" in plan:
+        raise ValueError("Sealed acceptance currently requires the native source-only backend")
     evaluation.prepare(plan, project)
     return plan, project, root
 
@@ -335,6 +337,7 @@ def create(plan_path, directory, *, trusted_local=False):
     source = directory / "champions" / "initial"
     source.parent.mkdir()
     state = {"schema_version": "0.1", "kind": "measured_development_session", "state": "STARTING",
+        "lineage_id": uuid.uuid4().hex, "acceptances": [],
         "plan": plan, "project": project, "environment": environment(),
         "runtime_identities": _runtime_identities(plan, project),
         "controller_sha256": file_hash(__file__),
@@ -516,6 +519,8 @@ def rollback(directory, champion_id, reason, *, trusted_local=False):
     directory = Path(directory).resolve()
     with _lock(directory):
         state = status(directory)
+        if state.get("acceptances"):
+            raise ValueError("Final acceptance is terminal; start a new lineage for further work")
         if not trusted_local and not evaluation.native(state["plan"]):
             raise ValueError("Rollback requires --trusted-local for host execution")
         if state["pending"] is not None:
@@ -556,6 +561,47 @@ def rollback(directory, champion_id, reason, *, trusted_local=False):
             state.update(state="INTERRUPTED", error=f"{type(error).__name__}: {error}")
             _save(directory, state)
             raise
+        return state
+
+
+def acceptance_request(directory):
+    directory = Path(directory).resolve()
+    state = status(directory)
+    if "acceptance" not in state["plan"] or not evaluation.native(state["plan"]):
+        raise ValueError("Session has no pinned sealed acceptance policy")
+    if state["pending"] is not None or state.get("acceptances"):
+        raise ValueError("Resolve pending work; final acceptance is allowed only once")
+    champion, source = _champion(directory, state)
+    if champion["verification"]["public"] != "native_budget_confirmation":
+        raise ValueError("Final acceptance needs an experimentally retained native candidate")
+    initial = state["champions"][0]
+    baseline = directory / initial["source"]
+    if identity(baseline) != initial["source_hash"]:
+        raise ValueError("Initial baseline source changed")
+    expected = {**state["plan"]["acceptance"], "lineage_id": state["lineage_id"],
+                "baseline_source_hash": initial["source_hash"], "candidate_source_hash": champion["source_hash"]}
+    return {"kind": "sealed_acceptance_request", "baseline_source": str(baseline),
+            "candidate_source": str(source), "expected": expected}
+
+
+def accept(directory, receipt_path):
+    from .acceptance import verify_receipt
+    directory = Path(directory).resolve()
+    if Path(receipt_path).stat().st_size > 32768:
+        raise ValueError("Acceptance receipt exceeds 32 KiB")
+    receipt = json.loads(Path(receipt_path).read_text(encoding="utf-8"))
+    with _lock(directory):
+        requested = acceptance_request(directory)
+        verdict = verify_receipt(receipt, requested["expected"])
+        state = status(directory)
+        champion, _ = _champion(directory, state)
+        state["acceptances"].append(receipt)
+        champion["verification"].update(sealed=verdict, transfer=verdict)
+        champion["acceptance_state"] = "verified_champion" if verdict == "passed" else "experimental_champion"
+        state.update(state="STOPPED", stop_reason="final_acceptance_" + verdict)
+        state["events"].append({"kind": "final_acceptance", "verdict": verdict,
+            "receipt_sha256": file_hash(receipt_path), "candidate_source_hash": champion["source_hash"]})
+        _save(directory, state)
         return state
 
 

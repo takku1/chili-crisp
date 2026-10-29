@@ -185,7 +185,8 @@ or exact process-tree consumption. Linux cgroup evidence is a separate contract.
 Retained records carry verification markers. Public checks are labelled by
 their baseline/confirmation or sampled-screening scope; `sealed: not_run` and
 `production: not_accepted` remain explicit. Retention does not imply independent
-hidden acceptance. No sealed-grader endpoint is implemented yet.
+hidden acceptance. The optional [owner-operated sealed gate](sealed-acceptance.md)
+can import a signed final verdict; no hosted grading-service endpoint exists.
 
 The [bounded real model pilot](../reports/model-source-pilot.md) demonstrates a
 source-only proposal adapter followed by protected native evaluation. It remains

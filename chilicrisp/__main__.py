@@ -62,9 +62,12 @@ def main(argv=None):
     start.add_argument("plan", type=Path)
     start.add_argument("session", type=Path)
     start.add_argument("--trusted-local", action="store_true")
-    for name in ("request", "status"):
+    for name in ("request", "status", "acceptance-request"):
         action = actions.add_parser(name)
         action.add_argument("session", type=Path)
+    acceptance = actions.add_parser("accept")
+    acceptance.add_argument("session", type=Path)
+    acceptance.add_argument("receipt", type=Path)
     submission = actions.add_parser("submit")
     submission.add_argument("session", type=Path)
     submission.add_argument("candidate", type=Path)
@@ -125,6 +128,11 @@ def main(argv=None):
                 result = development.request(args.session)
             elif args.action == "status":
                 result = development.status(args.session)
+            elif args.action == "acceptance-request":
+                result = development.acceptance_request(args.session)
+            elif args.action == "accept":
+                result = development.accept(args.session, args.receipt)
+                exit_code = 0 if result["acceptances"][-1]["body"]["verdict"] == "passed" else 1
             elif args.action == "rollback":
                 result = development.rollback(args.session, args.champion, args.reason,
                                               trusted_local=args.trusted_local)

@@ -21,6 +21,8 @@ retention, and a tighter next target. Run `python tools/demo-development.py`
 for a two-generation integration example.
 The opt-in [native development backend](docs/native-development.md) connects the
 same controller to enforced Linux memory budgets for source-only candidates.
+An optional [owner-operated acceptance gate](docs/sealed-acceptance.md) checks
+sealed workloads and identical-condition transfer, returning a signed final verdict.
 See [AI development priorities](docs/ai-improvements.md) for bounded experiment
 memory and the next isolated-build, sealed-grading and comparison increments.
 

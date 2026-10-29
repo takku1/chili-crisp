@@ -22,9 +22,9 @@ Requests and per-command output already remain in session run directories.
 1. Extend the [implemented source-only native bridge](native-development.md) with
    isolated compilation and a bounded real-model two-generation experiment.
    Shrinking enforced budgets now pass a deterministic controller fixture.
-2. Add sealed acceptance with an owner-controlled boundary and withheld workloads.
-   Public feedback and agent context must not include sealed inputs or detailed
-   failures. Keep experimental retention separate from verified acceptance.
+2. Harden deployment of the [owner-operated sealed gate](sealed-acceptance.md)
+   across separate accounts/hosts and independently reproduce its results.
+   Keep public feedback separate from private assets and detailed failures.
 3. Normalize provider traces and usage. Record model identity when actually
    reported, prompt/configuration identities, observed tool events and usage;
    represent unavailable cost explicitly. Never reconstruct private reasoning.
@@ -51,4 +51,5 @@ labelling and actual remeasurement after identical-source rejection. That increm
 did not run another model experiment or establish that compact memory improves
 optimization quality. Its work was unguarded under the managed `.git` restriction.
 Subsequent [native bridge validation](../reports/native-development-validation.md)
-exercises `dev run` and shrinking enforced limits. Sealed acceptance remains open.
+exercises `dev run` and shrinking enforced limits. The subsequent owner-operated
+sealed gate adds policy-scoped verification; remote service deployment remains open.

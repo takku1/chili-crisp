@@ -88,6 +88,14 @@ session = Path(sys.argv[1]) / 'development-session'
 state = create(plan, session, trusted_local=True)
 assert state['state'] == 'AWAITING_CANDIDATE', state
 assert request(session)['target_basis'].startswith('median local measurements')
+from chilicrisp.acceptance import sign, verify_receipt
+from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+key = Ed25519PrivateKey.generate()
+body = {'schema_version': '0.1', 'campaign': 'wheel-smoke', 'lineage_id': '0'*32,
+    'baseline_source_hash': '1'*64, 'candidate_source_hash': '2'*64,
+    'policy_sha256': '3'*64, 'evaluator_sha256': '4'*64, 'verdict': 'passed'}
+expected_receipt = {**body, 'public_key': key.public_key().public_bytes_raw().hex()}
+assert verify_receipt(sign(body, key), expected_receipt) == 'passed'
 print('Wheel schemas, comparison, evidence verification and skill export passed')
 """
     subprocess.run([sys.executable, "-P", "-c", script, str(directory),

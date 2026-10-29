@@ -4,6 +4,16 @@
   "required": ["schema_version", "concept", "project_config", "benchmark_command", "objective"],
   "properties": {
     "schema_version": {"const": "0.1"},
+    "acceptance": {
+      "type": "object", "additionalProperties": false,
+      "required": ["campaign", "public_key", "policy_sha256", "evaluator_sha256"],
+      "properties": {
+        "campaign": {"type": "string", "minLength": 1, "maxLength": 128},
+        "public_key": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "policy_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "evaluator_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
     "evaluation": {
       "type": "object", "additionalProperties": false,
       "required": ["backend", "manifest", "benchmark_workload", "initial_budget"],

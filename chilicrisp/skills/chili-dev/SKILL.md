@@ -115,7 +115,14 @@ Provision the runtime/oracles outside candidate source. Host benchmark/test argv
 are unused here; `dev run --trusted-local` still trusts the selected agent
 transport on the host. Native evaluation does not isolate an unrestricted agent
 or compile untrusted build scripts. Retention remains experimental, with sealed
-and production acceptance explicitly unset. See the installed framework's
+and production acceptance explicitly unset until an owner final gate is invoked.
+An owner may pin `acceptance` campaign/public-key/policy/evaluator identities in
+the initial native plan, export `dev acceptance-request`, privately run the
+separate sealed grader, then import its signed verdict with `dev accept`.
+Do not give the agent the vault or signing key. Final attempts are one-shot per
+campaign; a verdict ends the lineage. Policy-verified champions are not deployed
+or production-approved. See `docs/sealed-acceptance.md` in the framework checkout.
+See the installed framework's
 `docs/native-development.md` when working from its checkout.
 
 For supported Linux pressure trials, use an owner-prepared experiment manifest,
@@ -150,5 +157,5 @@ that no active runner owns the trial.
 
 Report the hypothesis, source hashes, changed behavior, actual correctness and
 resource checks, evidence paths, observed tradeoffs, and remaining gates. Keep
-unavailable metrics explicit. No automatic promotion is implemented: integrating
+unavailable metrics explicit. No automatic production integration is implemented: integrating
 a candidate requires the task's acceptance evidence and existing authority.

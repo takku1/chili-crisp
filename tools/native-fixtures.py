@@ -14,7 +14,7 @@ import sys
 import tempfile
 
 
-def provision(*, worker_name="native-worker.py", prepare=None):
+def provision(*, worker_name="native-worker.py", prepare=None, extra_requirements=()):
     if sys.platform != "linux" or os.geteuid() != 0:
         raise SystemExit("Run as root inside the disposable Ubuntu research VM")
     source = Path(__file__).resolve().parents[1]
@@ -30,7 +30,7 @@ def provision(*, worker_name="native-worker.py", prepare=None):
     venv = lab / "venv"
     subprocess.run([sys.executable, "-m", "venv", "--system-site-packages", str(venv)], check=True)
     python = venv / "bin/python"
-    subprocess.run([str(python), "-m", "pip", "install", "jsonschema>=4.26,<5", "psutil>=7.2,<8"], check=True)
+    subprocess.run([str(python), "-m", "pip", "install", "jsonschema>=4.26,<5", "psutil>=7.2,<8", *extra_requirements], check=True)
     rootfs = lab / "rootfs"
     for name in ("usr/bin", "fixtures", "proc", "dev", "tmp"):
         (rootfs / name).mkdir(parents=True)
@@ -83,6 +83,11 @@ def provision(*, worker_name="native-worker.py", prepare=None):
     for name in ("development-plan.json", "development-manifest.json"):
         if (lab / name).exists():
             shutil.copy2(lab / name, destination / name)
+    for name in ("good", "overfit"):
+        session = lab / ("acceptance-session-" + name)
+        if session.exists():
+            shutil.copytree(session, destination / session.name)
+            shutil.copy2(lab / (name + "-receipt.json"), destination / (name + "-receipt.json"))
     print(json.dumps({"lab": str(lab), "evidence": str(destination),
                       "exit_code": completed.returncode}, indent=2))
     return completed.returncode

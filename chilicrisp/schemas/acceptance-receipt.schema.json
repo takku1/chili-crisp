@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object", "additionalProperties": false, "required": ["body", "signature"],
+  "properties": {
+    "signature": {"type": "string", "pattern": "^[0-9a-f]{128}$"},
+    "body": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schema_version", "campaign", "lineage_id", "baseline_source_hash", "candidate_source_hash", "policy_sha256", "evaluator_sha256", "verdict"],
+      "properties": {
+        "schema_version": {"const": "0.1"},
+        "campaign": {"type": "string", "minLength": 1, "maxLength": 128},
+        "lineage_id": {"type": "string", "pattern": "^[0-9a-f]{32}$"},
+        "baseline_source_hash": {"$ref": "#/$defs/hash"},
+        "candidate_source_hash": {"$ref": "#/$defs/hash"},
+        "policy_sha256": {"$ref": "#/$defs/hash"},
+        "evaluator_sha256": {"$ref": "#/$defs/hash"},
+        "verdict": {"enum": ["passed", "rejected"]}
+      }
+    }
+  },
+  "$defs": {"hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}
+}

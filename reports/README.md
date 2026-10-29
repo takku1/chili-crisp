@@ -1,5 +1,8 @@
 # Reports
 
+- [Owner-operated sealed acceptance](sealed-acceptance-validation.md): signed
+  final decisions, overfitting rejection and identical bounded transfer conditions.
+
 - [Native development bridge](native-development-validation.md): two retained
   generations at 96 → 48 → 24 MiB enforced budgets, negative controls and rollback.
 

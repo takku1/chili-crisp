@@ -6,10 +6,10 @@ import json
 from jsonschema import Draft202012Validator
 
 
-@lru_cache(maxsize=8)
+@lru_cache(maxsize=10)
 def _validator(name):
     if name not in {"experiment", "result", "project", "comparison", "field-oracle", "ocean-oracle",
-                    "development", "research"}:
+                    "development", "research", "acceptance-policy", "acceptance-receipt"}:
         raise ValueError(f"unknown schema: {name}")
     resource = files("chilicrisp").joinpath("schemas", f"{name}.schema.json")
     schema = json.loads(resource.read_text(encoding="utf-8"))

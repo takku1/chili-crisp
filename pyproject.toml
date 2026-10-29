@@ -11,9 +11,10 @@ requires-python = ">=3.12"
 dependencies = ["jsonschema>=4.26,<5", "psutil>=7.2,<8"]
 
 [project.optional-dependencies]
+acceptance = ["cryptography>=46,<51"]
 benchexec = ["BenchExec>=3.30,<4; sys_platform == 'linux'"]
 evolution = ["openevolve>=0.3.2,<0.4"]
-dev = ["build>=1.2,<2", "twine>=6,<7", "ruff>=0.14,<1"]
+dev = ["build>=1.2,<2", "twine>=6,<7", "ruff>=0.14,<1", "cryptography>=46,<51"]
 
 [project.scripts]
 chilicrisp = "chilicrisp.__main__:main"
