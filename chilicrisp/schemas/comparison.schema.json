@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["schema_version", "kind", "run_id", "state", "config", "sources", "evaluations", "decision"],
+  "properties": {
+    "schema_version": {"const": "0.1"},
+    "kind": {"const": "trusted_local_comparison"},
+    "run_id": {"type": "string", "minLength": 1},
+    "state": {"enum": ["RUNNING", "FINALIZED", "FAILED", "INTERRUPTED"]},
+    "config": {"type": "object"},
+    "sources": {"type": "object", "required": ["baseline", "candidate"], "additionalProperties": {"type": "string"}},
+    "decision": {"enum": [null, "baseline_failed", "candidate_rejected", "public_tests_passed", "no_acceptance"]},
+    "evaluations": {
+      "type": "object", "additionalProperties": false,
+      "properties": {"baseline": {"$ref": "#/$defs/evaluation"}, "candidate": {"$ref": "#/$defs/evaluation"}}
+    }
+  },
+  "$defs": {
+    "evaluation": {
+      "type": "object", "required": ["source_hash", "commands", "outcome"],
+      "properties": {
+        "source_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "outcome": {"type": "string"},
+        "commands": {"type": "array", "items": {"$ref": "#/$defs/command"}}
+      }
+    },
+    "command": {
+      "type": "object",
+      "required": ["stage", "command", "outcome", "exit_code", "elapsed_seconds", "capture", "error"],
+      "properties": {
+        "stage": {"enum": ["build", "test"]},
+        "command": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "outcome": {"enum": ["pass", "failed", "timeout", "comparison_timeout", "output_limit", "runner_failure", "cleanup_failure"]},
+        "exit_code": {"type": ["integer", "null"]},
+        "elapsed_seconds": {"type": "number", "minimum": 0},
+        "capture": {"type": "object", "additionalProperties": {"type": "object"}},
+        "error": {"type": ["string", "null"]}
+      }
+    }
+  }
+}

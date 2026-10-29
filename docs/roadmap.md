@@ -1,16 +1,68 @@
 # Discovery engine roadmap
 
-Chili Crisp is intended to be a model-agnostic experiment engine that external coding agents can use. Constraint-Induced Architectural Discovery (CIAD) names the proposed workflow; it is not an established method or a novelty claim. The current implementation remains a memory-only exploration runner and controller.
+Chili Crisp is intended to be a model-agnostic experiment engine that external coding agents can use. Constraint-Induced Architectural Discovery (CIAD) names the proposed workflow; it is not an established method or a novelty claim. The current implementation supports adaptive memory exploration and predeclared CPU-bandwidth grids.
 
-The proposed [outer generation controller](evolution.md) manages promotion, rollback, moving challenge budgets, and diminishing returns after native validation. It is a planned contract, not implemented evolutionary search.
+The [measured development controller](development-loop.md) now manages local
+baseline measurements, moving targets, agent research/proposals, build/test,
+paired exploration/confirmation, experimental retention, rollback and stopping
+budgets. The [stronger isolated-generation contract](evolution.md) still defines
+future independent-acceptance and production-promotion gates.
 
 ## Delivery gates
+
+The VM-free development loop is implemented with persistent checkpoints and an
+optional external-agent command protocol. A real-process integration fixture
+completed two accepted storage reductions, preserved decoded behavior, tightened
+its next targets, and stopped at its generation cap. Local sampling, logical
+artifact volume and enforced cgroup pressure remain distinct measurement modes.
+Locus was inspected as optional proposal context; it is not the loop controller.
+
+The first internal source-changing self-test is complete: the decoder candidate
+passed pinned correctness checks and 18 randomized native trials with fresh
+confirmation. It reduced median whole-program charged peak memory by 19.91% on
+the maximum supported field-stream workload. The candidate and patch are retained
+experimentally; the working decoder is unchanged. [Scope and raw evidence](../reports/dogfood-decoder.md).
+Worldgame transfer, independent acceptance and automatic promotion remain open.
+
+CPU bandwidth is now an optional enforced control: explicit quota/period settings,
+readback, ancestor/delegation gates, CPU usage and throttling metrics, and a seeded
+repeated `cpu-sweep` at fixed memory. Native CPU fixtures and a four-trial grid
+pass on the local Ubuntu WSL host. [CPU usage and limits](cpu.md) distinguish this
+from cumulative CPU-time enforcement, adaptive CPU search and optimization
+acceptance, which remain open. [Validation evidence](../reports/cpu-validation.md).
+
+Package/tool hardening now pins local correctness files, rejects candidate/build
+changes to those files, validates frozen input/rootfs hashes during setup checks,
+and checks completed comparison evidence through `verify`. Schemas and the skill
+are canonical package data under `chilicrisp/`; the custom build shim is removed.
+The installed tool can export its bundled skill. These checks protect local
+workflow consistency and accidental drift; they do not add adversarial isolation,
+independent acceptance, additional resource backends, or automatic promotion.
+
+The CLI now includes project initialization, setup diagnostics, persisted status,
+and trusted local build/test comparisons of separate source snapshots. The
+`chili-dev` skill connects these commands to an agent's hypothesis/edit/check loop.
+The bundled source-changing demo runs real compilation and public tests. These
+comparisons do not perform isolated candidate builds, measure a transferable
+optimization, or promote candidates. See [setup and workflow](getting-started.md).
+
+The target now explicitly covers multiple resource dimensions; the enforced
+adaptive frontier remains memory-only, CPU bandwidth has a declared grid, and
+the local development loop accepts multiple measured resource objectives.
+The [resource plan](resources.md) records
+capability declarations, backend requirements, and interactions. A common CLI
+and observed pressure-map aggregation are implemented with portable tests.
+Full time-series maps, generalized resource-axis manifests, I/O enforcement
+backends and joint-axis search remain open. Local measured iteration does not
+advance independent native or production-acceptance gates.
 
 Current priority is one source-changing optimization generation after native
 Linux fixtures pass. Two-tier public Worldgame verification is implemented;
 its compiled negative-control pilot demonstrates early numerical rejection.
 See [the pilot evidence and remaining blockers](../reports/screening-20261029T043608Z/REPORT.md).
-Linux access remains blocked locally; no SSH research VM target is configured.
+Linux access is now available through elevated WSL execution. The fixture suite
+passes on the local Ubuntu host; [evidence and qualifications](../reports/native-validation.md)
+supersede earlier Linux-access blockers. No SSH research VM target is configured.
 BenchExec replacement and generation/promotion work remain gated on native
 compatibility, protected build transport, and independent acceptance evidence.
 

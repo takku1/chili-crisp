@@ -8,7 +8,7 @@ version = "0.1.0"
 description = "Verified resource-pressure experiments for software discovery"
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = ["jsonschema>=4.26,<5"]
+dependencies = ["jsonschema>=4.26,<5", "psutil>=7.2,<8"]
 
 [project.optional-dependencies]
 benchexec = ["BenchExec>=3.30,<4; sys_platform == 'linux'"]
@@ -16,6 +16,7 @@ evolution = ["openevolve>=0.3.2,<0.4"]
 dev = ["build>=1.2,<2", "twine>=6,<7", "ruff>=0.14,<1"]
 
 [project.scripts]
+chilicrisp = "chilicrisp.__main__:main"
 chili-runner = "chilicrisp.runner:main"
 chili-frontier = "chilicrisp.controller:main"
 chili-recover = "chilicrisp.recovery:main"
@@ -23,11 +24,27 @@ chili-benchexec-probe = "chilicrisp.integrations.benchexec:main"
 
 [tool.setuptools.packages.find]
 include = ["chilicrisp*"]
+namespaces = false
+
+[tool.setuptools.package-data]
+chilicrisp = ["schemas/*.schema.json", "skills/chili-dev/SKILL.md", "skills/chili-dev/agents/*.yaml"]
 
 [tool.ruff]
 target-version = "py312"
 line-length = 100
-include = ["chilicrisp/integrations/*.py", "tests/test_integrations.py", "setup.py"]
+include = [
+  "chilicrisp/integrations/*.py", "tests/test_integrations.py",
+  "chilicrisp/__main__.py", "chilicrisp/doctor.py", "chilicrisp/project.py",
+  "chilicrisp/pressure.py", "chilicrisp/resources.py",
+  "tests/test_project.py", "tests/test_pressure.py",
+  "tools/demo-local.py", "tools/native*.py",
+  "chilicrisp/contracts.py", "chilicrisp/evidence.py", "chilicrisp/skill.py", "tests/test_evidence.py",
+  "chilicrisp/cpu.py", "tests/test_cpu.py",
+  "tools/dogfood*.py", "tests/test_decoder_buffers.py",
+  "chilicrisp/measure.py", "chilicrisp/development.py", "tests/test_development.py", "tools/demo-development.py",
+  "tools/propose-codex.py", "tools/prepare-ai*.py", "tools/ai-pilot-workload.py",
+  "tests/test_source_proposals.py",
+]
 
 [tool.ruff.lint]
 select = ["E4", "E7", "E9", "F"]

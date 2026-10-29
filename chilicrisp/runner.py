@@ -11,24 +11,13 @@ import sys
 import time
 import uuid
 
-from jsonschema import Draft202012Validator
+from .contracts import validate
+from . import cpu as cpu_policy
 from .capture import capture
 from .frontier import Policy
 from .lifecycle import Lifecycle
 
 ROOT = Path(__file__).resolve().parents[1]
-
-
-def validate(value, name):
-    # Installed wheels carry schemas beside the modules; source checkouts use
-    # the authoritative top-level directory. Never use the working directory.
-    directory = Path(__file__).resolve().parent / "schemas"
-    if not directory.is_dir():
-        directory = ROOT / "schemas"
-    if name not in {"experiment", "result", "field-oracle", "ocean-oracle"}:
-        raise ValueError(f"unknown schema: {name}")
-    schema = json.loads((directory / f"{name}.schema.json").read_text(encoding="utf-8"))
-    Draft202012Validator(schema).validate(value)
 
 
 def file_hash(path):
@@ -178,12 +167,21 @@ def preflight(manifest, budget):
             if (budget is not None and name in {"memory.max", "memory.high"}
                     and value != "max" and int(value) <= budget):
                 raise RuntimeError(f"ancestor {name} interferes with budget")
+        for name in ("cpu.max", "cpu.weight", "cpuset.cpus.effective"):
+            path = ancestor / name
+            if path.exists():
+                entry[name] = path.read_text().strip()
         ancestors.append(entry)
+    cpu_record = None
+    if "cpu" in manifest["isolation"]:
+        cpu_record = cpu_policy.preflight(parent, ancestors, manifest["isolation"]["cpu"],
+                                   os.sched_getscheduler(0))
     for huge in Path("/sys/kernel/mm/hugepages").glob("*/free_hugepages"):
         if int(huge.read_text()):
             raise RuntimeError("explicit huge pages available; pilot does not account for these")
     return {"bwrap": bwrap, "bwrap_version": version, "bwrap_hash": file_hash(bwrap),
             "ancestors": ancestors,
+            "cpu": cpu_record,
             "cache_policy": "qualified_warm; no cold-cache claim",
             "kernel": os.uname().release,
             "pressure": Path("/proc/pressure/memory").read_text(),
@@ -276,6 +274,10 @@ def run_trial(manifest, workload_id, budget, experiment_deadline=None):
             settings = {"memory.max": "max" if budget is None else budget, "memory.swap.max": 0,
                         "memory.high": "max", "memory.oom.group": 1,
                         "pids.max": manifest["isolation"]["pids"]}
+            if "cpu" in manifest["isolation"]:
+                settings.update(cpu_policy.settings(manifest["isolation"]["cpu"]))
+                if (cgroup / "cpu.max.burst").exists():
+                    settings["cpu.max.burst"] = 0
             for name, value in settings.items():
                 (cgroup / name).write_text(str(value))
                 if (cgroup / name).read_text().strip() != str(value):
@@ -295,7 +297,7 @@ def run_trial(manifest, workload_id, budget, experiment_deadline=None):
                 resource.setrlimit(resource.RLIMIT_FSIZE,
                                    (manifest["isolation"]["scratch_bytes"],) * 2)
 
-            command = [result["preflight_record"]["bwrap"], "--unshare-all",
+            command = [result["preflight_record"]["bwrap"], "--unshare-all", "--unshare-user",
                        "--disable-userns", "--die-with-parent", "--new-session",
                        "--uid", "65534", "--gid", "65534", "--cap-drop", "ALL",
                        "--ro-bind", str(rootfs), "/", "--proc", "/proc", "--dev", "/dev",
@@ -336,12 +338,16 @@ def run_trial(manifest, workload_id, budget, experiment_deadline=None):
             life.move("COLLECTING")
             counters = {name: (cgroup / name).read_text() for name in
                         ("memory.peak", "memory.events", "memory.stat", "cpu.stat")}
+            for name in ("cpu.stat.local", "cpu.pressure", "memory.pressure"):
+                if (cgroup / name).exists():
+                    counters[name] = (cgroup / name).read_text()
             (directory / "counters.json").write_text(json.dumps(counters, indent=2))
             (directory / "capture.json").write_text(json.dumps(summaries, indent=2))
             result["metrics"]["memory_peak"] = dict(value=int(counters["memory.peak"]),
                 unit="bytes", method="cgroup_v2.memory.peak", status="available")
             result["metrics"]["elapsed"] = dict(value=execution_seconds, unit="seconds",
                 method="monotonic; launcher and sandbox included", status="available")
+            result["metrics"].update(cpu_policy.metrics(counters))
             if any("error" in summary for summary in summaries.values()):
                 raise RuntimeError("output capture failed")
             if overflow.is_set():

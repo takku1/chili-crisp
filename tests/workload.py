@@ -10,6 +10,11 @@ elif mode == "wrong":
     print("incorrect")
 elif mode == "timeout":
     time.sleep(60)
+elif mode == "cpu":
+    started = time.process_time()
+    while time.process_time() - started < .25:
+        pass
+    print("ok")
 elif mode == "flood":
     while True:
         os.write(1, b"x" * 8192)

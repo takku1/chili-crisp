@@ -1,5 +1,9 @@
-include schemas/*.schema.json
+recursive-include chilicrisp/schemas *.schema.json
+include requirements.txt
 recursive-include docs *.md
 recursive-include examples *.json
+recursive-include examples/local-project *.py
+recursive-include chilicrisp/skills *.md *.yaml
 recursive-include tests *.py
 recursive-include tools *.py *.ps1 *.sh
+recursive-include verification *.py *.md *.rs *.toml

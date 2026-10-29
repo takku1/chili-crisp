@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "root", "build", "test", "command_seconds", "comparison_seconds", "output_bytes_per_stream"],
+  "properties": {
+    "protected_paths": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "schema_version": {"const": "0.1"},
+    "root": {"type": "string", "minLength": 1},
+    "build": {"anyOf": [{"type": "null"}, {"$ref": "#/$defs/command"}]},
+    "test": {"$ref": "#/$defs/command"},
+    "command_seconds": {"type": "number", "exclusiveMinimum": 0, "maximum": 86400},
+    "comparison_seconds": {"type": "number", "exclusiveMinimum": 0, "maximum": 604800},
+    "output_bytes_per_stream": {"type": "integer", "minimum": 1, "maximum": 67108864}
+  },
+  "$defs": {"command": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}}
+}

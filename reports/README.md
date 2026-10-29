@@ -1,5 +1,22 @@
 # Reports
 
+- [Real model source pilot](model-source-pilot.md): two bounded model submissions,
+  a retained public rejection, and protected heldout confirmation of a 4 MiB gain.
+
+- [Measured development loop](development-loop-validation.md): VM-free moving
+  targets, agent command protocol, two real generations, recovery and rollback.
+
+- [Chili Crisp decoder self-test](dogfood-decoder.md): a source-changing candidate,
+  pinned correctness checks, 18 native resource trials and fresh confirmation.
+
+- [CPU controls and sweeps](cpu-validation.md): web-researched quota semantics,
+  native throttling measurements, rejection gates and repeated quota experiments.
+
+- [Native runner and development workflow](native-validation.md): Ubuntu WSL
+  isolation, OOM, output limits, cleanup and recovery fixtures.
+- [Tool policy and package cleanup](tool-package-cleanup.md): correctness-file
+  checks, evidence verification, canonical package resources and release checks.
+
 - [Field-level oracle and portable dependencies](worldgame/field-oracle-and-portability.md): generated-world fields, independent manufactured solutions, and an empty-cache offline component build.
 
 - [Worldgame oracle and frozen source](worldgame/oracle-and-snapshot.md): structured grading of the three saved runs, negative tests, source archive, and an isolated snapshot build.

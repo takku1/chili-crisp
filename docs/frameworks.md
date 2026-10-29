@@ -2,6 +2,23 @@
 
 ## Scope and ownership
 
+Current package layout: runtime modules in `chilicrisp/`, canonical versioned
+contracts in `chilicrisp/schemas/`, bundled skill in `chilicrisp/skills/`, executable
+examples in `examples/`, portable regressions in `tests/`, native/scientific
+adapters in `verification/`, and developer/setup commands in `tools/`. Research
+reports stay in `reports/`; generated runs/packages/archived clutter stay in
+ignored `artifacts/`. Empty legacy resource folders and old build/temp folders
+were archived, preserving their contents.
+
+The package uses declarative setuptools package data and one `contracts.py`
+schema provider. `runner.validate` remains a compatible import. Source and wheel
+resources use the same paths. The source distribution includes scientific
+verification sources needed by its tests; runtime wheels exclude development
+tests, tools, reports and run artifacts. CI builds to `artifacts/packages/` and
+exercises comparison, integrity verification and skill export from an extracted
+wheel. Local correctness selections and output evidence are enforced by tool
+code, with independent acceptance still outside that boundary.
+
 Chili Crisp owns the frozen behavioral contract, frontier policy, oracle boundary,
 evidence, and eventual promotion/rollback decisions. Reuse BenchExec for execution
 after compatibility testing and OpenEvolve for generic evolutionary search. Neither
@@ -48,10 +65,13 @@ python -m twine check dist/*
 python tools/check-wheel.py
 ```
 
-Base installations need only jsonschema; importing Chili Crisp does not load an
+Base installations use jsonschema and psutil; importing Chili Crisp does not load an
 LLM SDK. `requirements.txt` remains supported for existing source-tree workflows.
-The build copies authoritative `schemas/*.schema.json` into the wheel; no second
-editable schema copy is maintained. Install a wheel with `pip install dist/FILE.whl`.
+Authoritative schemas live in `chilicrisp/schemas/` and the reusable skill in
+`chilicrisp/skills/`. Setuptools includes them directly as package data; schema
+loading uses Python package resources in both source and installed environments.
+No custom build shim or duplicate resource tree is maintained.
+Install a wheel with `pip install dist/FILE.whl`.
 No project license was invented; choose one before public distribution.
 
 BenchExec's execution modules use Apache-2.0; its distribution also declares

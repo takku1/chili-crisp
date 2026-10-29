@@ -1,8 +1,18 @@
 # Chili Crisp design
 
+Start with [system constraints and current capabilities](resources.md) for the
+multi-resource direction, common CLI, and observed pressure-map reports.
+Use [getting started](getting-started.md) for installation and agent workflows,
+and [package organization](frameworks.md) for maintained source boundaries.
+
 Chili Crisp is a proposed experimental framework for finding useful software designs through artificial resource pressure. An AI agent proposes hypotheses and code changes; an independent runner decides whether they preserve behavior and improve measured outcomes. Scarcity is a discovery instrument, not a production requirement.
 
-**Status:** first implementation of schemas, public frontier control, and a Linux runner now exists. See [implementation and verification limits](implementation.md). Native Linux isolation remains unvalidated in this Windows session; there are no validated optimization results. Numbers in these documents are proposed defaults or explicitly labeled examples.
+**Status:** schemas, public frontier control, Linux runner, local candidate workflow,
+and AI coding skill are implemented. Native fixtures pass on one Ubuntu WSL host;
+see [validation evidence](../reports/native-validation.md) and
+[implementation limits](implementation.md). A [decoder self-test](../reports/dogfood-decoder.md)
+now provides one narrowly scoped measured candidate improvement; it is not
+production acceptance. Other design numbers remain proposed defaults or labeled examples.
 
 ## Read in order
 
@@ -15,6 +25,10 @@ Chili Crisp is a proposed experimental framework for finding useful software des
 Implementation requirements: [runner and experiment policies](engineering-contract.md) and [pressure-to-invention protocol](invention.md). These harden the original protocol and govern launch, accounting, hidden evaluation, and cost reporting.
 
 The [discovery roadmap](roadmap.md) records pressure maps, counterfactual diagnostics, AlphaEvolve comparisons, and the controlled four-arm evaluation while preserving the memory-only implementation gate.
+
+The runnable [measured development loop](development-loop.md) now provides
+checkpointed research/proposal/build/test/measure iterations on the current host.
+It keeps local metric targets separate from optional enforced resource trials.
 
 The [generation-controller contract](evolution.md) defines the future moving-target loop and its promotion/rollback gates.
 

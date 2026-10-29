@@ -1,6 +1,15 @@
-# Iterative optimization controller: planned contract
+# Iterative optimization controller
 
-The outer generation loop is planned after native runner and Worldgame oracle validation. `evolution.py` is not implemented. This contract keeps the model-agnostic runner usable independently and does not authorize automatic production integration.
+The measured local outer loop is implemented in `chilicrisp/development.py`.
+It checkpoints repeated build/test/benchmark generations, issues moving targets,
+records research/proposals, retains experimental versions and supports recovery
+and remeasured rollback. It can use the calling coding agent or a configured
+external agent command. See [the runnable development protocol](development-loop.md).
+
+The remaining contract below describes stronger independent-acceptance and
+isolated-generation goals. Local experimental retention does not satisfy those
+production promotion gates. Protected arbitrary builds, sealed grading and
+automatic production integration remain unimplemented.
 
 ## State and promotion
 

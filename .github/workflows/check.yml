@@ -15,6 +15,6 @@ jobs:
       - run: python -m pip install -e ".[dev,evolution]"
       - run: python -m unittest discover -s tests -v
       - run: python -m ruff check .
-      - run: python -m build
-      - run: python -m twine check dist/*
-      - run: python tools/check-wheel.py
+      - run: python -m build --outdir artifacts/packages
+      - run: python -m twine check artifacts/packages/*
+      - run: python tools/check-wheel.py --dist artifacts/packages

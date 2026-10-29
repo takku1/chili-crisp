@@ -13,7 +13,7 @@ set_tid_address set_robust_list rseq futex futex_waitv rt_sigaction rt_sigprocma
 rt_sigreturn sigaltstack clock_gettime clock_nanosleep nanosleep gettimeofday
 getrandom getpid getppid gettid getuid geteuid getgid getegid uname sysinfo
 getcwd chdir fchdir fcntl ioctl dup dup2 dup3 pipe pipe2 poll ppoll select pselect6
-prlimit64 getrlimit getrusage times sched_getaffinity sched_yield exit exit_group
+prlimit64 getrlimit getrusage times sched_getaffinity sched_yield wait4 waitid exit exit_group
 execve execveat restart_syscall mkdir mkdirat unlink unlinkat rename renameat
 renameat2 ftruncate fsync fdatasync umask chmod fchmod fchmodat utimensat
 statfs fstatfs""".split()

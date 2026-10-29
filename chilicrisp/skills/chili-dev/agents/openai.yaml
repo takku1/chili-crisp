@@ -1,0 +1,4 @@
+interface:
+  display_name: "Chili Dev"
+  short_description: "Develop software against progressively tighter targets"
+  default_prompt: "Use $chili-dev to develop and verify an implementation against progressively tighter measured resource targets."

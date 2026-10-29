@@ -1,0 +1,11 @@
+--- a/chilicrisp/fields.py
++++ b/chilicrisp/fields.py
+@@ -12,7 +12,7 @@
+     if count > 500000 or len(data) != 17 + count * 8:
+         raise ValueError("invalid field stream length")
+     values = array("d")
+-    values.frombytes(data[17:])
++    values.frombytes(memoryview(data)[17:])
+     if sys.byteorder != "little":
+         values.byteswap()
+     if any(not math.isfinite(v) for v in values):

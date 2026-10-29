@@ -8,6 +8,7 @@ build/
 dist/
 *.egg-info/
 .ruff_cache/
+.chilicrisp/
 tmp*/
 # Generated scientific arrays and portable build bundles are retained locally;
 # track their result metadata, hashes, and reproduction scripts instead.

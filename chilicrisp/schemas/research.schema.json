@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object", "additionalProperties": false,
+  "required": ["hypothesis", "mechanism", "falsification", "sources"],
+  "properties": {
+    "hypothesis": {"type": "string", "minLength": 1},
+    "mechanism": {"type": "string", "minLength": 1},
+    "falsification": {"type": "string", "minLength": 1},
+    "alternatives": {"type": "array", "items": {"type": "string"}},
+    "sources": {"type": "array", "minItems": 1, "maxItems": 100, "items": {
+      "type": "object", "additionalProperties": false, "required": ["reference", "supports"],
+      "properties": {"reference": {"type": "string", "minLength": 1}, "supports": {"type": "string", "minLength": 1}}
+    }}
+  }
+}

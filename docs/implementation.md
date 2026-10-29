@@ -1,16 +1,24 @@
 # First implementation
 
+Current setup and skill usage are in [getting started](getting-started.md).
+The first native fixture run now passes on Ubuntu WSL after correcting explicit
+user-namespace selection and allowing the wait syscalls required by bubblewrap's
+init process. See [retained validation evidence](../reports/native-validation.md).
+Earlier statements below about unavailable Linux access describe the original
+implementation session, not current access. Native validation remains specific
+to this host and fixture, not arbitrary targets or production certification.
+
 ## Implemented surface
 
 Packaging and optional framework adapters are described in [framework setup](frameworks.md).
 The BenchExec probe does not replace this runner. The OpenEvolve bridge evaluates
 already frozen artifacts and does not implement candidate generation or promotion.
 
-`schemas/experiment.schema.json` pins target/build identity, public workloads, isolation, search settings, cost limits, acceptance thresholds, sealed evaluation references, and evidence destination. `schemas/result.schema.json` validates individual exploration trials. Cross-field budget constraints are checked by `Policy` in addition to JSON Schema.
+`chilicrisp/schemas/experiment.schema.json` pins target/build identity, public workloads, isolation, search settings, cost limits, acceptance thresholds, sealed evaluation references, and evidence destination. `chilicrisp/schemas/result.schema.json` validates individual exploration trials. Cross-field budget constraints are checked by `Policy` in addition to JSON Schema.
 
-Workloads now select exactly one oracle mode: `expected_stdout_hash`, or `oracle` with kind `worldgame_ocean_v1`, `policy_path`, and `policy_hash`. The structured policy follows `schemas/ocean-oracle.schema.json`; `examples/worldgame-ocean-oracle.json` records the current pilot contract. Store the policy outside the target rootfs and protect it from candidate-agent writes. The runner checks the policy hash before execution and records structured results in `verification.json`. Timing diagnostics are parsed separately from the conservation and convergence gates. These checks do not independently validate scientific fields or prevent an implementation from printing fabricated summaries; a trusted independent oracle is still needed before optimization acceptance.
+Workloads now select exactly one oracle mode: `expected_stdout_hash`, or `oracle` with kind `worldgame_ocean_v1`, `policy_path`, and `policy_hash`. The structured policy follows `chilicrisp/schemas/ocean-oracle.schema.json`; `examples/worldgame-ocean-oracle.json` records the current pilot contract. Store the policy outside the target rootfs and protect it from candidate-agent writes. The runner checks the policy hash before execution and records structured results in `verification.json`. Timing diagnostics are parsed separately from the conservation and convergence gates. These checks do not independently validate scientific fields or prevent an implementation from printing fabricated summaries; a trusted independent oracle is still needed before optimization acceptance.
 
-Oracle kind `worldgame_fields_v1` additionally compares strict numerical field streams against owner-pinned reference arrays using `schemas/field-oracle.schema.json`. The reference stays outside the target rootfs and is hash-checked before execution. A trusted driver reads library arrays rather than accepting the candidate benchmark's self-reported summaries. See the [field verification adapter](../verification/worldgame/README.md) for public-world and independently calculated manufactured-solution checks, the portable component kit, and remaining scientific coverage limits. This adapter is portable-tested; its native sandbox execution remains unvalidated.
+Oracle kind `worldgame_fields_v1` additionally compares strict numerical field streams against owner-pinned reference arrays using `chilicrisp/schemas/field-oracle.schema.json`. The reference stays outside the target rootfs and is hash-checked before execution. A trusted driver reads library arrays rather than accepting the candidate benchmark's self-reported summaries. See the [field verification adapter](../verification/worldgame/README.md) for public-world and independently calculated manufactured-solution checks, the portable component kit, and remaining scientific coverage limits. This adapter is portable-tested; its native sandbox execution remains unvalidated.
 
 `python -m chilicrisp.runner trial MANIFEST --workload ID --budget BYTES` runs one public trial. `python -m chilicrisp.controller MANIFEST` first takes repeated baseline runs with target `memory.max=max`, derives a page-aligned ceiling from the largest measured peak plus a margin, and then drives a per-workload frontier. Ancestor and host limits still apply and are recorded; this is not infinite host memory. Optional `baseline` settings default to three runs and a 10% margin. Baseline failures or missing peaks stop the experiment; baseline invocations count against the per-workload trial cap and experiment deadline. The derived starting limit must pass confirmation before descent. This controller cannot edit code, run hidden grading, or declare a production win. Sealed references and acceptance thresholds are reserved inputs for independent evaluation; this release does not implement those services. Builds are supplied as frozen rootfs artifacts, rather than executed by this runner.
 

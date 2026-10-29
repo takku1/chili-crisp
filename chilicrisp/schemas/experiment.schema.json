@@ -56,6 +56,14 @@
       "type": "object", "additionalProperties": false,
       "required": ["backend", "cgroup_parent", "cache_policy", "network", "swap_bytes", "pids", "file_descriptors", "scratch_bytes", "seccomp"],
       "properties": {
+        "cpu": {
+          "type": "object", "additionalProperties": false,
+          "required": ["quota_usec", "period_usec"],
+          "properties": {
+            "quota_usec": {"type": "integer", "minimum": 1000, "maximum": 1000000000},
+            "period_usec": {"type": "integer", "minimum": 1000, "maximum": 1000000}
+          }
+        },
         "backend": {"const": "bubblewrap"},
         "cgroup_parent": {"type": "string", "minLength": 1},
         "cache_policy": {"const": "qualified_warm"},
