@@ -2,6 +2,7 @@
 import ctypes
 import ctypes.util
 import errno
+import socket
 import tempfile
 
 # Single-process runtime pilot. Threads/process creation, networking, mount,
@@ -54,14 +55,20 @@ def compile_filter(profile="pilot_allowlist_v1"):
             import platform
             if platform.machine() != "x86_64":
                 raise RuntimeError("Build seccomp profile currently requires x86_64")
-            for name in ("fork", "vfork", "kill", "tgkill"):
+            # Cargo locks and hardlinks within its target directory; Rust's process
+            # spawn reports child errors over a socketpair.
+            for name in ("fork", "vfork", "kill", "tgkill", "flock", "linkat", "eventfd2",
+                         "recvfrom", "recvmsg", "sendmsg"):
                 number = lib.seccomp_syscall_resolve_name(name.encode())
                 if number >= 0 and lib.seccomp_rule_add(context, 0x7fff0000, number, 0):
                     raise RuntimeError("Build seccomp rule failed: " + name)
-            mask = ArgumentComparison(0, 7, 0x7e020080, 0)  # SCMP_CMP_MASKED_EQ
-            number = lib.seccomp_syscall_resolve_name(b"clone")
-            if number < 0 or lib.seccomp_rule_add_array(context, 0x7fff0000, number, 1, ctypes.byref(mask)):
-                raise RuntimeError("Build clone filter failed")
+            # SCMP_CMP_MASKED_EQ / SCMP_CMP_EQ argument filters.
+            for name, comparison in (("clone", ArgumentComparison(0, 7, 0x7e020080, 0)),
+                                     ("socketpair", ArgumentComparison(0, 4, socket.AF_UNIX, 0)),
+                                     ("prctl", ArgumentComparison(0, 4, 15, 0))):  # PR_SET_NAME
+                number = lib.seccomp_syscall_resolve_name(name.encode())
+                if number < 0 or lib.seccomp_rule_add_array(context, 0x7fff0000, number, 1, ctypes.byref(comparison)):
+                    raise RuntimeError("Build seccomp filter failed: " + name)
             # clone3 embeds flags behind a pointer. Deny it; ENOSYS permits libc's
             # normal fallback to the argument-filtered clone/vfork paths.
             number = lib.seccomp_syscall_resolve_name(b"clone3")

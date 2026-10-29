@@ -28,11 +28,17 @@ def audit(lab):
             if Path(name).name != name or file_hash(path.parent / name) != digest:
                 raise ValueError("Compiler/runtime artifact differs")
         counts[result["outcome"]] += 1
-    for name in ("compile", "background"):
-        verify_cached(work / name / "source", work / (name + "-manifest.json"), work / name, 536870912)
-    for name in ("nondeterministic", "timeout", "flood", "oom", "invalid", "host-include"):
-        result = json.loads((work / name / "build-record.json").read_text())
-        if result["status"] != "rejected" or (work / name / "artifacts").exists():
+    controls = json.loads((lab / "native-summary.json").read_text())["compiler_controls"]
+    for control in controls:
+        name = control["mode"]
+        record = json.loads((work / name / "build-record.json").read_text())
+        manifest = work / (name + "-manifest.json")
+        manifest = manifest if manifest.exists() else work / "compile-manifest.json"
+        if file_hash(manifest) != record["manifest_sha256"] or record["status"] != control["outcome"]:
+            raise ValueError("Compiler control record differs: " + name)
+        if record["status"] == "retained":
+            verify_cached(work / name / "source", manifest, work / name, record["memory_budget"])
+        elif (work / name / "artifacts").exists():
             raise ValueError("Failed compiler output was retained")
     if session.exists():
         state = json.loads((session / "state.json").read_text())
@@ -41,14 +47,15 @@ def audit(lab):
             record = json.loads((cache / "build-record.json").read_text())
             if record["source_hash"] not in source_hashes:
                 raise ValueError("Compiled source differs from a frozen champion")
-            verify_cached(cache / "source", state["plan"]["evaluation"]["build"]["manifest"], cache, 536870912)
+            build = state["plan"]["evaluation"]["build"]
+            verify_cached(cache / "source", build["manifest"], cache, build["memory_budget"])
         known_builds = {file_hash(path) for path in (session / "build-cache").glob("*/build-record.json")}
         for path in (session / "native-evidence").glob("*/result.json"):
             result = json.loads(path.read_text())
             recorded = result["preflight_record"].get("build_record_sha256")
             if recorded is not None and recorded not in known_builds:
                 raise ValueError("Runtime build provenance differs")
-    return {"public_trials": len(records), "outcomes": dict(counts),
+    return {"public_trials": len(records), "outcomes": dict(counts), "controls": len(controls),
             "scope": "saved compiler/provenance/runtime consistency; not authenticity"}
 
 

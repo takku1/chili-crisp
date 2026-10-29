@@ -118,9 +118,13 @@ before reuse and a tampered entry rejects rather than rebuilding. Compilation
 reserves four extra trials per baseline/candidate evaluation. Run
 `chilicrisp build MANIFEST SOURCE OUTPUT --budget BYTES` to compile standalone.
 
-Only one GCC C toolchain is validated; see
-[validation](../reports/isolated-build-validation.md). Run
-`sudo python3 tools/native-build.py` to reproduce the fixture.
+Validated toolchains are GCC C (`tools/native-build.py`) and Rust/Cargo
+(`tools/native-cargo.py`); see [validation](../reports/isolated-build-validation.md).
+For Rust, the owner vendors the permitted crates into the frozen compiler root
+while provisioning. Candidates supply `Cargo.toml`, `Cargo.lock` and sources;
+the build runs `--offline --locked` against `/vendor` only, so an unvendored
+crate or altered lockfile checksum fails the build. Candidate `.cargo`
+configuration and `rust-toolchain` files are ignored.
 
 ## Reproduce the integration fixture
 

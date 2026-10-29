@@ -20,9 +20,8 @@ Requests and per-command output already remain in session run directories.
 ## Next increments, in order
 
 1. Run a bounded real-model two-generation experiment on the
-   [native bridge](native-development.md). Isolated C compilation now passes a
-   [native fixture](../reports/isolated-build-validation.md); extend it to a
-   lockfile-pinned offline dependency toolchain (e.g. Cargo) next.
+   [native bridge](native-development.md). Isolated C and Rust/Cargo compilation
+   pass [native fixtures](../reports/isolated-build-validation.md).
 2. Harden deployment of the [owner-operated sealed gate](sealed-acceptance.md)
    across separate accounts/hosts and independently reproduce its results.
    Keep public feedback separate from private assets and detailed failures.
