@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "experiment_id", "trial_id", "candidate_hash", "manifest_hash", "measurement_mode", "workload_id", "phase", "requested_budget_bytes", "effective_budget_bytes", "outcome", "metrics", "artifact_hashes", "preflight_record", "cost", "lifecycle", "error"],
+  "properties": {
+    "schema_version": {"const": "0.1"},
+    "experiment_id": {"type": "string"}, "trial_id": {"type": "string"},
+    "candidate_hash": {"$ref": "#/$defs/hash"}, "manifest_hash": {"$ref": "#/$defs/hash"},
+    "measurement_mode": {"const": "whole_program"},
+    "workload_id": {"type": "string"}, "phase": {"enum": ["baseline", "exploration"]},
+    "requested_budget_bytes": {"type": ["integer", "null"], "minimum": 1},
+    "effective_budget_bytes": {"type": ["integer", "null"], "minimum": 1},
+    "outcome": {"enum": ["pass", "wrong_output", "timeout", "oom", "output_limit", "runner_failure", "unsupported", "inconclusive", "cleanup_failure"]},
+    "metrics": {"type": "object", "additionalProperties": {"$ref": "#/$defs/metric"}},
+    "artifact_hashes": {"type": "object", "additionalProperties": {"$ref": "#/$defs/hash"}},
+    "preflight_record": {"type": "object"},
+    "cost": {
+      "type": "object", "additionalProperties": false,
+      "required": ["wall_seconds", "runner_cpu_seconds", "target_cpu_seconds", "test_invocations", "tool_calls", "model_tokens", "model_cost"],
+      "properties": {
+        "wall_seconds": {"type": "number", "minimum": 0},
+        "runner_cpu_seconds": {"type": "number", "minimum": 0},
+        "target_cpu_seconds": {"type": ["number", "null"], "minimum": 0},
+        "test_invocations": {"type": "integer", "minimum": 0},
+        "tool_calls": {"type": ["integer", "null"], "minimum": 0},
+        "model_tokens": {"type": ["integer", "null"], "minimum": 0},
+        "model_cost": {"type": ["number", "null"], "minimum": 0}
+      }
+    },
+    "lifecycle": {"enum": ["FINALIZED", "RECOVERY_REQUIRED"]},
+    "error": {"type": ["string", "null"]}
+  },
+  "$defs": {
+    "hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "metric": {
+      "type": "object", "additionalProperties": false,
+      "required": ["value", "unit", "method", "status"],
+      "properties": {
+        "value": {"type": ["number", "null"]}, "unit": {"type": "string"},
+        "method": {"type": "string"}, "status": {"enum": ["available", "unavailable"]}
+      },
+      "allOf": [
+        {"if": {"properties": {"status": {"const": "unavailable"}}}, "then": {"properties": {"value": {"type": "null"}}}},
+        {"if": {"properties": {"status": {"const": "available"}}}, "then": {"properties": {"value": {"type": "number"}}}}
+      ]
+    }
+  }
+}

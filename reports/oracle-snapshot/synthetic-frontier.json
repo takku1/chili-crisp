@@ -1,0 +1,86 @@
+{
+  "kind": "synthetic_policy_simulation_not_workload_measurement",
+  "oracle": "pass iff budget >= 32768 bytes",
+  "decisions": [
+    {
+      "decision": "EXPLORE",
+      "budget": 65536,
+      "reason": "screen",
+      "synthetic_outcome": "pass"
+    },
+    {
+      "decision": "EXPLORE",
+      "budget": 65536,
+      "reason": "confirm",
+      "synthetic_outcome": "pass"
+    },
+    {
+      "decision": "EXPLORE",
+      "budget": 49152,
+      "reason": "descend",
+      "synthetic_outcome": "pass"
+    },
+    {
+      "decision": "EXPLORE",
+      "budget": 49152,
+      "reason": "confirm",
+      "synthetic_outcome": "pass"
+    },
+    {
+      "decision": "EXPLORE",
+      "budget": 24576,
+      "reason": "descend",
+      "synthetic_outcome": "oom"
+    },
+    {
+      "decision": "EXPLORE",
+      "budget": 24576,
+      "reason": "confirm",
+      "synthetic_outcome": "oom"
+    },
+    {
+      "decision": "EXPLORE",
+      "budget": 36864,
+      "reason": "refine",
+      "synthetic_outcome": "pass"
+    },
+    {
+      "decision": "EXPLORE",
+      "budget": 36864,
+      "reason": "confirm",
+      "synthetic_outcome": "pass"
+    },
+    {
+      "decision": "EXPLORE",
+      "budget": 32768,
+      "reason": "refine",
+      "synthetic_outcome": "pass"
+    },
+    {
+      "decision": "EXPLORE",
+      "budget": 32768,
+      "reason": "confirm",
+      "synthetic_outcome": "pass"
+    },
+    {
+      "decision": "EXPLORE",
+      "budget": 28672,
+      "reason": "refine",
+      "synthetic_outcome": "oom"
+    },
+    {
+      "decision": "EXPLORE",
+      "budget": 28672,
+      "reason": "confirm",
+      "synthetic_outcome": "oom"
+    },
+    {
+      "decision": "INVENT",
+      "budget": null,
+      "reason": "resolution_or_floor"
+    }
+  ],
+  "passing": 32768,
+  "failing": 28672,
+  "trial_count": 12
+}

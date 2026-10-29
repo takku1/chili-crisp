@@ -1,0 +1,297 @@
+{
+  "kind": "trusted negative-control screening pilot",
+  "checks": {
+    "source_changed": true,
+    "baseline_unchanged": true,
+    "good_screen_passed": true,
+    "good_full_passed": true,
+    "bad_candidate_compiled": true,
+    "bad_screen_rejected": true,
+    "no_acceptance_claim": true
+  },
+  "baseline_source_hash": "5a9fa4c952f31c7af4ece4a54ef0d6ab3d59ea80d3108752fd99db5303552b34",
+  "candidate_source_hash": "cd6869731af21200d1f6c106d446967b99289d24cda9e83094659154a5dfd03b",
+  "candidate": "Z:\\chilicrisp\\artifacts\\incorrect-solver-20261029T043608Z",
+  "diff_sha256": "00b35ddb92533b5afbf617975b6a072719a8be67dea38759e9c100e48efa033f",
+  "records": [
+    {
+      "name": "good-screen",
+      "command": [
+        "C:\\Users\\dcarn\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\python.exe",
+        "verification/worldgame/check.py",
+        "--source",
+        "Z:\\chilicrisp\\artifacts\\worldgame-frozen",
+        "--reference",
+        "Z:\\chilicrisp\\reports\\worldgame\\field-checks\\20261029T041033487475Z",
+        "--tier",
+        "screen"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 8.030999999959022,
+      "evidence": "Z:\\chilicrisp\\reports\\worldgame\\field-checks\\20261029T043609657574Z\\results.json",
+      "result": {
+        "source": "Z:\\chilicrisp\\artifacts\\worldgame-frozen",
+        "harness_sha256": "0bcd3cdaafcdf235fd1a8dfc7e3359af2ae662604822a44579d283247013cb08",
+        "executable_sha256": "0a882b608320e76d1afdde2fdf7a57a719ee5a59eb65a5dbdb2f513e2546ffcc",
+        "build_command": [
+          "cargo",
+          "+1.98.0",
+          "build",
+          "--offline",
+          "--release",
+          "--manifest-path",
+          "Z:\\chilicrisp\\artifacts\\field-driver-20261029T043609657574Z\\Cargo.toml"
+        ],
+        "generated_lock_sha256": "50acf27ae57deb14d59dd9a7b924733bb7efe7afdf40b0d4fae33c1a6c1b51a4",
+        "reference": "Z:\\chilicrisp\\reports\\worldgame\\field-checks\\20261029T041033487475Z",
+        "cases": [
+          {
+            "case": [
+              "manufactured",
+              "17"
+            ],
+            "case_index": 3,
+            "outcome": "pass",
+            "exit_code": 0,
+            "field_count": 289,
+            "sha256": "de9cf9bc22ef413f2ca3affa81c1d49affdf2dbf2904b97cc87b80d95502a25e",
+            "analytic_max_abs_error": 5.72815128663251e-11,
+            "differential_max_abs_error": 0.0,
+            "elapsed_seconds": 0.046999999962281436
+          },
+          {
+            "case": [
+              "ocean",
+              "42",
+              "1.0"
+            ],
+            "case_index": 0,
+            "outcome": "pass",
+            "exit_code": 0,
+            "field_count": 131040,
+            "sha256": "df7242bac129ba6a9237939bb82144df19637626ca4fbffef739456dc64af02e",
+            "differential_max_abs_error": 0.0,
+            "elapsed_seconds": 0.45300000003771856
+          }
+        ],
+        "tolerance": {
+          "atol": 1e-08,
+          "rtol": 1e-08
+        },
+        "limitations": "Public circulation cases and manufactured shared-solver checks; not evolved transport or empirical Earth validation",
+        "tier": "screen",
+        "outcome": "pass",
+        "error": null,
+        "source_hash": "5a9fa4c952f31c7af4ece4a54ef0d6ab3d59ea80d3108752fd99db5303552b34",
+        "source_stable": true,
+        "acceptance_eligible": false,
+        "elapsed_seconds": 7.780999999959022,
+        "build_exit_code": 0
+      }
+    },
+    {
+      "name": "good-full",
+      "command": [
+        "C:\\Users\\dcarn\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\python.exe",
+        "verification/worldgame/check.py",
+        "--source",
+        "Z:\\chilicrisp\\artifacts\\worldgame-frozen",
+        "--reference",
+        "Z:\\chilicrisp\\reports\\worldgame\\field-checks\\20261029T041033487475Z",
+        "--tier",
+        "full"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 8.094000000040978,
+      "evidence": "Z:\\chilicrisp\\reports\\worldgame\\field-checks\\20261029T043617682404Z\\results.json",
+      "result": {
+        "source": "Z:\\chilicrisp\\artifacts\\worldgame-frozen",
+        "harness_sha256": "0bcd3cdaafcdf235fd1a8dfc7e3359af2ae662604822a44579d283247013cb08",
+        "executable_sha256": "ad92ee0e4f95756d7bcfa2118022e7c504bac772560535ec3b44bb707f40058b",
+        "build_command": [
+          "cargo",
+          "+1.98.0",
+          "build",
+          "--offline",
+          "--release",
+          "--manifest-path",
+          "Z:\\chilicrisp\\artifacts\\field-driver-20261029T043617682404Z\\Cargo.toml"
+        ],
+        "generated_lock_sha256": "50acf27ae57deb14d59dd9a7b924733bb7efe7afdf40b0d4fae33c1a6c1b51a4",
+        "reference": "Z:\\chilicrisp\\reports\\worldgame\\field-checks\\20261029T041033487475Z",
+        "cases": [
+          {
+            "case": [
+              "ocean",
+              "42",
+              "1.0"
+            ],
+            "case_index": 0,
+            "outcome": "pass",
+            "exit_code": 0,
+            "field_count": 131040,
+            "sha256": "df7242bac129ba6a9237939bb82144df19637626ca4fbffef739456dc64af02e",
+            "differential_max_abs_error": 0.0,
+            "elapsed_seconds": 0.48399999999674037
+          },
+          {
+            "case": [
+              "ocean",
+              "7",
+              "0.8"
+            ],
+            "case_index": 1,
+            "outcome": "pass",
+            "exit_code": 0,
+            "field_count": 131040,
+            "sha256": "42a4b40bbf5a2e6e6bbe1684293940492d508ce58180937fc3245d981ca88d81",
+            "differential_max_abs_error": 0.0,
+            "elapsed_seconds": 0.5
+          },
+          {
+            "case": [
+              "ocean",
+              "2026",
+              "1.2"
+            ],
+            "case_index": 2,
+            "outcome": "pass",
+            "exit_code": 0,
+            "field_count": 131040,
+            "sha256": "1446c8898a79c0f0c5ac3a330088a46bf1c7c95920b9010ef7c41c2c22862166",
+            "differential_max_abs_error": 0.0,
+            "elapsed_seconds": 0.46899999998277053
+          },
+          {
+            "case": [
+              "manufactured",
+              "17"
+            ],
+            "case_index": 3,
+            "outcome": "pass",
+            "exit_code": 0,
+            "field_count": 289,
+            "sha256": "de9cf9bc22ef413f2ca3affa81c1d49affdf2dbf2904b97cc87b80d95502a25e",
+            "analytic_max_abs_error": 5.72815128663251e-11,
+            "differential_max_abs_error": 0.0,
+            "elapsed_seconds": 0.01600000000325963
+          },
+          {
+            "case": [
+              "manufactured",
+              "33"
+            ],
+            "case_index": 4,
+            "outcome": "pass",
+            "exit_code": 0,
+            "field_count": 1089,
+            "sha256": "81ec4b9d6a46733188c937af163e66e7093cb0d2eaf539a3ee65f6f2f4f860df",
+            "analytic_max_abs_error": 8.725575817436493e-11,
+            "differential_max_abs_error": 0.0,
+            "elapsed_seconds": 0.061999999976251274
+          },
+          {
+            "case": [
+              "manufactured",
+              "65"
+            ],
+            "case_index": 5,
+            "outcome": "pass",
+            "exit_code": 0,
+            "field_count": 4225,
+            "sha256": "91a48b30be701f22642d0a059e52d5e2fd0d70793eeb568ab0810ee880abcc19",
+            "analytic_max_abs_error": 9.648859489175265e-11,
+            "differential_max_abs_error": 0.0,
+            "elapsed_seconds": 0.3130000000237487
+          }
+        ],
+        "tolerance": {
+          "atol": 1e-08,
+          "rtol": 1e-08
+        },
+        "limitations": "Public circulation cases and manufactured shared-solver checks; not evolved transport or empirical Earth validation",
+        "tier": "full",
+        "outcome": "pass",
+        "error": null,
+        "source_hash": "5a9fa4c952f31c7af4ece4a54ef0d6ab3d59ea80d3108752fd99db5303552b34",
+        "source_stable": true,
+        "acceptance_eligible": false,
+        "elapsed_seconds": 7.829000000027008,
+        "build_exit_code": 0
+      }
+    },
+    {
+      "name": "bad-screen",
+      "command": [
+        "C:\\Users\\dcarn\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\python.exe",
+        "verification/worldgame/check.py",
+        "--source",
+        "Z:\\chilicrisp\\artifacts\\incorrect-solver-20261029T043608Z",
+        "--reference",
+        "Z:\\chilicrisp\\reports\\worldgame\\field-checks\\20261029T041033487475Z",
+        "--tier",
+        "screen"
+      ],
+      "exit_code": 1,
+      "elapsed_seconds": 6.639999999955762,
+      "evidence": "Z:\\chilicrisp\\reports\\worldgame\\field-checks\\20261029T043625781331Z\\results.json",
+      "result": {
+        "source": "Z:\\chilicrisp\\artifacts\\incorrect-solver-20261029T043608Z",
+        "harness_sha256": "0bcd3cdaafcdf235fd1a8dfc7e3359af2ae662604822a44579d283247013cb08",
+        "executable_sha256": "ae50cc2ae448f9382a6fef54ede3bfa4bd0447927b6db732ff5dcddaea1ea0d2",
+        "build_command": [
+          "cargo",
+          "+1.98.0",
+          "build",
+          "--offline",
+          "--release",
+          "--manifest-path",
+          "Z:\\chilicrisp\\artifacts\\field-driver-20261029T043625781331Z\\Cargo.toml"
+        ],
+        "generated_lock_sha256": "50acf27ae57deb14d59dd9a7b924733bb7efe7afdf40b0d4fae33c1a6c1b51a4",
+        "reference": "Z:\\chilicrisp\\reports\\worldgame\\field-checks\\20261029T041033487475Z",
+        "cases": [
+          {
+            "case": [
+              "manufactured",
+              "17"
+            ],
+            "case_index": 3,
+            "outcome": "reject",
+            "exit_code": 0,
+            "field_count": 289,
+            "sha256": "321724ae44c355330f3c0c1261442cfad031560b116f786e5117bbe02d8c80ad",
+            "error": "field 18 differs: 0.03780092079852506 vs 0.038182748283360816",
+            "elapsed_seconds": 0.0470000000204891
+          }
+        ],
+        "tolerance": {
+          "atol": 1e-08,
+          "rtol": 1e-08
+        },
+        "limitations": "Public circulation cases and manufactured shared-solver checks; not evolved transport or empirical Earth validation",
+        "tier": "screen",
+        "outcome": "reject",
+        "error": "field 18 differs: 0.03780092079852506 vs 0.038182748283360816",
+        "source_hash": "cd6869731af21200d1f6c106d446967b99289d24cda9e83094659154a5dfd03b",
+        "source_stable": true,
+        "acceptance_eligible": false,
+        "elapsed_seconds": 6.39100000000326,
+        "build_exit_code": 0
+      }
+    }
+  ],
+  "native_measurements": null,
+  "model_generated": false,
+  "promotion": "not attempted; native resource and acceptance gates unavailable",
+  "implementation_hashes": {
+    "verification\\worldgame\\check.py": "cb3a5d53b53f5b055344b42efe7bd75792a5b06b9c48c586820a32a4344381a7",
+    "verification\\worldgame\\harness.rs": "0bcd3cdaafcdf235fd1a8dfc7e3359af2ae662604822a44579d283247013cb08",
+    "chilicrisp\\fields.py": "2d53e05a896eb2c4d66be3c06ac829813b95748367ffbaea7ab2010c385ba989"
+  },
+  "portable_tests": {
+    "run": 40,
+    "passed": 38,
+    "skipped_native": 2
+  }
+}

@@ -1,0 +1,160 @@
+{
+  "kind": "normal_windows_baseline_no_enforced_scarcity",
+  "collected_at": "2026-10-29T01:38:47.905892+00:00",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "binary": "Z:\\chilicrisp\\artifacts\\worldgame-target\\release\\examples\\oceanbench.exe",
+  "binary_sha256": "e600e0a49384094605e667f3222954abe80147ff33d4951c9be44ccea68fddca",
+  "build_command": [
+    "cargo",
+    "build",
+    "--locked",
+    "--offline",
+    "--release",
+    "-p",
+    "mote-core",
+    "--example",
+    "oceanbench",
+    "--manifest-path",
+    "Z:\\worldgame\\Cargo.toml",
+    "--target-dir",
+    "Z:\\chilicrisp\\artifacts\\worldgame-target"
+  ],
+  "cache_policy": "uncontrolled sequential runs; first run not excluded",
+  "accounting": "single Windows process; GetProcessMemoryInfo lifetime peak counters",
+  "trials": [
+    {
+      "index": 1,
+      "exit_code": 0,
+      "reason": "completed",
+      "elapsed_seconds": 2.577999999979511,
+      "peak_working_set_bytes": 64245760,
+      "peak_commit_bytes": 69222400,
+      "memory_counter_samples": 124,
+      "output": {
+        "stdout": {
+          "bytes": 608,
+          "sha256": "d79a84152a11141ff597c17d8ec6cf6a0ef3667591d30c1f0ca4d3622c963b4c",
+          "hash_scope": "complete_stream",
+          "truncated": false
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "hash_scope": "complete_stream",
+          "truncated": false
+        }
+      }
+    },
+    {
+      "index": 2,
+      "exit_code": 0,
+      "reason": "completed",
+      "elapsed_seconds": 2.5,
+      "peak_working_set_bytes": 63676416,
+      "peak_commit_bytes": 69648384,
+      "memory_counter_samples": 122,
+      "output": {
+        "stdout": {
+          "bytes": 608,
+          "sha256": "1ab8d8bb589137eff4d6526b5848eb5c3d99dd94390790e10b8618740e369ea2",
+          "hash_scope": "complete_stream",
+          "truncated": false
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "hash_scope": "complete_stream",
+          "truncated": false
+        }
+      }
+    },
+    {
+      "index": 3,
+      "exit_code": 0,
+      "reason": "completed",
+      "elapsed_seconds": 2.5160000000032596,
+      "peak_working_set_bytes": 63016960,
+      "peak_commit_bytes": 69132288,
+      "memory_counter_samples": 124,
+      "output": {
+        "stdout": {
+          "bytes": 608,
+          "sha256": "3373169fae29ee4d1c164a8a93a1915f9749bb9227ffb635d40f9d8b50b2a374",
+          "hash_scope": "complete_stream",
+          "truncated": false
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "hash_scope": "complete_stream",
+          "truncated": false
+        }
+      }
+    }
+  ],
+  "source_revision": {
+    "exit_code": 0,
+    "stdout": "86718e350cb2e81312603e3b095bb325685fedd2\n",
+    "stderr": ""
+  },
+  "source_status": {
+    "exit_code": 0,
+    "stdout": " M .gitignore\n M crates/mote-core/examples/covermap.rs\n M crates/mote-core/examples/tidemap.rs\n M crates/mote-core/src/climate.rs\n M crates/mote-core/src/lib.rs\n M crates/mote-core/src/orbit.rs\n M crates/mote-core/src/planet.rs\n M crates/mote-core/src/rivers.rs\n M crates/mote-core/src/sailing.rs\n M crates/mote-core/src/surface.rs\n M crates/mote-core/src/tides.rs\n M crates/mote-core/src/water.rs\n M crates/mote-core/src/weather_bridge.rs\n M crates/mote-game/src/app.rs\n M crates/mote-game/src/game.rs\n M crates/mote-game/src/headless.rs\n M crates/mote-game/src/input.rs\n M crates/mote-game/src/lightning.rs\n M crates/mote-game/src/main.rs\n M crates/mote-game/src/map.rs\n M crates/mote-game/src/save.rs\n M crates/mote-game/src/ship.rs\n M crates/mote-game/src/spawn.rs\n M crates/mote-game/src/ui.rs\n M crates/mote-render/src/mesh.rs\n M crates/mote-render/src/planet/mod.rs\n M crates/mote-render/src/planet/render.rs\n M crates/mote-render/src/planet/scene.wgsl\n M crates/mote-render/src/planet/stream.rs\n M crates/mote-render/src/planet/vegetation.rs\n M crates/mote-render/src/planet/water.rs\n M crates/mote-render/src/planet/weather.rs\n M crates/mote-render/src/sky_gpu.rs\n M crates/mote-tools/src/bin/planet-viewer.rs\n M crates/mote-tools/src/bin/sail-viewer.rs\n M docs/STATUS.md\n M docs/current/direction.md\n M docs/current/engine-roadmap.md\n M docs/current/land-formation.md\n M docs/current/planetary-generation.md\n M docs/current/sailing-controls.md\n M docs/current/sailing/index.md\n M docs/current/sailing/physics.md\n M docs/current/sailing/sails-and-rigs.md\n M docs/current/sailing/vessels-and-gameplay.md\n M docs/current/tides.md\n M docs/current/weather.md\n?? crates/mote-core/data/\n?? crates/mote-core/examples/oceanbench.rs\n?? crates/mote-core/examples/sailpolar.rs\n?? crates/mote-core/examples/tideregion.rs\n?? crates/mote-core/src/autopilot.rs\n?? crates/mote-core/src/coast.rs\n?? crates/mote-core/src/numerics.rs\n?? crates/mote-core/src/ocean.rs\n?? crates/mote-core/src/ocean/\n?? crates/mote-core/src/orbit/\n?? crates/mote-core/src/stars.rs\n?? crates/mote-core/src/tides/\n?? crates/mote-core/src/water_cycle.rs\n?? crates/mote-core/src/water_cycle/\n?? crates/mote-core/src/weather_bridge/\n?? crates/mote-core/tests/\n?? crates/mote-game/src/ocean.rs\n?? crates/mote-game/src/tide.rs\n?? crates/mote-game/src/worlds.rs\n?? crates/mote-render/examples/\n?? crates/mote-render/src/planet/stars.rs\n?? crates/mote-render/src/planet/stars.wgsl\n?? docs/current/README.md\n?? docs/current/astronomy.md\n?? docs/current/atmosphere.md\n?? docs/current/backlog.md\n?? docs/current/biomes/\n?? docs/current/carbon-and-geochemistry.md\n?? docs/current/computational-core.md\n?? docs/current/cryosphere-and-soils.md\n?? docs/current/ecology-simulation.md\n?? docs/current/planetary-systems.md\n?? docs/current/rendering-and-light.md\n?? docs/current/sailing/controls.md\n?? docs/current/sailing/relational-sail-trim-instrument.md\n?? docs/current/sailing/views-and-navigation.md\n?? docs/current/validation-and-benchmarks.md\n?? docs/current/water/\n?? docs/current/world-simulation-research.md\n?? tools/\n",
+    "stderr": ""
+  },
+  "rustc": {
+    "exit_code": 0,
+    "stdout": "rustc 1.98.0 (88d9e12ae 2026-08-18)\n",
+    "stderr": ""
+  },
+  "cargo": {
+    "exit_code": 0,
+    "stdout": "cargo 1.98.0 (797e8a9bc 2026-08-05)\n",
+    "stderr": ""
+  },
+  "source_files_sha256": {
+    "Cargo.toml": "0c6d8804c8ac26b7df9d87c035c135378a08a7d17d75cff76ae850e57d7f33d8",
+    "Cargo.lock": "a1f6e07d8cb5bec7e9869db29f00a41eaaa9e38ff947ead8b845d72eb8d75fbf",
+    "crates/mote-core/examples/covermap.rs": "bc70a25d1e9a5c8ad6abf861a0c60996de23208a931066a5e4d5c00b37fc52f5",
+    "crates/mote-core/examples/grid.rs": "22e6ef88ed9eb70c9ffbdaf54acdabe44863cc91b26dde7647426edaf7af1b2c",
+    "crates/mote-core/examples/oceanbench.rs": "994be7704947a81b29f238b2148f71e2e94a99fe5f4243be2015e0fc326bf5ab",
+    "crates/mote-core/examples/probe.rs": "f25f309bccac4ce15c53e44840fd092ee35f5f4dc528ee2634a2a4631df45504",
+    "crates/mote-core/examples/sailpolar.rs": "dade023d99e76f51cb598babb38c7199b488900da86fae26a8e566d890a3e526",
+    "crates/mote-core/examples/tidemap.rs": "e7457deb8fcf863282e1112eb4508636a94ec8a72f2f474a41e1963deab1de04",
+    "crates/mote-core/examples/tideregion.rs": "c2dc4e9c758b12b8d94e0b3f8f5a5b8933aecca08f5d9469589892b7ea6bb248",
+    "crates/mote-core/examples/worldmap.rs": "7217e21d65e443f50726f0150c3d1925a4685c782bda5f074196ab52a83ffcce",
+    "crates/mote-core/src/autopilot.rs": "9dc9728596232905e947891ede595274df01c5f97216a0322b7f03aaeb3ae7cc",
+    "crates/mote-core/src/climate.rs": "d852edeb264e2b78b065ff84c88843d188bee78c9238d357b06ea682f10f1013",
+    "crates/mote-core/src/coast.rs": "8cf6d5ae5c0b9fa57be20b019201ea0133064f7993a06666602ec19898e983fc",
+    "crates/mote-core/src/genus.rs": "f7c2464a0a4e0649c0ce7920bfdc90856fc1d42410574d03bcea98473cd52159",
+    "crates/mote-core/src/hydrology.rs": "918b577899ee9e57b9a3b9f8db2c5c6da631d4007db93c7ecbd6e08b19c07ea4",
+    "crates/mote-core/src/lib.rs": "625ee7b49e6de7f44e4f42c60248fa82d6d5a11f9887ff52444eeb945dd5dadf",
+    "crates/mote-core/src/lithology.rs": "f3b07b11cc33b7515f764e35371cac57883616cd5bcc1153857d27d1a8798b6b",
+    "crates/mote-core/src/numerics.rs": "16b10cbb1ec16863ee2251060a9d9050f845882e9f7d97fd5ee7da255f555ba2",
+    "crates/mote-core/src/ocean/transport.rs": "4a7ccbd995e10a55f3ba7cb562ebb38a942296be682b0ef42f8d872d31082ef2",
+    "crates/mote-core/src/ocean.rs": "d62d4a287cf11ad58b7eba1d320fc6095b8884e9fdca4ffe8e36e21f1eb1b087",
+    "crates/mote-core/src/orbit/almanac.rs": "75290a82fd5c12c1060ecf14d101c682600f3416236c240603dbe7bea34e4dfd",
+    "crates/mote-core/src/orbit/calendar.rs": "7d5604be22a06ea44d211192fa4fe2c76a817f0d569bd98154c614bcb80e1bfc",
+    "crates/mote-core/src/orbit.rs": "4d87c3b2b0b7cb77f1565f18f3b4ff39d9f6a5aa3dc48507f57440791dd2a15d",
+    "crates/mote-core/src/planet.rs": "f9f27653edcf2c6d981fe7dfec9666899440d0a3093bbaca276292d13f0dc351",
+    "crates/mote-core/src/rivers.rs": "8d210d24c8f06ae7f511bf546eff0743bbe111a0efdb7df8d4a4d31d76877df5",
+    "crates/mote-core/src/sailing.rs": "bf8a34c0583f08aeade0cea294bbf7054c94297e73d070e181256c9a1214706b",
+    "crates/mote-core/src/stars.rs": "51d56792d516b38d4feca5319282b78d2e88661eb8ac6de1878692974bfc38e8",
+    "crates/mote-core/src/surface.rs": "4d0b413041da48184c019ec6ea1ab12e1452ec3646d1307c8bc9fa0fd909db54",
+    "crates/mote-core/src/tectonics.rs": "758724b8efc3c63511f9a97c71411a2e32384663f3630d2e5f3f83549354266a",
+    "crates/mote-core/src/tides/prediction.rs": "1474f19ebdfa870b2673a713db21392003337214b2073cb309b235b290743837",
+    "crates/mote-core/src/tides/regional.rs": "09d9fb4c711df5cfe701ce50e1221841aa278cac5f42dce4de00b01086d2569e",
+    "crates/mote-core/src/tides.rs": "3340085e6f28069c90415c9e6b8eb59d9873ea3f77c68b827d4c90969e81b52f",
+    "crates/mote-core/src/traversal.rs": "3dce6f33987fea18f4acf881879bab55ad8416042892935c08655f9a9b639e73",
+    "crates/mote-core/src/vibes.rs": "2b980f4553d063df1bb947326a9c260282a9eccd8df74154d8902e1580e3251c",
+    "crates/mote-core/src/warp.rs": "68d74d3961c157b9c56e0d14c309825492aea7aba68c79e649142ae947ce6d34",
+    "crates/mote-core/src/water.rs": "37debf55d0b6b7a2729ec7aa5510ace92266c270fab638fd73587fa4ca95668e",
+    "crates/mote-core/src/water_cycle/materials.rs": "df26d76617da5e9514cade85355a9e2c0494cb194d8b504efaa22970646cc3ed",
+    "crates/mote-core/src/water_cycle/thermal.rs": "ad30a8d469afefb22ea624ad7df3726819aa4f3c6092c4b4724ded84b1ae5ef7",
+    "crates/mote-core/src/water_cycle.rs": "c4044f03e6483630e551237d36f7cde0388ad3ea4b12bb2a9daf1546353de437",
+    "crates/mote-core/src/weather_bridge/air.rs": "643ff47348c1d6a1ce180c78f82f01f942a4ed09ceb2ca44c121a33d242bcd6c",
+    "crates/mote-core/src/weather_bridge/column.rs": "94914a2e026d16506628f45ab391bece1a7031c0fbeec19871d26237bbe1eb55",
+    "crates/mote-core/src/weather_bridge.rs": "d3d3226b1d04fd0996d58a47845d458edfad9ea80b4373afbded10f94d1dc636",
+    "crates/mote-core/tests/astronomy_reference.rs": "bf5bcbec360fb3784d1373fed388abb2811b97902314a7a62f0a7efe4135ef74"
+  }
+}

@@ -1,0 +1,10 @@
+   Compiling autocfg v1.5.1
+   Compiling rand_core v0.6.4
+   Compiling glam v0.29.3
+   Compiling rand v0.8.8
+   Compiling rand_xorshift v0.3.0
+   Compiling num-traits v0.2.19
+   Compiling noise v0.9.0
+   Compiling mote-core v0.1.0 (Z:\worldgame\crates\mote-core)
+   Compiling chili-field-driver v0.1.0 (Z:\chilicrisp\artifacts\field-driver-20261029T041041743646Z)
+    Finished `release` profile [optimized] target(s) in 6.12s

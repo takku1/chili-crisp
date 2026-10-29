@@ -1,0 +1,19 @@
+{
+  "command": [
+    "cargo",
+    "build",
+    "--locked",
+    "--offline",
+    "--release",
+    "-p",
+    "mote-core",
+    "--example",
+    "oceanbench",
+    "--manifest-path",
+    "Z:\\chilicrisp\\artifacts\\worldgame-frozen\\Cargo.toml",
+    "--target-dir",
+    "Z:\\chilicrisp\\artifacts\\worldgame-frozen-target"
+  ],
+  "exit_code": 0,
+  "source_id": "e3bb0485fe44c3f08333ffbca7867b5aed38c2e00934deed31fa77ad477d97b3"
+}

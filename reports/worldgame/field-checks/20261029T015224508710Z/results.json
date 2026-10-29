@@ -1,0 +1,83 @@
+{
+  "source": "Z:\\chilicrisp\\artifacts\\worldgame-frozen",
+  "harness_sha256": "0bcd3cdaafcdf235fd1a8dfc7e3359af2ae662604822a44579d283247013cb08",
+  "executable_sha256": "6c63ba51e1008f19048fe7cb042c7c1db1bdee68f395b485a1a0f89913800422",
+  "build_command": [
+    "cargo",
+    "+1.98.0",
+    "build",
+    "--offline",
+    "--release",
+    "--manifest-path",
+    "Z:\\chilicrisp\\artifacts\\field-driver-20261029T015224508710Z\\Cargo.toml"
+  ],
+  "generated_lock_sha256": "50acf27ae57deb14d59dd9a7b924733bb7efe7afdf40b0d4fae33c1a6c1b51a4",
+  "reference": "reports\\worldgame\\field-checks\\20261029T015152519351Z",
+  "cases": [
+    {
+      "case": [
+        "ocean",
+        "42",
+        "1.0"
+      ],
+      "field_count": 131040,
+      "sha256": "df7242bac129ba6a9237939bb82144df19637626ca4fbffef739456dc64af02e",
+      "differential_max_abs_error": 0.0
+    },
+    {
+      "case": [
+        "ocean",
+        "7",
+        "0.8"
+      ],
+      "field_count": 131040,
+      "sha256": "42a4b40bbf5a2e6e6bbe1684293940492d508ce58180937fc3245d981ca88d81",
+      "differential_max_abs_error": 0.0
+    },
+    {
+      "case": [
+        "ocean",
+        "2026",
+        "1.2"
+      ],
+      "field_count": 131040,
+      "sha256": "1446c8898a79c0f0c5ac3a330088a46bf1c7c95920b9010ef7c41c2c22862166",
+      "differential_max_abs_error": 0.0
+    },
+    {
+      "case": [
+        "manufactured",
+        "17"
+      ],
+      "field_count": 289,
+      "sha256": "de9cf9bc22ef413f2ca3affa81c1d49affdf2dbf2904b97cc87b80d95502a25e",
+      "analytic_max_abs_error": 5.72815128663251e-11,
+      "differential_max_abs_error": 0.0
+    },
+    {
+      "case": [
+        "manufactured",
+        "33"
+      ],
+      "field_count": 1089,
+      "sha256": "81ec4b9d6a46733188c937af163e66e7093cb0d2eaf539a3ee65f6f2f4f860df",
+      "analytic_max_abs_error": 8.725575817436493e-11,
+      "differential_max_abs_error": 0.0
+    },
+    {
+      "case": [
+        "manufactured",
+        "65"
+      ],
+      "field_count": 4225,
+      "sha256": "91a48b30be701f22642d0a059e52d5e2fd0d70793eeb568ab0810ee880abcc19",
+      "analytic_max_abs_error": 9.648859489175265e-11,
+      "differential_max_abs_error": 0.0
+    }
+  ],
+  "tolerance": {
+    "atol": 1e-08,
+    "rtol": 1e-08
+  },
+  "limitations": "Public circulation cases and manufactured shared-solver checks; not evolved transport or empirical Earth validation"
+}

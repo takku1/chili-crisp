@@ -1,0 +1,25 @@
+{
+  "scope": "package and optional framework boundaries",
+  "python": "3.12.10",
+  "openevolve": "0.3.2",
+  "tests": {"run": 38, "passed": 36, "skipped_native_linux": 2},
+  "checks": {
+    "scoped_ruff": "passed",
+    "example_manifest": "passed",
+    "sdist_and_wheel_via_setuptools": "passed",
+    "extracted_wheel_schema_validation": "passed",
+    "pep517_build_frontend": "blocked by temporary directory ACLs",
+    "twine": "unavailable locally; configured in CI",
+    "hosted_ci": "not executed",
+    "benchexec_native": "not executed: Windows unsupported",
+    "wsl": "E_ACCESSDENIED",
+    "docker": "engine pipe permission denied"
+  },
+  "remaining": [
+    "Native BenchExec versus existing runner contract comparison",
+    "Protected candidate generation-to-build transport",
+    "Independent grading, transplant acceptance, atomic promotion and rollback",
+    "Two consecutive reproducible moving-frontier generations"
+  ],
+  "limitations": "No scientific improvement, hostile-code certification, or native enforcement result established. No Git checkout was available."
+}

@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "reference_path", "reference_hash", "field_count", "atol", "rtol"],
+  "properties": {
+    "schema_version": {"const": "worldgame_fields_v1"},
+    "reference_path": {"type": "string", "minLength": 1},
+    "reference_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "field_count": {"type": "integer", "minimum": 1, "maximum": 500000},
+    "atol": {"type": "number", "minimum": 0},
+    "rtol": {"type": "number", "minimum": 0}
+  }
+}

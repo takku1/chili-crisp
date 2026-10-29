@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "grid", "seasons", "conservation_abs_max", "solver_residual_max"],
+  "properties": {
+    "schema_version": {"const": "worldgame_ocean_v1"},
+    "grid": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "integer", "minimum": 1}},
+    "seasons": {"type": "integer", "minimum": 1, "maximum": 100},
+    "conservation_abs_max": {"type": "number", "exclusiveMinimum": 0},
+    "solver_residual_max": {"type": "number", "exclusiveMinimum": 0}
+  }
+}

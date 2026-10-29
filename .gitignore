@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+.venv/
+evidence/
+artifacts/
+test-artifacts-*/
+build/
+dist/
+*.egg-info/
+.ruff_cache/
+tmp*/
+# Generated scientific arrays and portable build bundles are retained locally;
+# track their result metadata, hashes, and reproduction scripts instead.
+reports/**/*.bin
+reports/**/*.zip
+reports/**/*.exe

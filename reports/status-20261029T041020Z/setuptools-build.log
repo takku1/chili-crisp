@@ -1,0 +1,157 @@
+running sdist
+running egg_info
+writing chilicrisp.egg-info\PKG-INFO
+writing dependency_links to chilicrisp.egg-info\dependency_links.txt
+writing entry points to chilicrisp.egg-info\entry_points.txt
+writing requirements to chilicrisp.egg-info\requires.txt
+writing top-level names to chilicrisp.egg-info\top_level.txt
+reading manifest file 'chilicrisp.egg-info\SOURCES.txt'
+reading manifest template 'MANIFEST.in'
+writing manifest file 'chilicrisp.egg-info\SOURCES.txt'
+running check
+creating chilicrisp-0.1.0
+creating chilicrisp-0.1.0\chilicrisp
+creating chilicrisp-0.1.0\chilicrisp.egg-info
+creating chilicrisp-0.1.0\chilicrisp\integrations
+creating chilicrisp-0.1.0\docs
+creating chilicrisp-0.1.0\examples
+creating chilicrisp-0.1.0\schemas
+creating chilicrisp-0.1.0\tests
+creating chilicrisp-0.1.0\tools
+copying files to chilicrisp-0.1.0...
+copying MANIFEST.in -> chilicrisp-0.1.0
+copying README.md -> chilicrisp-0.1.0
+copying pyproject.toml -> chilicrisp-0.1.0
+copying setup.py -> chilicrisp-0.1.0
+copying chilicrisp\__init__.py -> chilicrisp-0.1.0\chilicrisp
+copying chilicrisp\capture.py -> chilicrisp-0.1.0\chilicrisp
+copying chilicrisp\controller.py -> chilicrisp-0.1.0\chilicrisp
+copying chilicrisp\fields.py -> chilicrisp-0.1.0\chilicrisp
+copying chilicrisp\frontier.py -> chilicrisp-0.1.0\chilicrisp
+copying chilicrisp\lifecycle.py -> chilicrisp-0.1.0\chilicrisp
+copying chilicrisp\oracles.py -> chilicrisp-0.1.0\chilicrisp
+copying chilicrisp\recovery.py -> chilicrisp-0.1.0\chilicrisp
+copying chilicrisp\runner.py -> chilicrisp-0.1.0\chilicrisp
+copying chilicrisp\seccomp.py -> chilicrisp-0.1.0\chilicrisp
+copying chilicrisp.egg-info\PKG-INFO -> chilicrisp-0.1.0\chilicrisp.egg-info
+copying chilicrisp.egg-info\SOURCES.txt -> chilicrisp-0.1.0\chilicrisp.egg-info
+copying chilicrisp.egg-info\dependency_links.txt -> chilicrisp-0.1.0\chilicrisp.egg-info
+copying chilicrisp.egg-info\entry_points.txt -> chilicrisp-0.1.0\chilicrisp.egg-info
+copying chilicrisp.egg-info\requires.txt -> chilicrisp-0.1.0\chilicrisp.egg-info
+copying chilicrisp.egg-info\top_level.txt -> chilicrisp-0.1.0\chilicrisp.egg-info
+copying chilicrisp\integrations\__init__.py -> chilicrisp-0.1.0\chilicrisp\integrations
+copying chilicrisp\integrations\benchexec.py -> chilicrisp-0.1.0\chilicrisp\integrations
+copying chilicrisp\integrations\openevolve.py -> chilicrisp-0.1.0\chilicrisp\integrations
+copying docs\README.md -> chilicrisp-0.1.0\docs
+copying docs\design.md -> chilicrisp-0.1.0\docs
+copying docs\engineering-contract.md -> chilicrisp-0.1.0\docs
+copying docs\evidence.md -> chilicrisp-0.1.0\docs
+copying docs\evolution.md -> chilicrisp-0.1.0\docs
+copying docs\frameworks.md -> chilicrisp-0.1.0\docs
+copying docs\implementation.md -> chilicrisp-0.1.0\docs
+copying docs\invention.md -> chilicrisp-0.1.0\docs
+copying docs\pilot.md -> chilicrisp-0.1.0\docs
+copying docs\protocol.md -> chilicrisp-0.1.0\docs
+copying docs\research.md -> chilicrisp-0.1.0\docs
+copying docs\roadmap.md -> chilicrisp-0.1.0\docs
+copying examples\experiment.json -> chilicrisp-0.1.0\examples
+copying examples\worldgame-ocean-oracle.json -> chilicrisp-0.1.0\examples
+copying schemas\experiment.schema.json -> chilicrisp-0.1.0\schemas
+copying schemas\field-oracle.schema.json -> chilicrisp-0.1.0\schemas
+copying schemas\ocean-oracle.schema.json -> chilicrisp-0.1.0\schemas
+copying schemas\result.schema.json -> chilicrisp-0.1.0\schemas
+copying tests\test_core.py -> chilicrisp-0.1.0\tests
+copying tests\test_fields.py -> chilicrisp-0.1.0\tests
+copying tests\test_integrations.py -> chilicrisp-0.1.0\tests
+copying tests\test_oracles.py -> chilicrisp-0.1.0\tests
+copying tests\test_wsl_setup.py -> chilicrisp-0.1.0\tests
+copying tests\workload.py -> chilicrisp-0.1.0\tests
+copying tools\check-wheel.py -> chilicrisp-0.1.0\tools
+copying tools\setup-linux.sh -> chilicrisp-0.1.0\tools
+copying tools\setup-wsl.ps1 -> chilicrisp-0.1.0\tools
+copying chilicrisp.egg-info\SOURCES.txt -> chilicrisp-0.1.0\chilicrisp.egg-info
+Writing chilicrisp-0.1.0\setup.cfg
+Creating tar archive
+removing 'chilicrisp-0.1.0' (and everything under it)
+running bdist_wheel
+running build
+running build_py
+copying chilicrisp\capture.py -> build\lib\chilicrisp
+copying chilicrisp\controller.py -> build\lib\chilicrisp
+copying chilicrisp\fields.py -> build\lib\chilicrisp
+copying chilicrisp\frontier.py -> build\lib\chilicrisp
+copying chilicrisp\lifecycle.py -> build\lib\chilicrisp
+copying chilicrisp\oracles.py -> build\lib\chilicrisp
+copying chilicrisp\recovery.py -> build\lib\chilicrisp
+copying chilicrisp\runner.py -> build\lib\chilicrisp
+copying chilicrisp\seccomp.py -> build\lib\chilicrisp
+copying chilicrisp\__init__.py -> build\lib\chilicrisp
+copying chilicrisp\integrations\benchexec.py -> build\lib\chilicrisp\integrations
+copying chilicrisp\integrations\openevolve.py -> build\lib\chilicrisp\integrations
+copying chilicrisp\integrations\__init__.py -> build\lib\chilicrisp\integrations
+installing to build\bdist.win-amd64\wheel
+running install
+running install_lib
+creating build\bdist.win-amd64\wheel
+creating build\bdist.win-amd64\wheel\chilicrisp
+copying build\lib\chilicrisp\capture.py -> build\bdist.win-amd64\wheel\.\chilicrisp
+copying build\lib\chilicrisp\controller.py -> build\bdist.win-amd64\wheel\.\chilicrisp
+copying build\lib\chilicrisp\fields.py -> build\bdist.win-amd64\wheel\.\chilicrisp
+copying build\lib\chilicrisp\frontier.py -> build\bdist.win-amd64\wheel\.\chilicrisp
+creating build\bdist.win-amd64\wheel\chilicrisp\integrations
+copying build\lib\chilicrisp\integrations\benchexec.py -> build\bdist.win-amd64\wheel\.\chilicrisp\integrations
+copying build\lib\chilicrisp\integrations\openevolve.py -> build\bdist.win-amd64\wheel\.\chilicrisp\integrations
+copying build\lib\chilicrisp\integrations\__init__.py -> build\bdist.win-amd64\wheel\.\chilicrisp\integrations
+copying build\lib\chilicrisp\lifecycle.py -> build\bdist.win-amd64\wheel\.\chilicrisp
+copying build\lib\chilicrisp\oracles.py -> build\bdist.win-amd64\wheel\.\chilicrisp
+copying build\lib\chilicrisp\recovery.py -> build\bdist.win-amd64\wheel\.\chilicrisp
+copying build\lib\chilicrisp\runner.py -> build\bdist.win-amd64\wheel\.\chilicrisp
+creating build\bdist.win-amd64\wheel\chilicrisp\schemas
+copying build\lib\chilicrisp\schemas\experiment.schema.json -> build\bdist.win-amd64\wheel\.\chilicrisp\schemas
+copying build\lib\chilicrisp\schemas\field-oracle.schema.json -> build\bdist.win-amd64\wheel\.\chilicrisp\schemas
+copying build\lib\chilicrisp\schemas\ocean-oracle.schema.json -> build\bdist.win-amd64\wheel\.\chilicrisp\schemas
+copying build\lib\chilicrisp\schemas\result.schema.json -> build\bdist.win-amd64\wheel\.\chilicrisp\schemas
+copying build\lib\chilicrisp\seccomp.py -> build\bdist.win-amd64\wheel\.\chilicrisp
+copying build\lib\chilicrisp\__init__.py -> build\bdist.win-amd64\wheel\.\chilicrisp
+running install_egg_info
+Copying chilicrisp.egg-info to build\bdist.win-amd64\wheel\.\chilicrisp-0.1.0-py3.12.egg-info
+running install_scripts
+creating build\bdist.win-amd64\wheel\chilicrisp-0.1.0.dist-info\WHEEL
+creating 'dist\\chilicrisp-0.1.0-py3-none-any.whl' and adding 'build\\bdist.win-amd64\\wheel' to it
+adding 'chilicrisp/__init__.py'
+adding 'chilicrisp/capture.py'
+adding 'chilicrisp/controller.py'
+adding 'chilicrisp/fields.py'
+adding 'chilicrisp/frontier.py'
+adding 'chilicrisp/lifecycle.py'
+adding 'chilicrisp/oracles.py'
+adding 'chilicrisp/recovery.py'
+adding 'chilicrisp/runner.py'
+adding 'chilicrisp/seccomp.py'
+adding 'chilicrisp/integrations/__init__.py'
+adding 'chilicrisp/integrations/benchexec.py'
+adding 'chilicrisp/integrations/openevolve.py'
+adding 'chilicrisp/schemas/experiment.schema.json'
+adding 'chilicrisp/schemas/field-oracle.schema.json'
+adding 'chilicrisp/schemas/ocean-oracle.schema.json'
+adding 'chilicrisp/schemas/result.schema.json'
+adding 'chilicrisp-0.1.0.dist-info/METADATA'
+adding 'chilicrisp-0.1.0.dist-info/WHEEL'
+adding 'chilicrisp-0.1.0.dist-info/entry_points.txt'
+adding 'chilicrisp-0.1.0.dist-info/top_level.txt'
+adding 'chilicrisp-0.1.0.dist-info/RECORD'
+removing build\bdist.win-amd64\wheel
+ModuleNotFoundError while trying to load entry-point nosetests: No module named 'imp'
+C:\Users\dcarn\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\setuptools\_distutils\cmd.py:90: SetuptoolsDeprecationWarning: setup.py install is deprecated.
+!!
+
+        ********************************************************************************
+        Please avoid running ``setup.py`` directly.
+        Instead, use pypa/build, pypa/installer or other
+        standards-based tools.
+
+        See https://blog.ganssle.io/articles/2021/10/setup-py-deprecated.html for details.
+        ********************************************************************************
+
+!!
+  self.initialize_options()

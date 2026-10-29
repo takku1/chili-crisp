@@ -1,0 +1,6 @@
+grid=180x80; seasonal solve=0.361s; energy+transport=2.113ms/1800 world seconds; retained ocean field buffers=2.32MiB
+relative budget residuals: water=0.000e0, initial salt=5.985e-16, committed heat=1.971e-15
+season 0: SolveReport { iterations: 496, relative_residual: 8.322843439431255e-8, converged: true }
+season 1: SolveReport { iterations: 408, relative_residual: 7.63001816339364e-8, converged: true }
+season 2: SolveReport { iterations: 496, relative_residual: 7.797956111974608e-8, converged: true }
+season 3: SolveReport { iterations: 512, relative_residual: 9.097663177238481e-8, converged: true }

@@ -1,0 +1,10 @@
+--- baseline/numerics.rs
++++ negative-control/numerics.rs
+@@ -84,6 +84,7 @@
+                 return Err("elliptic solve diverged".into());
+             }
+             if residual <= tolerance {
++                x.iter_mut().for_each(|v| *v *= 0.99);
+                 return Ok(SolveReport {
+                     iterations: iteration,
+                     relative_residual: residual,

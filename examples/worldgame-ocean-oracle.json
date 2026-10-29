@@ -1,0 +1,7 @@
+{
+  "schema_version": "worldgame_ocean_v1",
+  "grid": [180, 80],
+  "seasons": 4,
+  "conservation_abs_max": 1e-12,
+  "solver_residual_max": 1e-7
+}

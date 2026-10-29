@@ -1,0 +1,51 @@
+{
+  "collected_at_utc": "2026-10-29T01:56:40.542588+00:00",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "commands": [
+    {
+      "command": [
+        "C:\\Users\\dcarn\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\python.exe",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-v"
+      ],
+      "exit_code": 0,
+      "output_file": "tests.log"
+    },
+    {
+      "command": [
+        "C:\\Users\\dcarn\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\python.exe",
+        "-m",
+        "chilicrisp.runner",
+        "validate",
+        "examples/experiment.json"
+      ],
+      "exit_code": 0,
+      "output_file": "manifest-validation.log"
+    }
+  ],
+  "source_sha256": {
+    "chilicrisp/__init__.py": "d56edc59370f0f48333ebb2af9e72f0a95b975986089a3d5a678eec74895a74f",
+    "chilicrisp/capture.py": "fd36b2c34c400c25cd768711bf8361eadf745b596b0c7763da4e0d574af852ae",
+    "chilicrisp/controller.py": "28136d03bfb122e579bd14edbe63a5071e31867367ad71c88f43063371c95c0b",
+    "chilicrisp/fields.py": "2d53e05a896eb2c4d66be3c06ac829813b95748367ffbaea7ab2010c385ba989",
+    "chilicrisp/frontier.py": "a9940b2a8d61d1768cec0af76b770bdfa09ce940cd5e2a3b1ee4bc9ebc5eaad4",
+    "chilicrisp/lifecycle.py": "70104e5fe5d3e867ee5e452770a270e058228dfc47c530227a773b59ac7d3561",
+    "chilicrisp/oracles.py": "34b20cc80c7391fd1beebacb07ccf8242ca33c2fa75bc4658584f501d9ffd6e9",
+    "chilicrisp/recovery.py": "5de21fc095bca95a3a3cd8c4c8c5bacbd6d024951e75ada9f4c2535c34e9f1c1",
+    "chilicrisp/runner.py": "06445ff40aab67aac505cb66f6f35b6bb63b46c6b93a5c62ba469d7434f574d2",
+    "chilicrisp/seccomp.py": "4a2f7996e24a71173cf06f012e12b26d8848b21db448a1988ac1189ca981cb8d",
+    "tests/test_core.py": "7c60b067720a329979f3bdd25fdd2739bb16eab9d75cea4d679cbcf211e2c0c0",
+    "tests/test_fields.py": "42b01003cdb8a084edeb33c81c195eea3e5f364beded2479e252bc1334df6baa",
+    "tests/test_oracles.py": "2e819a882f83308ea366c525f0b9bb1dab5926e43897678dde5a597a85bfffd2",
+    "tests/workload.py": "4e92ac02dc405279e52dc33fb13b99cf848237838129f2564961ce55cbece49f",
+    "schemas/experiment.schema.json": "036e5d20adfb54adb1ca514ff829a441ec7e805d43cce891039e0ab5f0d77105",
+    "schemas/field-oracle.schema.json": "3d311b1b047d1de9660c7ba714c4fc81d6d4be923870d1e224f6abfb92a3960a",
+    "schemas/ocean-oracle.schema.json": "75d9b64fe6bc60f45b0e76e43039b1bf9661ad052a49f2350434a132247d0324",
+    "schemas/result.schema.json": "a75644a852503d62838ee4492e4fa1ee7cd3d560c569c56babde01bb637ada7d"
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "source": "Z:\\chilicrisp\\artifacts\\incorrect-solver-20261029T043608Z",
+  "harness_sha256": "0bcd3cdaafcdf235fd1a8dfc7e3359af2ae662604822a44579d283247013cb08",
+  "executable_sha256": "ae50cc2ae448f9382a6fef54ede3bfa4bd0447927b6db732ff5dcddaea1ea0d2",
+  "build_command": [
+    "cargo",
+    "+1.98.0",
+    "build",
+    "--offline",
+    "--release",
+    "--manifest-path",
+    "Z:\\chilicrisp\\artifacts\\field-driver-20261029T043625781331Z\\Cargo.toml"
+  ],
+  "generated_lock_sha256": "50acf27ae57deb14d59dd9a7b924733bb7efe7afdf40b0d4fae33c1a6c1b51a4",
+  "reference": "Z:\\chilicrisp\\reports\\worldgame\\field-checks\\20261029T041033487475Z",
+  "cases": [
+    {
+      "case": [
+        "manufactured",
+        "17"
+      ],
+      "case_index": 3,
+      "outcome": "reject",
+      "exit_code": 0,
+      "field_count": 289,
+      "sha256": "321724ae44c355330f3c0c1261442cfad031560b116f786e5117bbe02d8c80ad",
+      "error": "field 18 differs: 0.03780092079852506 vs 0.038182748283360816",
+      "elapsed_seconds": 0.0470000000204891
+    }
+  ],
+  "tolerance": {
+    "atol": 1e-08,
+    "rtol": 1e-08
+  },
+  "limitations": "Public circulation cases and manufactured shared-solver checks; not evolved transport or empirical Earth validation",
+  "tier": "screen",
+  "outcome": "reject",
+  "error": "field 18 differs: 0.03780092079852506 vs 0.038182748283360816",
+  "source_hash": "cd6869731af21200d1f6c106d446967b99289d24cda9e83094659154a5dfd03b",
+  "source_stable": true,
+  "acceptance_eligible": false,
+  "elapsed_seconds": 6.39100000000326,
+  "build_exit_code": 0
+}

@@ -1,0 +1,31 @@
+test_finite_stream_hashed_without_unbounded_storage (test_core.CaptureTests.test_finite_stream_hashed_without_unbounded_storage) ... ok
+test_real_output_flood_is_bounded (test_core.CaptureTests.test_real_output_flood_is_bounded) ... ok
+test_all_pass_floor_is_not_invention (test_core.FrontierTests.test_all_pass_floor_is_not_invention) ... ok
+test_cap_is_hard (test_core.FrontierTests.test_cap_is_hard) ... ok
+test_confirmation_and_refinement (test_core.FrontierTests.test_confirmation_and_refinement) ... ok
+test_controller_stops_on_infrastructure_failure (test_core.FrontierTests.test_controller_stops_on_infrastructure_failure) ... ok
+test_controller_uses_measured_baseline_and_reserves_trials (test_core.FrontierTests.test_controller_uses_measured_baseline_and_reserves_trials) ... ok
+test_noise_never_becomes_clean_boundary (test_core.FrontierTests.test_noise_never_becomes_clean_boundary) ... ok
+test_timeout_does_not_establish_memory_failure (test_core.FrontierTests.test_timeout_does_not_establish_memory_failure) ... ok
+test_unstable_baseline_never_starts_descent (test_core.FrontierTests.test_unstable_baseline_never_starts_descent) ... ok
+test_failed_cleanup_blocks_next_trial (test_core.LifecycleTests.test_failed_cleanup_blocks_next_trial) ... ok
+test_failed_journal_never_prevents_cleanup (test_core.LifecycleTests.test_failed_journal_never_prevents_cleanup) ... ok
+test_illegal_transition_and_durable_recovery_marker (test_core.LifecycleTests.test_illegal_transition_and_durable_recovery_marker) ... ok
+test_journal_initialization_failure_has_emergency_record (test_core.LifecycleTests.test_journal_initialization_failure_has_emergency_record) ... ok
+test_result_write_failure_preserves_original_error (test_core.LifecycleTests.test_result_write_failure_preserves_original_error) ... ok
+test_unsupported_host_produces_schema_valid_evidence (test_core.LifecycleTests.test_unsupported_host_produces_schema_valid_evidence) ... ok
+test_failed_cleanup_is_recorded_and_recoverable (test_core.NativeIsolationTests.test_failed_cleanup_is_recorded_and_recoverable) ... skipped 'requires Linux, delegated cgroup and explicit fixture rootfs manifest'
+test_native_failure_fixtures (test_core.NativeIsolationTests.test_native_failure_fixtures) ... skipped 'requires Linux, delegated cgroup and explicit fixture rootfs manifest'
+test_cross_field_policy_validation (test_core.SchemaTests.test_cross_field_policy_validation) ... ok
+test_manifest_rejects_network_and_unknown_fields (test_core.SchemaTests.test_manifest_rejects_network_and_unknown_fields) ... ok
+test_fake_zero_fields_and_single_value_change_fail (test_fields.FieldTests.test_fake_zero_fields_and_single_value_change_fail) ... ok
+test_real_values_and_tolerances (test_fields.FieldTests.test_real_values_and_tolerances) ... ok
+test_summaries_truncation_extra_bytes_and_nonfinite_rejected (test_fields.FieldTests.test_summaries_truncation_extra_bytes_and_nonfinite_rejected) ... ok
+test_exactly_one_oracle_mode_is_required (test_oracles.OceanOracleTests.test_exactly_one_oracle_mode_is_required) ... ok
+test_missing_duplicate_unconverged_and_nonfinite_records_fail (test_oracles.OceanOracleTests.test_missing_duplicate_unconverged_and_nonfinite_records_fail) ... ok
+test_timing_and_solver_iteration_changes_are_not_physics_failures (test_oracles.OceanOracleTests.test_timing_and_solver_iteration_changes_are_not_physics_failures) ... ok
+
+----------------------------------------------------------------------
+Ran 26 tests in 0.116s
+
+OK (skipped=2)

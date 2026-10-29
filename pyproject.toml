@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "chilicrisp"
+version = "0.1.0"
+description = "Verified resource-pressure experiments for software discovery"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = ["jsonschema>=4.26,<5"]
+
+[project.optional-dependencies]
+benchexec = ["BenchExec>=3.30,<4; sys_platform == 'linux'"]
+evolution = ["openevolve>=0.3.2,<0.4"]
+dev = ["build>=1.2,<2", "twine>=6,<7", "ruff>=0.14,<1"]
+
+[project.scripts]
+chili-runner = "chilicrisp.runner:main"
+chili-frontier = "chilicrisp.controller:main"
+chili-recover = "chilicrisp.recovery:main"
+chili-benchexec-probe = "chilicrisp.integrations.benchexec:main"
+
+[tool.setuptools.packages.find]
+include = ["chilicrisp*"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+include = ["chilicrisp/integrations/*.py", "tests/test_integrations.py", "setup.py"]
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F"]

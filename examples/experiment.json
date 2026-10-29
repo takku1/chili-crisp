@@ -1,0 +1,38 @@
+{
+  "schema_version": "0.1",
+  "experiment_id": "fixture-pilot",
+  "baseline": {"trials": 3, "margin_fraction": 0.1},
+  "target": {
+    "source_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+    "build_identity": "REPLACE with pinned compiler/runtime and build command",
+    "rootfs": "/srv/chili/frozen-rootfs",
+    "rootfs_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+    "command": ["/usr/bin/python3", "/fixtures/workload.py"]
+  },
+  "workloads": [{
+    "id": "correct",
+    "input": "/srv/chili/empty-input",
+    "input_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "expected_stdout_hash": "dc51b8c96c2d745df3bd5590d990230a482fd247123599548e0632fdbf97fc22",
+    "arguments": ["correct"]
+  }],
+  "isolation": {
+    "backend": "bubblewrap", "cgroup_parent": "/sys/fs/cgroup/chili-delegated",
+    "cache_policy": "qualified_warm", "network": "none", "swap_bytes": 0,
+    "pids": 32, "file_descriptors": 64, "scratch_bytes": 1048576,
+    "seccomp": "pilot_allowlist_v1"
+  },
+  "search": {
+    "initial_budget": 67108864, "minimum_budget": 6291456,
+    "initial_reduction": 0.25, "maximum_reduction": 0.5,
+    "tolerance": 0.05, "confirmation_trials": 10, "max_trials": 30,
+    "page_size": 4096
+  },
+  "limits": {
+    "timeout_seconds": 5, "output_bytes_per_stream": 65536,
+    "experiment_seconds": 300, "candidate_count": 1
+  },
+  "acceptance": {"minimum_memory_improvement_fraction": 0.1, "maximum_latency_regression_fraction": 0.05},
+  "hidden_evaluation": {"confirmation_reference": "sealed:confirmation-v1", "final_reference": "sealed:final-v1"},
+  "evidence_directory": "/srv/chili/evidence"
+}

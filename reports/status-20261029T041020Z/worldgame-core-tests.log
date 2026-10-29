@@ -1,0 +1,237 @@
+   Compiling autocfg v1.5.1
+   Compiling rand_core v0.6.4
+   Compiling glam v0.29.3
+   Compiling rand_xorshift v0.3.0
+   Compiling rand v0.8.8
+   Compiling num-traits v0.2.19
+   Compiling noise v0.9.0
+   Compiling mote-core v0.1.0 (Z:\worldgame\crates\mote-core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 7.25s
+     Running unittests src\lib.rs (artifacts\status-worldgame-tests\debug\deps\mote_core-ef8bf2d7ff2d826f.exe)
+
+running 193 tests
+test climate::tests::equator_seam_report ... ignored, diagnostic sweep across the equator
+test climate::daily_insolation_tests::equinox_integral_and_polar_day_night ... ok
+test climate::tests::atmosphere_falls_with_height_and_humidity_bounded ... ok
+test climate::tests::insolation_day_night_and_temp_lapse ... ok
+test genus::tests::table_covers_wmo_temperate_bands ... ok
+test climate::tests::seasonal_hemisphere_contrast_at_solstice ... ok
+test climate::tests::westerlies_strength_at_lat50 ... ok
+test lithology::tests::basins_ocean_floor_and_rifts ... ok
+test genus::tests::diagnosis_matches_regimes ... ok
+test climate::tests::no_dead_calm_ring_at_lat60 ... ok
+test genus::tests::lcl_rises_as_air_dries ... ok
+test climate::tests::prevailing_wind_matches_wind_en ... ok
+test hydrology::tests::evolution_with_zero_params_is_identity ... ok
+test climate::tests::trades_easterly_westerlies_westerly_doldrums_calm ... ok
+test hydrology::tests::a_flat_grid_produces_no_pits_and_no_nonsense ... ok
+test hydrology::tests::filling_removes_a_pit_and_leaves_the_rest_untouched ... ok
+test lithology::tests::collision_belts_are_metamorphic_cores_with_volcanic_flanks ... ok
+test lithology::tests::properties_are_ordered_and_only_carbonate_is_karst ... ok
+test climate::tests::orographic_lift_is_effective_with_lee_shadow ... ok
+test lithology::tests::interiors_split_into_shield_and_platform_strata ... ok
+test hydrology::tests::malformed_grids_are_rejected_rather_than_producing_garbage ... ok
+test orbit::tests::bad_specs_rejected ... ok
+test hydrology::tests::a_bowl_becomes_one_lake_at_its_spill_level ... ok
+test orbit::tests::declination_hits_solstices_and_equinoxes ... ok
+test orbit::tests::moon_phase_and_tide_hooks ... ok
+test orbit::tests::subsolar_lon_wraps_in_range ... ok
+test planet::sweep_tests::sweep_seeds_for_finder_panics ... ignored, diagnostic sweep, minutes at Earth scale
+test orbit::tests::subsolar_longitude_moves_15deg_per_hour ... ok
+test ocean::tests::disconnected_basins_and_zero_wind_have_no_spurious_flow ... ok
+test hydrology::tests::a_cone_drains_radially_out_to_the_boundary ... ok
+test hydrology::tests::the_sea_is_never_reported_as_a_lake ... ok
+test hydrology::tests::a_uniform_slope_produces_one_channel_not_a_spread ... ok
+test hydrology::tests::carving_never_raises_terrain_and_keeps_channels_draining ... ok
+test numerics::tests::manufactured_dirichlet_solution_and_residual ... ok
+test hydrology::tests::analysis_is_deterministic ... ok
+test hydrology::tests::evolution_incises_channels_and_fills_lakes ... ok
+test planet::tests::elevation_is_deterministic_and_smooth ... ok
+test planet::tests::seed_fanout_is_deterministic_and_distinct ... ok
+test orbit::tests::moon_declination_and_distance_swing_like_earths ... ok
+test planet::tests::climate_history_glaciates_poles_not_equator ... ok
+test planet::tests::moisture_and_temp_are_deterministic_and_ranged ... ok
+test planet::tests::land_within_finds_nearby_shore ... ok
+test climate::tests::rain_windward_and_sea_grows_with_wind_and_sample_deterministic ... ok
+test climate::tests::wind_is_continuous_across_the_equator ... ok
+test planet::tests::some_oceanic_plume_breaks_the_surface_as_an_island ... ok
+test autopilot::tests::estimated_polar_orders_points_of_sail ... ok
+test planet::tests::hadley_moisture_latitude_ordering ... ok
+test planet::tests::sea_level_shifts_elevation_exactly ... ok
+test sailing::tests::aspect_ratio_changes_induced_drag ... ok
+test sailing::tests::dead_run_takes_the_better_part_of_a_minute_to_settle ... ok
+test planet::tests::default_world_has_both_land_and_ocean ... ok
+test sailing::tests::boom_holds_its_tack_through_small_wind_shifts_then_changes_cleanly ... ok
+test sailing::tests::hard_gybe_reports_a_jolt ... ok
+test sailing::tests::every_sail_has_independent_trim_airflow_and_force_feedback ... ok
+test ocean::tests::stommel_rectangular_gyre_matches_analytic_solution_and_intensifies_west ... ok
+test sailing::tests::lift_is_smooth_at_the_luff_edge_and_gusts_average_one ... ok
+test planet::tests::morphology_terms_are_finite_and_bounded ... ok
+test sailing::tests::beam_reach_beats_the_run_in_the_same_wind ... ok
+test sailing::tests::point_of_sail_uses_true_wind_angle_bands ... ok
+test sailing::tests::force_balance_diagnostics_close_at_equilibrium ... ok
+test sailing::tests::beam_reach_in_a_breeze_makes_hull_speed_ish ... ok
+test sailing::tests::dead_run_in_light_air_is_drag_propulsion_near_two_knots ... ok
+test sailing::tests::righting_moment_follows_the_wall_sided_curve ... ok
+test sailing::tests::sheeting_in_revives_a_luffing_main_on_a_beam_reach ... ok
+test sailing::tests::rudder_needs_way_on ... ok
+test sailing::tests::sculling_moves_and_steers_a_becalmed_boat ... ok
+test sailing::tests::report_exposes_the_angle_used_by_the_aerodynamic_model ... ok
+test sailing::tests::suggested_boom_comes_from_the_force_curves ... ok
+test planet::tests::drainage_channel_tracks_field_convergence ... ok
+test sailing::tests::roll_oscillates_at_the_natural_period_and_settles ... ok
+test sailing::tests::trim_advice_names_the_error_and_the_action ... ok
+test sailing::tests::tack_carries_through_with_way_and_stalls_without ... ok
+test sailing::tests::trim_matters_eased_luffs_overtrimmed_stalls ... ok
+test sailing::tests::twist_spills_lift_from_the_head_first ... ok
+test planet::tests::temp_latitude_ordering_and_lapse ... ok
+test sailing::tests::trimming_main_in_from_eased_helps_on_a_broad_reach ... ok
+test tectonics::tests::chains_age_downstream_and_nothing_builds_upstream ... ok
+test surface::tests::dolines_are_bounded_bowls_and_only_some_cells_hold_one ... ok
+test planet::tests::mountains_stay_out_of_deep_ocean ... ok
+test sailing::tests::no_go_zone_and_close_hauled ... ok
+test tectonics::tests::floor_depth_follows_cooling ... ok
+test tectonics::tests::generation_is_deterministic_and_seed_sensitive ... ok
+test planet::tests::same_seed_is_byte_identical ... ok
+test tectonics::tests::hotspots_are_seeded_and_leave_plates_untouched ... ok
+test tests::anchor_numbers_match_spec ... ok
+test tests::default_spec_is_earth_size ... ok
+test tests::destination_east_quarter_adds_90deg_lon ... ok
+test tests::east_north_are_unit_tangent_and_handed ... ok
+test planet::tests::hypsometry_matches_earth_shape ... ok
+test tests::enu_frame_is_right_handed_with_east_on_screen_right ... ok
+test planet::tests::land_fraction_is_ocean_world_like ... ok
+test tests::lat_lon_round_trips ... ok
+test tests::planet_spec_defaults_carry_earth_tunables ... ok
+test tests::gravity_points_inward_and_flips_at_antipode ... ok
+test tests::great_circle_quarter_is_10018km ... ok
+test tides::prediction::tests::sinusoidal_extrema_are_refined_and_flat_tides_have_none ... ok
+test tides::regional::geometry_tests::nested_regions_preserve_parent_coverage_and_crossfade_constants ... ok
+test tides::regional::geometry_tests::regional_projection_round_trips_metres_and_excludes_distant_water ... ok
+test sailing::tests::more_wind_more_speed_but_hull_speed_is_a_wall ... ok
+test sailing::tests::polar_matrix_orders_points_of_sail ... ok
+test planet::tests::rock_provinces_are_varied_and_karst_suppresses_stream_power ... ok
+test planet::tests::fast_elevation_agrees_with_full_on_classification ... ok
+test planet::tests::rain_shadow_sits_downwind_of_the_barrier ... ok
+test tectonics::tests::every_direction_has_a_plate_and_bounded_elevation ... ok
+test planet::tests::glacial_fluvial_coupling_fires_somewhere ... ok
+test autopilot::tests::planner_beats_upwind_instead_of_pointing_at_it ... ok
+test planet::tests::tectonics_shape_elevation_and_can_be_disabled ... ok
+test traversal::tests::hud_line_matches_exact_format ... ok
+test planet::tests::raising_sea_level_drowns_land ... ok
+test planet::tests::relief_spans_mountains_and_trenches ... ok
+test traversal::tests::pitch_rises_with_speed ... ok
+test traversal::tests::trail_discards_close_points ... ok
+test traversal::tests::wave_ride_is_bounded_and_deterministic ... ok
+test traversal::tests::equatorial_loop_fires_circumnavigation_once ... ok
+test traversal::tests::ship_advances_and_counts_odometer ... ok
+test traversal::tests::half_loop_and_out_and_back_do_not_fire ... ok
+test traversal::tests::straight_sailing_keeps_course_on_heading ... ok
+test traversal::tests::ship_beaches_in_shallow_water ... ok
+test traversal::tests::trail_caps_at_max_length ... ok
+test water::tests::ekman_current_turns_with_hemisphere_and_fades_at_equator ... ok
+test water::tests::hydrostatic_pressure_scales_with_depth_and_gravity ... ok
+test warp::tests::warp_breaks_zonal_symmetry ... ok
+test warp::tests::warp_is_deterministic_and_wind_advected ... ok
+test vibes::tests::vortex_core_stormier_than_rim ... ok
+test vibes::tests::vortices_deterministic_and_ocean_biased ... ok
+test planet::tests::carve_terms_capped_to_half_land_height ... ok
+test traversal::tests::wave_ride_pitch_and_roll_follow_the_slope ... ok
+test tectonics::tests::continents_cover_a_minority_and_all_boundary_kinds_occur ... ok
+test vibes::tests::coverage_finite_in_range ... ok
+test vibes::tests::itcz_wetter_than_horse_latitudes ... ok
+test vibes::tests::pack_pads_to_eight_with_zero_radius ... ok
+test water::tests::cpu_gradient_matches_wgsl_math ... ok
+test water::tests::cpu_matches_wgsl_math_on_random_points ... ok
+test water_cycle::tests::dry_catchment_routes_retained_water_to_ocean ... ok
+test water_cycle::tests::dry_or_material_free_discharge_does_not_create_load_at_the_outlet ... ok
+test water::tests::spectrum_is_deterministic_and_ordered ... ok
+test water::tests::spectrum_reconstructs_target_hs ... ok
+test water::tests::stored_salinity_rescales_the_ocean_profile ... ok
+test water::tests::surface_height_inverts_the_horizontal_displacement ... ok
+test autopilot::tests::planner_sails_the_desired_course_when_it_is_sailable ... ok
+test water_cycle::tests::empty_ocean_hypsometry_is_finite_and_dry ... ok
+test water_cycle::tests::atmospheric_vapor_initialization_transfers_existing_water_only ... ok
+test water_cycle::tests::catchment_forcing_partitions_precipitation_and_conserves_mass ... ok
+test water::tests::ocean_profile_has_a_warm_mixed_layer_and_latitude_salinity_pattern ... ok
+test water::tests::salinity_and_temperature_change_water_density ... ok
+test water_cycle::tests::invalid_elapsed_time_does_not_advance_stores ... ok
+test water_cycle::tests::lake_spill_retains_capacity_and_conserves_overflow_in_channels ... ok
+test water_cycle::tests::evaporation_retains_solute_and_overflow_carries_the_concentrated_load ... ok
+test water_cycle::tests::ocean_salt_is_conserved_and_freshwater_and_evaporation_change_salinity ... ok
+test water_cycle::tests::ocean_salt_mixing_conserves_salt_and_equalizes_salinity ... ok
+test water_cycle::tests::mapped_lake_inventory_uses_spherical_cell_area_and_initializes_surface_store ... ok
+test water_cycle::tests::mixed_surface_water_splits_load_between_infiltration_lakes_and_channels ... ok
+test water_cycle::tests::fluxes_cannot_make_a_store_negative_or_create_water ... ok
+test water_cycle::tests::ocean_hypsometry_converts_area_depth_to_volume_and_mass ... ok
+test water_cycle::tests::ocean_hypsometry_inverts_volume_and_mass ... ok
+test water_cycle::tests::groundwater_weathering_and_runoff_deliver_material_with_realized_water ... ok
+test water_cycle::tests::internal_water_cycle_transfers_conserve_mass ... ok
+test water_cycle::tests::repeated_catchment_cycles_balance_material_inputs_and_water_inventory ... ok
+test water_cycle::tests::small_river_load_is_preserved_against_a_planetary_ocean_inventory ... ok
+test weather_bridge::tests::condition_words_and_hud ... ok
+test weather_bridge::tests::formation_converges_and_bounded ... ok
+test water_cycle::tests::suspension_settles_without_water_or_sediment_loss_at_large_timesteps ... ok
+test water_cycle::thermal::tests::density_drives_sinking_and_freshwater_can_suppress_it ... ok
+test weather_bridge::tests::genus_lanes_resolve_profiles ... ok
+test water_cycle::thermal::tests::heating_freezing_and_melting_preserve_water_salt_and_enthalpy ... ok
+test water_cycle::thermal::tests::snow_insulates_conductive_ice_surface_and_layer_resize_conserves_heat ... ok
+test water_cycle::thermal::tests::wind_mixing_and_surface_budget_close_without_secret_temperature_correction ... ok
+test weather_bridge::tests::cloud_weather_carries_pressure_and_genus ... ok
+test weather_bridge::tests::quality_tables_and_cycle ... ok
+test weather_bridge::tests::override_roundtrip_and_bands ... ok
+test weather_bridge::tests::pack_layout_and_counts ... ok
+test weather_bridge::tests::sample_weather_maps_and_deterministic ... ok
+test tectonics::tests::drift_opens_young_oceans_with_ridges_shallower_than_old_floor ... ok
+test planet::tests::orographic_factor_is_neutral_at_sea_and_fires_both_ways_on_land ... ok
+test planet::tests::surface_context_is_ranged_and_plate_aware ... ok
+test ocean::tests::generated_flow_is_conservative_closed_and_seasonally_continuous ... ok
+test water_cycle::tests::generated_planet_ocean_inventory_is_deterministic_and_bounded ... ok
+test weather_bridge::tests::globe_grid_bakes_and_samples ... ok
+test tectonics::tests::convergent_continents_raise_rugged_belts ... ok
+test water_cycle::tests::configured_ocean_volume_solves_mean_sea_level_from_hypsometry ... ok
+test water_cycle::tests::drainage_outlets_partition_planet_and_preserve_initial_water_mass ... ok
+test tectonics::tests::crust_elevation_has_no_cliff_lines ... ok
+test surface::tests::micro_relief_varies_at_metre_scale_on_land_only ... ok
+test rivers::tests::every_land_cell_drains_to_the_sea_and_discharge_grows_downstream ... ok
+test rivers::tests::big_rivers_cut_a_channel_that_holds_water_and_a_valley_beside_it ... ok
+test surface::tests::refinement_preserves_coasts_and_is_seed_deterministic ... ok
+test ocean::transport::tests::transport_conserves_inventory_keeps_uniform_profiles_and_fails_atomically has been running for over 60 seconds
+test planet::tests::wet_loop_is_closed_deterministic_and_wet has been running for over 60 seconds
+test surface::tests::live_sea_level_moves_relative_coast_without_moving_terrain has been running for over 60 seconds
+test surface::tests::relief_wavelengths_do_not_stretch_with_planet_radius has been running for over 60 seconds
+test tides::tests::lunar_tide_has_earthlike_amplitudes_and_amphidromes has been running for over 60 seconds
+test tides::tests::rate_is_the_derivative_of_height has been running for over 60 seconds
+test tides::tests::tides_rise_and_fall_twice_a_day_with_spring_and_neap has been running for over 60 seconds
+test ocean::transport::tests::transport_conserves_inventory_keeps_uniform_profiles_and_fails_atomically ... ok
+test planet::tests::wet_loop_is_closed_deterministic_and_wet ... ok
+test surface::tests::live_sea_level_moves_relative_coast_without_moving_terrain ... ok
+test surface::tests::relief_wavelengths_do_not_stretch_with_planet_radius ... ok
+test tides::tests::rate_is_the_derivative_of_height ... ok
+test tides::tests::lunar_tide_has_earthlike_amplitudes_and_amphidromes ... ok
+test tides::tests::tides_rise_and_fall_twice_a_day_with_spring_and_neap ... ok
+
+test result: ok. 191 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 194.49s
+
+     Running tests\astronomy_reference.rs (artifacts\status-worldgame-tests\debug\deps\astronomy_reference-e9ec303da14257db.exe)
+
+running 10 tests
+test arbitrary_time_seek_is_consistent ... ok
+test daily_insolation_at_the_poles_and_equator ... ok
+test sidereal_and_solar_day_differ_by_3m56s ... ok
+test obliquity_and_solstice_declinations ... ok
+test season_lengths_follow_keplers_second_law ... ok
+test equation_of_time_extremes_match_usno ... ok
+test day_length_at_45n_at_the_solstices ... ok
+test synodic_month_is_29_53_days ... ok
+test perihelion_in_early_january_aphelion_in_early_july ... ok
+test pole_star_altitude_equals_latitude ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+   Doc-tests mote_core
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

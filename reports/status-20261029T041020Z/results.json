@@ -1,0 +1,272 @@
+{
+  "generated_utc": "2026-10-29T04:10:49.798770+00:00",
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "platform": "win32",
+  "versions": {
+    "jsonschema": "4.26.0",
+    "openevolve": "0.3.2",
+    "BenchExec": null,
+    "setuptools": "78.1.0",
+    "build": "1.5.0",
+    "ruff": "0.16.4",
+    "twine": null
+  },
+  "checks": [
+    {
+      "name": "unit-tests",
+      "command": [
+        "C:\\Users\\dcarn\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\python.exe",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-v"
+      ],
+      "exit_code": 0,
+      "seconds": 5.75,
+      "log": "unit-tests.log",
+      "log_sha256": "00bac9cacbb59d8b56aada6ebe6ccd61d2fbc7ce14af79af10e87f4631debcdf",
+      "tail": "t_score (test_integrations.EvaluatorTests.test_failed_unavailable_and_mismatched_trials_cannot_score) ... ok\r\ntest_real_openevolve_result_repeated_workloads_and_frozen_policy (test_integrations.EvaluatorTests.test_real_openevolve_result_repeated_workloads_and_frozen_policy) ... ok\r\ntest_real_runner_unsupported_host_fails_closed (test_integrations.EvaluatorTests.test_real_runner_unsupported_host_fails_closed) ... ok\r\ntest_unsupported_host_never_imports_linux_executor_or_creates_files (test_integrations.ProbeTests.test_unsupported_host_never_imports_linux_executor_or_creates_files) ... ok\r\ntest_exactly_one_oracle_mode_is_required (test_oracles.OceanOracleTests.test_exactly_one_oracle_mode_is_required) ... ok\r\ntest_missing_duplicate_unconverged_and_nonfinite_records_fail (test_oracles.OceanOracleTests.test_missing_duplicate_unconverged_and_nonfinite_records_fail) ... ok\r\ntest_timing_and_solver_iteration_changes_are_not_physics_failures (test_oracles.OceanOracleTests.test_timing_and_solver_iteration_changes_are_not_physics_failures) ... ok\r\ntest_ambiguous_configuration_rejected (test_wsl_setup.WslConfigurationTests.test_ambiguous_configuration_rejected) ... ok\r\ntest_handles_missing_final_newline (test_wsl_setup.WslConfigurationTests.test_handles_missing_final_newline) ... ok\r\ntest_inserts_key_before_next_section (test_wsl_setup.WslConfigurationTests.test_inserts_key_before_next_section) ... ok\r\ntest_new_config_and_idempotence (test_wsl_setup.WslConfigurationTests.test_new_config_and_idempotence) ... ok\r\ntest_preserves_other_settings_comments_and_boot_command (test_wsl_setup.WslConfigurationTests.test_preserves_other_settings_comments_and_boot_command) ... ok\r\n\r\n----------------------------------------------------------------------\r\nRan 38 tests in 5.195s\r\n\r\nOK (skipped=2)\r\n",
+      "tests_run": 38,
+      "tests_skipped": 2
+    },
+    {
+      "name": "adapter-lint",
+      "command": [
+        "C:\\Users\\dcarn\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\python.exe",
+        "-m",
+        "ruff",
+        "check",
+        "--no-cache",
+        "chilicrisp/integrations",
+        "tests/test_integrations.py",
+        "setup.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.563,
+      "log": "adapter-lint.log",
+      "log_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "tail": "All checks passed!\n"
+    },
+    {
+      "name": "manifest",
+      "command": [
+        "C:\\Users\\dcarn\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\python.exe",
+        "-m",
+        "chilicrisp.runner",
+        "validate",
+        "examples/experiment.json"
+      ],
+      "exit_code": 0,
+      "seconds": 0.282,
+      "log": "manifest.log",
+      "log_sha256": "619ba0e65be89cb9abba0b694bdb428d2f8cff75a499582ea1aa87488b54530d",
+      "tail": "Manifest valid; runtime preflight has not run.\r\n"
+    },
+    {
+      "name": "benchexec",
+      "command": [
+        "C:\\Users\\dcarn\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\python.exe",
+        "-m",
+        "chilicrisp.integrations.benchexec",
+        "Z:\\chilicrisp\\reports\\status-20261029T041020Z\\benchexec"
+      ],
+      "exit_code": 1,
+      "seconds": 0.157,
+      "log": "benchexec.log",
+      "log_sha256": "8d4521680ced4f4924eb8e50965ef56bd155f496021084853ca68cea68bc4f61",
+      "tail": "{\r\n  \"status\": \"unsupported\",\r\n  \"reason\": \"BenchExec requires Linux\",\r\n  \"trials\": []\r\n}\r\n"
+    },
+    {
+      "name": "wsl",
+      "command": [
+        "wsl",
+        "--list",
+        "--quiet"
+      ],
+      "exit_code": 4294967295,
+      "seconds": 0.062,
+      "log": "wsl.log",
+      "log_sha256": "49fb5d5d3fd02e60a2b755c9f33a4c9f909380127761f1cebb317456597001b9",
+      "tail": "A\u0000c\u0000c\u0000e\u0000s\u0000s\u0000 \u0000i\u0000s\u0000 \u0000d\u0000e\u0000n\u0000i\u0000e\u0000d\u0000.\u0000 \u0000\r\u0000\n\u0000E\u0000r\u0000r\u0000o\u0000r\u0000 \u0000c\u0000o\u0000d\u0000e\u0000:\u0000 \u0000W\u0000s\u0000l\u0000/\u0000E\u0000n\u0000u\u0000m\u0000e\u0000r\u0000a\u0000t\u0000e\u0000D\u0000i\u0000s\u0000t\u0000r\u0000o\u0000s\u0000/\u0000S\u0000e\u0000r\u0000v\u0000i\u0000c\u0000e\u0000/\u0000E\u0000_\u0000A\u0000C\u0000C\u0000E\u0000S\u0000S\u0000D\u0000E\u0000N\u0000I\u0000E\u0000D\u0000\r\u0000\n\u0000"
+    },
+    {
+      "name": "docker",
+      "command": [
+        "docker",
+        "version",
+        "--format",
+        "{{.Server.Version}}"
+      ],
+      "exit_code": 1,
+      "seconds": 1.0,
+      "log": "docker.log",
+      "log_sha256": "5032aa0d15c2696e897ff9e73086b91b6775e19ab808cd21b72b619c7c04abec",
+      "tail": "\npermission denied while trying to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine\n"
+    },
+    {
+      "name": "rust",
+      "command": [
+        "rustc",
+        "+1.98.0",
+        "--version"
+      ],
+      "exit_code": 0,
+      "seconds": 0.172,
+      "log": "rust.log",
+      "log_sha256": "785f1364c0d5bf077f7bfb885fd4bde99899dfd80ce0fb6226a4527d9b27724c",
+      "tail": "rustc 1.98.0 (88d9e12ae 2026-08-18)\n"
+    },
+    {
+      "name": "pep517-build",
+      "command": [
+        "C:\\Users\\dcarn\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\python.exe",
+        "-m",
+        "build",
+        "--no-isolation"
+      ],
+      "exit_code": 1,
+      "seconds": 0.282,
+      "log": "pep517-build.log",
+      "log_sha256": "b2b31cca28457c6f7c91327b6ac39fdffdb13364eadbed1ffac80f53ee6b3816",
+      "tail": "\r\nTraceback (most recent call last):\r\n  File \"C:\\Users\\dcarn\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python312\\site-packages\\pyproject_hooks\\_impl.py\", line 29, in write_json\r\n    with open(path, \"w\", encoding=\"utf-8\") as f:\r\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\nPermissionError: [Errno 13] Permission denied: 'C:\\\\Users\\\\dcarn\\\\AppData\\\\Local\\\\Temp\\\\tmptomwkwix\\\\input.json'\r\n\r\nDuring handling of the above exception, another exception occurred:\r\n\r\nTraceback (most recent call last):\r\n  File \"<frozen os>\", line 366, in walk\r\nPermissionError: [WinError 5] Access is denied: 'C:\\\\Users\\\\dcarn\\\\AppData\\\\Local\\\\Temp\\\\tmptomwkwix'\r\n\r\nDuring handling of the above exception, another exception occurred:\r\n\r\nTraceback (most recent call last):\r\n  File \"C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\\Lib\\tempfile.py\", line 277, in _dont_follow_symlinks\r\n    func(path, *args)\r\nPermissionError: [WinError 5] Access is denied: 'C:\\\\Users\\\\dcarn\\\\AppData\\\\Local\\\\Temp\\\\tmptomwkwix'\r\n\r\n* Getting build dependencies for sdist...\r\nERROR Backend operation failed: PermissionError(13, 'Access is denied')\r\n"
+    },
+    {
+      "name": "setuptools-build",
+      "command": [
+        "C:\\Users\\dcarn\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\python.exe",
+        "setup.py",
+        "sdist",
+        "bdist_wheel"
+      ],
+      "exit_code": 0,
+      "seconds": 6.0,
+      "log": "setuptools-build.log",
+      "log_sha256": "7c555f4ee2b345a9f2dc8a156dbd4014cb6806fa0fca7495a3b3577b88af4b45",
+      "tail": "-py3-none-any.whl' and adding 'build\\\\bdist.win-amd64\\\\wheel' to it\r\nadding 'chilicrisp/__init__.py'\r\nadding 'chilicrisp/capture.py'\r\nadding 'chilicrisp/controller.py'\r\nadding 'chilicrisp/fields.py'\r\nadding 'chilicrisp/frontier.py'\r\nadding 'chilicrisp/lifecycle.py'\r\nadding 'chilicrisp/oracles.py'\r\nadding 'chilicrisp/recovery.py'\r\nadding 'chilicrisp/runner.py'\r\nadding 'chilicrisp/seccomp.py'\r\nadding 'chilicrisp/integrations/__init__.py'\r\nadding 'chilicrisp/integrations/benchexec.py'\r\nadding 'chilicrisp/integrations/openevolve.py'\r\nadding 'chilicrisp/schemas/experiment.schema.json'\r\nadding 'chilicrisp/schemas/field-oracle.schema.json'\r\nadding 'chilicrisp/schemas/ocean-oracle.schema.json'\r\nadding 'chilicrisp/schemas/result.schema.json'\r\nadding 'chilicrisp-0.1.0.dist-info/METADATA'\r\nadding 'chilicrisp-0.1.0.dist-info/WHEEL'\r\nadding 'chilicrisp-0.1.0.dist-info/entry_points.txt'\r\nadding 'chilicrisp-0.1.0.dist-info/top_level.txt'\r\nadding 'chilicrisp-0.1.0.dist-info/RECORD'\r\nremoving build\\bdist.win-amd64\\wheel\r\nModuleNotFoundError while trying to load entry-point nosetests: No module named 'imp'\r\nC:\\Users\\dcarn\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python312\\site-packages\\setuptools\\_distutils\\cmd.py:90: SetuptoolsDeprecationWarning: setup.py install is deprecated.\r\n!!\r\n\r\n        ********************************************************************************\r\n        Please avoid running ``setup.py`` directly.\r\n        Instead, use pypa/build, pypa/installer or other\r\n        standards-based tools.\r\n\r\n        See https://blog.ganssle.io/articles/2021/10/setup-py-deprecated.html for details.\r\n        ********************************************************************************\r\n\r\n!!\r\n  self.initialize_options()\r\n"
+    },
+    {
+      "name": "wheel-smoke",
+      "command": [
+        "C:\\Users\\dcarn\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\python.exe",
+        "tools/check-wheel.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.375,
+      "log": "wheel-smoke.log",
+      "log_sha256": "8218914bc9fdbecb433a63ae3ef123c73480afbf3bda0d428269ea95ed2a85f4",
+      "tail": "Installed wheel schema validation passed\r\n"
+    },
+    {
+      "name": "twine",
+      "command": [
+        "C:\\Users\\dcarn\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\python.exe",
+        "-m",
+        "twine",
+        "check",
+        "Z:\\chilicrisp\\dist\\chilicrisp-0.1.0-py3-none-any.whl",
+        "Z:\\chilicrisp\\dist\\chilicrisp-0.1.0.tar.gz"
+      ],
+      "exit_code": 1,
+      "seconds": 0.093,
+      "log": "twine.log",
+      "log_sha256": "a1abf5b6776bdb2593d4f5f2e0e556bd9a062d8e7bfe7f59ea6544dbaab9db04",
+      "tail": "C:\\Users\\dcarn\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\python.exe: No module named twine\r\n"
+    },
+    {
+      "name": "worldgame-baseline",
+      "command": [
+        "C:\\Users\\dcarn\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\python.exe",
+        "verification/worldgame/check.py",
+        "--source",
+        "Z:\\chilicrisp\\artifacts\\worldgame-frozen"
+      ],
+      "exit_code": 0,
+      "seconds": 8.25,
+      "log": "worldgame-baseline.log",
+      "log_sha256": "13cd96842184800481f1bc09495ea6f077815e24d41b4afe7ff2918860eca6aa",
+      "tail": "Z:\\chilicrisp\\reports\\worldgame\\field-checks\\20261029T041033487475Z\r\n"
+    },
+    {
+      "name": "worldgame-candidate",
+      "command": [
+        "C:\\Users\\dcarn\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\python.exe",
+        "verification/worldgame/check.py",
+        "--source",
+        "Z:\\worldgame",
+        "--reference",
+        "Z:\\chilicrisp\\reports\\worldgame\\field-checks\\20261029T041033487475Z"
+      ],
+      "exit_code": 0,
+      "seconds": 8.094,
+      "log": "worldgame-candidate.log",
+      "log_sha256": "fe6f9bd24010c0dea676310bba63770ba76e48fa404ad57ebbe3241b0d2c9bba",
+      "tail": "Z:\\chilicrisp\\reports\\worldgame\\field-checks\\20261029T041041743646Z\r\n"
+    },
+    {
+      "name": "worldgame-core-tests",
+      "command": [
+        "cargo",
+        "+1.98.0",
+        "test",
+        "--offline",
+        "--locked",
+        "--manifest-path",
+        "Z:\\worldgame\\Cargo.toml",
+        "-p",
+        "mote-core",
+        "--target-dir",
+        "Z:\\chilicrisp\\artifacts\\status-worldgame-tests"
+      ],
+      "exit_code": 0,
+      "seconds": 202.265,
+      "log": "worldgame-core-tests.log",
+      "log_sha256": "13a6d758ae51492a5052174319b6a7aa09042274e99deecaff239ff1fb8e7766",
+      "tests_passed": 201,
+      "tests_failed": 0,
+      "tests_ignored": 2
+    }
+  ],
+  "source_identities": {
+    "baseline_before": {
+      "mote_core_tree": "5a9fa4c952f31c7af4ece4a54ef0d6ab3d59ea80d3108752fd99db5303552b34",
+      "cargo_toml": "0c6d8804c8ac26b7df9d87c035c135378a08a7d17d75cff76ae850e57d7f33d8",
+      "cargo_lock": "a1f6e07d8cb5bec7e9869db29f00a41eaaa9e38ff947ead8b845d72eb8d75fbf"
+    },
+    "candidate_before": {
+      "mote_core_tree": "5a9fa4c952f31c7af4ece4a54ef0d6ab3d59ea80d3108752fd99db5303552b34",
+      "cargo_toml": "0c6d8804c8ac26b7df9d87c035c135378a08a7d17d75cff76ae850e57d7f33d8",
+      "cargo_lock": "a1f6e07d8cb5bec7e9869db29f00a41eaaa9e38ff947ead8b845d72eb8d75fbf"
+    },
+    "baseline_after": {
+      "mote_core_tree": "5a9fa4c952f31c7af4ece4a54ef0d6ab3d59ea80d3108752fd99db5303552b34",
+      "cargo_toml": "0c6d8804c8ac26b7df9d87c035c135378a08a7d17d75cff76ae850e57d7f33d8",
+      "cargo_lock": "a1f6e07d8cb5bec7e9869db29f00a41eaaa9e38ff947ead8b845d72eb8d75fbf"
+    },
+    "candidate_after": {
+      "mote_core_tree": "5a9fa4c952f31c7af4ece4a54ef0d6ab3d59ea80d3108752fd99db5303552b34",
+      "cargo_toml": "0c6d8804c8ac26b7df9d87c035c135378a08a7d17d75cff76ae850e57d7f33d8",
+      "cargo_lock": "a1f6e07d8cb5bec7e9869db29f00a41eaaa9e38ff947ead8b845d72eb8d75fbf"
+    },
+    "candidate_after_core_tests": {
+      "mote_core_tree": "5a9fa4c952f31c7af4ece4a54ef0d6ab3d59ea80d3108752fd99db5303552b34",
+      "cargo_toml": "0c6d8804c8ac26b7df9d87c035c135378a08a7d17d75cff76ae850e57d7f33d8",
+      "cargo_lock": "a1f6e07d8cb5bec7e9869db29f00a41eaaa9e38ff947ead8b845d72eb8d75fbf"
+    }
+  },
+  "worldgame_reference": "Z:\\chilicrisp\\reports\\worldgame\\field-checks\\20261029T041033487475Z",
+  "artifacts": {
+    "chilicrisp-0.1.0-py3-none-any.whl": "7e93a07b3a8ef2fa444b54a0240357ebca9a4a3b7b837c6eb128851385139875",
+    "chilicrisp-0.1.0.tar.gz": "de8068a0c5dd141c1de8cd280d7173acf4fbace7ba7798593b37c936e7ca5261"
+  },
+  "native_fixture_manifest_configured": false,
+  "candidate_stable_through_all_tests": true,
+  "completed_utc": "2026-10-29T04:15:30.868334+00:00",
+  "worldgame_fields": {
+    "evidence": "Z:\\chilicrisp\\reports\\worldgame\\field-checks\\20261029T041041743646Z\\results.json",
+    "cases": 6,
+    "values": 398723,
+    "max_difference": 0.0
+  }
+}

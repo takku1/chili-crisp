@@ -1,0 +1,19 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "--locked",
+    "--offline",
+    "--release",
+    "-p",
+    "mote-core",
+    "--manifest-path",
+    "Z:/worldgame/Cargo.toml",
+    "--target-dir",
+    "Z:/chilicrisp/artifacts/worldgame-target",
+    "ocean",
+    "--",
+    "--nocapture"
+  ],
+  "exit_code": 0
+}

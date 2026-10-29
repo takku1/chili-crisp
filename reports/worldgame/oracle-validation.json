@@ -1,0 +1,149 @@
+{
+  "kind": "retrospective_output_contract_checks_not_independent_physics_validation",
+  "policy_sha256": "00878b4056ca8c906fefb3776644b303bade7d46e6658d75f6b01097e1a857a9",
+  "comparator_sha256": "34b20cc80c7391fd1beebacb07ccf8242ca33c2fa75bc4658584f501d9ffd6e9",
+  "policy": {
+    "schema_version": "worldgame_ocean_v1",
+    "grid": [
+      180,
+      80
+    ],
+    "seasons": 4,
+    "conservation_abs_max": 1e-12,
+    "solver_residual_max": 1e-07
+  },
+  "results": [
+    {
+      "run": 1,
+      "stdout_sha256": "d79a84152a11141ff597c17d8ec6cf6a0ef3667591d30c1f0ca4d3622c963b4c",
+      "verification": {
+        "pass_checks": true,
+        "grid": [
+          180,
+          80
+        ],
+        "conservation": [
+          0.0,
+          5.985e-16,
+          1.971e-15
+        ],
+        "seasons": [
+          {
+            "season": 0,
+            "iterations": 496,
+            "residual": 8.322843439431255e-08
+          },
+          {
+            "season": 1,
+            "iterations": 408,
+            "residual": 7.63001816339364e-08
+          },
+          {
+            "season": 2,
+            "iterations": 496,
+            "residual": 7.797956111974608e-08
+          },
+          {
+            "season": 3,
+            "iterations": 512,
+            "residual": 9.097663177238481e-08
+          }
+        ],
+        "diagnostic_only": {
+          "seasonal_seconds": 0.365,
+          "transport_ms": 2.248,
+          "selected_buffer_mib": 2.32
+        },
+        "scope": "reported-output invariants; not independent physics validation"
+      }
+    },
+    {
+      "run": 2,
+      "stdout_sha256": "1ab8d8bb589137eff4d6526b5848eb5c3d99dd94390790e10b8618740e369ea2",
+      "verification": {
+        "pass_checks": true,
+        "grid": [
+          180,
+          80
+        ],
+        "conservation": [
+          0.0,
+          5.985e-16,
+          1.971e-15
+        ],
+        "seasons": [
+          {
+            "season": 0,
+            "iterations": 496,
+            "residual": 8.322843439431255e-08
+          },
+          {
+            "season": 1,
+            "iterations": 408,
+            "residual": 7.63001816339364e-08
+          },
+          {
+            "season": 2,
+            "iterations": 496,
+            "residual": 7.797956111974608e-08
+          },
+          {
+            "season": 3,
+            "iterations": 512,
+            "residual": 9.097663177238481e-08
+          }
+        ],
+        "diagnostic_only": {
+          "seasonal_seconds": 0.355,
+          "transport_ms": 2.033,
+          "selected_buffer_mib": 2.32
+        },
+        "scope": "reported-output invariants; not independent physics validation"
+      }
+    },
+    {
+      "run": 3,
+      "stdout_sha256": "3373169fae29ee4d1c164a8a93a1915f9749bb9227ffb635d40f9d8b50b2a374",
+      "verification": {
+        "pass_checks": true,
+        "grid": [
+          180,
+          80
+        ],
+        "conservation": [
+          0.0,
+          5.985e-16,
+          1.971e-15
+        ],
+        "seasons": [
+          {
+            "season": 0,
+            "iterations": 496,
+            "residual": 8.322843439431255e-08
+          },
+          {
+            "season": 1,
+            "iterations": 408,
+            "residual": 7.63001816339364e-08
+          },
+          {
+            "season": 2,
+            "iterations": 496,
+            "residual": 7.797956111974608e-08
+          },
+          {
+            "season": 3,
+            "iterations": 512,
+            "residual": 9.097663177238481e-08
+          }
+        ],
+        "diagnostic_only": {
+          "seasonal_seconds": 0.361,
+          "transport_ms": 2.113,
+          "selected_buffer_mib": 2.32
+        },
+        "scope": "reported-output invariants; not independent physics validation"
+      }
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+"""Verified scarcity experiment primitives."""

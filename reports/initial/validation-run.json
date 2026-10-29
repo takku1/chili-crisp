@@ -1,0 +1,45 @@
+{
+  "collected_at_utc": "2026-10-29T01:32:06.345362+00:00",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "commands": [
+    {
+      "command": [
+        "C:\\Users\\dcarn\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\python.exe",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-v"
+      ],
+      "exit_code": 0,
+      "output_file": "tests.log"
+    },
+    {
+      "command": [
+        "C:\\Users\\dcarn\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\python.exe",
+        "-m",
+        "chilicrisp.runner",
+        "validate",
+        "examples/experiment.json"
+      ],
+      "exit_code": 0,
+      "output_file": "manifest-validation.log"
+    }
+  ],
+  "source_sha256": {
+    "chilicrisp/__init__.py": "d56edc59370f0f48333ebb2af9e72f0a95b975986089a3d5a678eec74895a74f",
+    "chilicrisp/capture.py": "4284d7c2be16dbb442a01997892da937330366de85a075edfbcda6f8d14b393a",
+    "chilicrisp/controller.py": "e482a69a444cfee23ba01b92362dc186516ed17fd71fc49b75b6a4bcb6188333",
+    "chilicrisp/frontier.py": "bfbffe0b8e4ece5eea32eaefe8e0c3a7f72b001dcb1ea7082c0d9d472af2d41f",
+    "chilicrisp/lifecycle.py": "70104e5fe5d3e867ee5e452770a270e058228dfc47c530227a773b59ac7d3561",
+    "chilicrisp/recovery.py": "71cbb8a7ae161b5d97a11e27ec0c092c459a73c05ddfd45299e3a197732a8a00",
+    "chilicrisp/runner.py": "e497554ed5240161207eedf17845d0d7b4d991d4d1a2ac3a32554ee587c44f3e",
+    "chilicrisp/seccomp.py": "4a2f7996e24a71173cf06f012e12b26d8848b21db448a1988ac1189ca981cb8d",
+    "tests/test_core.py": "0febc551c5a6f4a417706eef65acc7b9eff6d5d9f7811937e0870159b1484694",
+    "tests/workload.py": "00083a0364fbe85904f08a8d50e5e449dc414fe710b031945c8bc12f9ca470d2",
+    "schemas/experiment.schema.json": "9587fbeedb7e14ca3a6d4770dec21ce576cf92877d0345802e53b856cc02ec67",
+    "schemas/result.schema.json": "3bd0ded91450f6f57d3d7a089cc7ba491859a2247771f207b97d3fb52007d848"
+  }
+}
