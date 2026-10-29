@@ -111,6 +111,8 @@ def _plan(path):
         raise ValueError("Development sessions require explicit protected correctness files")
     if evaluation.native(plan):
         plan["evaluation"]["manifest"] = str((path.parent / plan["evaluation"]["manifest"]).resolve())
+        if "build" in plan["evaluation"]:
+            plan["evaluation"]["build"]["manifest"] = str((path.parent / plan["evaluation"]["build"]["manifest"]).resolve())
     elif "acceptance" in plan:
         raise ValueError("Sealed acceptance currently requires the native source-only backend")
     evaluation.prepare(plan, project)
@@ -350,7 +352,7 @@ def create(plan_path, directory, *, trusted_local=False):
     with _lock(directory):
         correctness_count = (2 * len(evaluation.manifest(plan)["workloads"]) if evaluation.native(plan)
                              else 2 * (1 + (project["build"] is not None)))
-        _reserve(directory, state, correctness_count + plan["repetitions"], "baseline")
+        _reserve(directory, state, correctness_count + plan["repetitions"] + evaluation.build_reservation(plan), "baseline")
         try:
             source_hash = snapshot(root, source)
             state["champions"][0]["source_hash"] = source_hash
@@ -403,7 +405,7 @@ def submit(directory, candidate, research_path, *, trusted_local=False,
         plan = state["plan"]
         correctness_count = (2 * len(evaluation.manifest(plan)["workloads"]) + 1 if evaluation.native(plan)
                              else 2 * (1 + (state["project"]["build"] is not None)))
-        reserve = correctness_count + 2 * (
+        reserve = correctness_count + evaluation.build_reservation(plan) + 2 * (
             plan["repetitions"] + plan["confirmation_repetitions"])
         _reserve(directory, state, reserve, "candidate")
         generation = {"id": len(state["generations"]) + 1, "parent": champion["id"],
@@ -538,7 +540,7 @@ def rollback(directory, champion_id, reason, *, trusted_local=False):
         champion, source = _champion(directory, target)
         correctness_count = (2 * len(evaluation.manifest(state["plan"])["workloads"])
             if evaluation.native(state["plan"]) else 2 * (1 + (state["project"]["build"] is not None)))
-        _reserve(directory, state, correctness_count
+        _reserve(directory, state, correctness_count + evaluation.build_reservation(state["plan"])
                  + state["plan"]["repetitions"], "rollback")
         action = "rollback-" + state["pending"]["id"]
         try:

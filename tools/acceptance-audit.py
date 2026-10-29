@@ -7,7 +7,7 @@ from pathlib import Path
 from chilicrisp.acceptance import private_path, verify_receipt
 from chilicrisp.contracts import validate
 from chilicrisp.development import identity
-from chilicrisp.runner import file_hash
+from chilicrisp.runner import file_hash, tree_hash
 
 
 def audit(vault, sessions):
@@ -44,6 +44,20 @@ def audit(vault, sessions):
                 raise ValueError("Frozen sealed source identity differs")
         outcomes = Counter()
         conditions = set()
+        compiler_trials = 0
+        known_trials = {item["result"]["trial_id"] for item in report["records"]}
+        if "build" in policy:
+            from chilicrisp.build import verify_cached
+            compiler = policies[0].parent / policy["build"]["manifest"]
+            if file_hash(compiler) != policy["build"]["manifest_sha256"]:
+                raise ValueError("Sealed compiler manifest differs")
+            for cache in (path.parent / "build-cache").iterdir():
+                record = json.loads((cache / "build-record.json").read_text())
+                source = next(path.parent / name for name in ("baseline", "candidate")
+                              if tree_hash(path.parent / name) == record["source_tree_hash"])
+                verify_cached(source, compiler, cache, policy["build"]["memory_budget"])
+                compiler_trials += len(record["trials"])
+                known_trials.update(record["trials"])
         for item in report["records"]:
             record = item["result"]
             validate(record, "result")
@@ -69,7 +83,11 @@ def audit(vault, sessions):
             outcomes[record["outcome"]] += 1
         if len(conditions) != 1:
             raise ValueError("Execution policies differ between variants")
-        results.append({"verdict": verdict, "trials": len(report["records"]), "outcomes": dict(outcomes),
+        actual_trials = {p.parent.name for p in (path.parent / "evidence").glob("*/result.json")}
+        if actual_trials != known_trials or len(actual_trials) > policy["max_trials"]:
+            raise ValueError("Compiler/runtime trial accounting differs")
+        results.append({"verdict": verdict, "trials": len(actual_trials), "runtime_trials": len(report["records"]),
+                        "compiler_trials": compiler_trials, "runtime_outcomes": dict(outcomes),
                         "medians": report.get("medians"), "transfer_budget": policy["transfer_budget"]})
     return results
 

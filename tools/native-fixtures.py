@@ -88,6 +88,13 @@ def provision(*, worker_name="native-worker.py", prepare=None, extra_requirement
         if session.exists():
             shutil.copytree(session, destination / session.name)
             shutil.copy2(lab / (name + "-receipt.json"), destination / (name + "-receipt.json"))
+    if (lab / "build-validation").exists():
+        shutil.copytree(lab / "build-validation", destination / "build-validation")
+        shutil.copy2(lab / "toolchain-version.txt", destination / "toolchain-version.txt")
+        if (lab / "compiled-development-session").exists():
+            shutil.copytree(lab / "compiled-development-session", destination / "compiled-development-session")
+        if (lab / "compiled-receipt.json").exists():
+            shutil.copy2(lab / "compiled-receipt.json", destination / "compiled-receipt.json")
     print(json.dumps({"lab": str(lab), "evidence": str(destination),
                       "exit_code": completed.returncode}, indent=2))
     return completed.returncode

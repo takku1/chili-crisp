@@ -19,9 +19,10 @@ Requests and per-command output already remain in session run directories.
 
 ## Next increments, in order
 
-1. Extend the [implemented source-only native bridge](native-development.md) with
-   isolated compilation and a bounded real-model two-generation experiment.
-   Shrinking enforced budgets now pass a deterministic controller fixture.
+1. Run a bounded real-model two-generation experiment on the
+   [native bridge](native-development.md). Isolated C compilation now passes a
+   [native fixture](../reports/isolated-build-validation.md); extend it to a
+   lockfile-pinned offline dependency toolchain (e.g. Cargo) next.
 2. Harden deployment of the [owner-operated sealed gate](sealed-acceptance.md)
    across separate accounts/hosts and independently reproduce its results.
    Keep public feedback separate from private assets and detailed failures.

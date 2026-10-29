@@ -4,10 +4,10 @@ The existing `dev init/request/submit/run/rollback/recover` controller now suppo
 an opt-in `linux_cgroup` evaluation backend. It uses the existing Linux runner;
 there is no unconfined fallback. Default evaluation remains trusted local.
 
-This first bridge supports source-only programs executed by an owner-provisioned
-runtime and public correctness driver. It rejects any project build command.
-Compilation, dependency installation and generated build hooks are unsupported;
-this is not a general isolated build service or sealed acceptance service.
+The bridge runs source programs through an owner-provisioned runtime and public
+correctness driver, or compiles them first in an
+[isolated compiler root](#isolated-compilation). It rejects any project build
+command. Dependency installation and generated build hooks are unsupported.
 
 ## Owner provisioning and policy
 
@@ -92,8 +92,35 @@ native recovery succeeds. Measurement summaries and agent artifacts remain in
 cache policy. `enforced_budget_bytes` is observed survival at a limit, not an
 exact minimum requirement. Public retention leaves `sealed: not_run` and
 `production: not_accepted`. An optional [owner-operated sealed gate](sealed-acceptance.md)
-can subsequently mark a policy-verified champion. Isolated compilation, broader
-normal-hardware reproduction and controlled AI comparison remain separate work.
+can subsequently mark a policy-verified champion. Broader normal-hardware
+reproduction and controlled AI comparison remain separate work.
+
+## Isolated compilation
+
+Add an optional `build` object to `evaluation`:
+
+```json
+"build": {"manifest": "/srv/chili/owner/compiler.json", "memory_budget": 536870912}
+```
+
+The compiler manifest is a normal experiment manifest with its own frozen
+toolchain rootfs, `seccomp: "pilot_build_v1"`, no source mount and exactly one
+workload whose oracle is `build_elf_v1`. Its command reads source from
+`/candidate` and writes one ELF64 x86_64 executable to stdout. The program
+runtime manifest must keep `pilot_allowlist_v1`, and the two roots must be
+disjoint.
+
+Each source is compiled twice; the export is retained only if both are
+byte-identical and pass the ELF size/format policy. The retained artifact is
+mounted read-only at `/candidate` in the program runtime. Builds are cached per
+source and compiler manifest under the session; a cache entry is re-verified
+before reuse and a tampered entry rejects rather than rebuilding. Compilation
+reserves four extra trials per baseline/candidate evaluation. Run
+`chilicrisp build MANIFEST SOURCE OUTPUT --budget BYTES` to compile standalone.
+
+Only one GCC C toolchain is validated; see
+[validation](../reports/isolated-build-validation.md). Run
+`sudo python3 tools/native-build.py` to reproduce the fixture.
 
 ## Reproduce the integration fixture
 

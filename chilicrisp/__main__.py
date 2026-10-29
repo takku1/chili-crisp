@@ -17,12 +17,12 @@ from . import development
 
 def main(argv=None):
     argv = list(sys.argv[1:] if argv is None else argv)
-    if argv and argv[0] in {"runner", "frontier", "recover"}:
-        from . import controller, recovery, runner
+    if argv and argv[0] in {"runner", "frontier", "recover", "build"}:
+        from . import controller, recovery, runner, build
         old = sys.argv
         try:
             sys.argv = [f"chilicrisp {argv[0]}", *argv[1:]]
-            return {"runner": runner.main, "frontier": controller.main, "recover": recovery.main}[argv[0]]()
+            return {"runner": runner.main, "frontier": controller.main, "recover": recovery.main, "build": build.main}[argv[0]]()
         finally:
             sys.argv = old
     parser = argparse.ArgumentParser(description=__doc__)
@@ -85,7 +85,7 @@ def main(argv=None):
     undo.add_argument("champion")
     undo.add_argument("--reason", required=True)
     undo.add_argument("--trusted-local", action="store_true")
-    for name in ("runner", "frontier", "recover"):
+    for name in ("runner", "frontier", "recover", "build"):
         commands.add_parser(name, help="Forward to existing experiment command")
     args = parser.parse_args(argv)
     exit_code = 0

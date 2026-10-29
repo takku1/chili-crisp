@@ -23,6 +23,8 @@ def native(plan):
 def manifest(plan):
     value = json.loads(Path(plan["evaluation"]["manifest"]).read_text(encoding="utf-8"))
     validate(value, "experiment")
+    if value["isolation"]["seccomp"] != "pilot_allowlist_v1":
+        raise ValueError("Native program evaluation requires the runtime seccomp profile")
     if "source_mount" in value["target"]:
         raise ValueError("The development controller owns the candidate mount")
     ids = [workload["id"] for workload in value["workloads"]]
@@ -38,6 +40,13 @@ def identities(plan):
     from . import runner, seccomp, capture, lifecycle, cpu, fields, oracles
     for module in (runner, seccomp, capture, lifecycle, cpu, fields, oracles):
         result[module.__name__] = file_hash(module.__file__)
+    if "build" in plan["evaluation"]:
+        from . import build
+        config = plan["evaluation"]["build"]
+        compiler, _ = build.load_policy(config["manifest"])
+        result.update(build_adapter=file_hash(build.__file__), build_manifest=file_hash(config["manifest"]),
+            toolchain=compiler["target"]["rootfs_hash"], build_input=compiler["workloads"][0]["input_hash"],
+            export_policy=compiler["workloads"][0]["oracle"]["policy_hash"])
     if result["runtime"] != value["target"]["rootfs_hash"]:
         raise ValueError("Native runtime identity mismatch")
     for workload in value["workloads"]:
@@ -81,6 +90,35 @@ def prepare(plan, project):
         raise ValueError("Native runtime requires an empty real /candidate directory")
     identities(plan)
     preflight(value, plan["evaluation"]["initial_budget"])
+    if "build" in plan["evaluation"]:
+        from .build import load_policy
+        config = plan["evaluation"]["build"]
+        compiler, _ = load_policy(config["manifest"])
+        if config["memory_budget"] % compiler["search"]["page_size"]:
+            raise ValueError("Compiler memory budget must be page aligned")
+        compiler_root = Path(compiler["target"]["rootfs"]).resolve()
+        runtime = Path(value["target"]["rootfs"]).resolve()
+        if compiler_root.is_relative_to(runtime) or runtime.is_relative_to(compiler_root):
+            raise ValueError("Compiler and program runtime must be separate frozen roots")
+        preflight(compiler, config["memory_budget"])
+
+
+def build_reservation(plan):
+    return 4 if "build" in plan.get("evaluation", {}) else 0
+
+
+def compiled_source(plan, source, evidence_root, deadline):
+    from .build import compile_candidate, verify_cached
+    import hashlib
+    config = plan["evaluation"]["build"]
+    key = hashlib.sha256((tree_hash(source) + file_hash(config["manifest"])).encode()).hexdigest()
+    output = Path(evidence_root).parent / "build-cache" / key
+    output.parent.mkdir(parents=True, exist_ok=True)
+    if not output.exists():
+        compile_candidate(source, config["manifest"], output, config["memory_budget"], deadline,
+                          evidence_root=evidence_root)
+    artifact = verify_cached(source, config["manifest"], output, config["memory_budget"])
+    return artifact, file_hash(output / "build-record.json")
 
 
 def ensure_clean(root):
@@ -103,7 +141,11 @@ def trial(plan, source, output, budget, deadline, workload=None, *, evidence_roo
     value = copy.deepcopy(manifest(plan))
     source = Path(source).resolve()
     digest = tree_hash(source)
-    value["target"].update(source_hash=digest, source_mount={"path": str(source), "tree_hash": digest})
+    mounted = source
+    if "build" in plan["evaluation"]:
+        mounted, build_record = compiled_source(plan, source, evidence_root or output, deadline)
+        value["target"]["build_record_sha256"] = build_record
+    value["target"].update(source_hash=digest, source_mount={"path": str(mounted), "tree_hash": tree_hash(mounted)})
     value["evidence_directory"] = str(Path(evidence_root or output).resolve())
     result = run_trial(value, workload or plan["evaluation"]["benchmark_workload"],
                        int(budget), experiment_deadline=deadline)

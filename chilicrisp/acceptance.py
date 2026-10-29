@@ -35,10 +35,10 @@ def canonical(value):
 
 
 def implementation():
-    from . import runner, seccomp, capture, lifecycle, cpu, fields, oracles, development, project, contracts
+    from . import runner, seccomp, capture, lifecycle, cpu, fields, oracles, development, project, contracts, build
     values = {"acceptance": file_hash(__file__), "evaluation": file_hash(evaluation.__file__),
               "cryptography": importlib.metadata.version("cryptography")}
-    for module in (runner, seccomp, capture, lifecycle, cpu, fields, oracles, development, project, contracts):
+    for module in (runner, seccomp, capture, lifecycle, cpu, fields, oracles, development, project, contracts, build):
         values[module.__name__] = file_hash(module.__file__)
     return hashlib.sha256(canonical(values)).hexdigest()
 
@@ -120,6 +120,20 @@ def grade(request, policy_path, key_path, vault):
     runtime = Path(manifest["target"]["rootfs"]).resolve()
     if vault.is_relative_to(runtime):
         raise ValueError("Sealed assets cannot be inside the candidate runtime")
+    if "build" in policy:
+        from .build import load_policy
+        compiler_path = private_path(policy_path.parent / policy["build"]["manifest"], vault)
+        if file_hash(compiler_path) != policy["build"]["manifest_sha256"]:
+            raise ValueError("Sealed compiler manifest identity mismatch")
+        compiler, _ = load_policy(compiler_path)
+        compiler_root = Path(compiler["target"]["rootfs"]).resolve()
+        if vault.is_relative_to(compiler_root):
+            raise ValueError("Sealed assets cannot be inside the compiler runtime")
+        if compiler_root.is_relative_to(runtime) or runtime.is_relative_to(compiler_root):
+            raise ValueError("Sealed compiler and program runtime must be separate")
+        if policy["build"]["memory_budget"] % compiler["search"]["page_size"]:
+            raise ValueError("Sealed compiler budget must be page aligned")
+        plan["evaluation"]["build"] = {"manifest": str(compiler_path), "memory_budget": policy["build"]["memory_budget"]}
     for item in manifest["workloads"]:
         private_path(item["input"], vault)
         if "oracle" in item:
@@ -128,7 +142,7 @@ def grade(request, policy_path, key_path, vault):
             if "reference_path" in data:
                 private_path(data["reference_path"], vault)
     pinned = evaluation.identities(plan)
-    required = 2 * len(manifest["workloads"]) + 2 + 2 * policy["repetitions"]
+    required = 2 * len(manifest["workloads"]) + 2 + 2 * policy["repetitions"] + evaluation.build_reservation(plan)
     if required > policy["max_trials"]:
         raise ValueError("Acceptance trial reservation exceeds policy")
     # The vault is the shared registry: changing output paths cannot buy retries.
@@ -214,6 +228,10 @@ def grade(request, policy_path, key_path, vault):
         if evaluation.identities(plan) != pinned or file_hash(policy_path) != expected["policy_sha256"]:
             raise ValueError("Sealed evaluator assets changed during evaluation")
         evaluation.ensure_clean(work / "evidence")
+        executed_trials = len(list((work / "evidence").glob("*/result.json")))
+        if executed_trials > policy["max_trials"]:
+            raise ValueError("Sealed build/run trial budget exceeded")
+        report["executed_trials"] = executed_trials
         body = {name: expected[name] for name in ("campaign", "lineage_id", "baseline_source_hash", "candidate_source_hash", "policy_sha256", "evaluator_sha256")}
         body.update(schema_version="0.1", verdict="passed" if eligible else "rejected")
         receipt = sign(body, key)

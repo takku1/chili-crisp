@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "format", "maximum_bytes"],
+  "properties": {
+    "schema_version": {"const": "0.1"},
+    "format": {"const": "elf64-lsb-x86_64"},
+    "maximum_bytes": {"type": "integer", "minimum": 64, "maximum": 67108864}
+  }
+}

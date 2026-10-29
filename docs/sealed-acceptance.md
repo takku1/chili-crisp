@@ -65,7 +65,10 @@ cryptography package version. Freeze a development plan's `acceptance` object:
 ```
 
 This is a field illustration, not a schema-valid complete plan. Only native
-source-only sessions support this gate. Keep hidden policy content outside the
+sessions support this gate. For compiled sessions, add a private policy
+`build` object (`manifest`, `manifest_sha256`, `memory_budget`); the grader
+recompiles both versions from its own vault copy of the compiler manifest and
+counts compiler trials against `max_trials`. Keep hidden policy content outside the
 public plan; the public fields pin its identity without publishing workloads.
 
 ## Freeze, grade, import

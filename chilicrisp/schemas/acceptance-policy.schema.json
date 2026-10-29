@@ -7,6 +7,12 @@
     "campaign": {"type": "string", "minLength": 1, "maxLength": 128},
     "manifest": {"type": "string", "minLength": 1},
     "manifest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "build": {
+      "type": "object", "additionalProperties": false, "required": ["manifest", "manifest_sha256", "memory_budget"],
+      "properties": {"manifest": {"type": "string", "minLength": 1},
+        "manifest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "memory_budget": {"type": "integer", "minimum": 4096}}
+    },
     "benchmark_workload": {"type": "string", "minLength": 1},
     "transfer_budget": {"type": "integer", "minimum": 4096},
     "repetitions": {"type": "integer", "minimum": 3, "maximum": 20},

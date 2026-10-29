@@ -243,6 +243,8 @@ def run_trial(manifest, workload_id, budget, experiment_deadline=None):
                 raise RuntimeError("runtime needs an empty real /candidate directory")
             result["preflight_record"]["source_mount"] = {
                 "tree_hash": source_mount["tree_hash"], "destination": "/candidate", "read_only": True}
+            if "build_record_sha256" in manifest["target"]:
+                result["preflight_record"]["build_record_sha256"] = manifest["target"]["build_record_sha256"]
             result["candidate_hash"] = hashlib.sha256((manifest["target"]["rootfs_hash"] +
                 source_mount["tree_hash"]).encode()).hexdigest()
         for mountpoint in ("proc", "dev", "tmp"):
@@ -254,6 +256,7 @@ def run_trial(manifest, workload_id, budget, experiment_deadline=None):
             raise RuntimeError("input identity mismatch")
         oracle_policy = None
         field_reference = None
+        build_mode = False
         if "oracle" in workload:
             oracle = workload["oracle"]
             policy_path = Path(oracle["policy_path"]).resolve()
@@ -263,7 +266,10 @@ def run_trial(manifest, workload_id, budget, experiment_deadline=None):
                 raise RuntimeError("oracle policy identity mismatch")
             oracle_policy = json.loads(policy_path.read_text())
             field_mode = oracle["kind"] == "worldgame_fields_v1"
-            validate(oracle_policy, "field-oracle" if field_mode else "ocean-oracle")
+            build_mode = oracle["kind"] == "build_elf_v1"
+            if build_mode and manifest["isolation"]["seccomp"] != "pilot_build_v1":
+                raise RuntimeError("Build artifact grading requires the build worker profile")
+            validate(oracle_policy, "build-artifact" if build_mode else "field-oracle" if field_mode else "ocean-oracle")
             if field_mode:
                 from .fields import decode
                 reference_path = Path(oracle_policy["reference_path"]).resolve()
@@ -278,10 +284,10 @@ def run_trial(manifest, workload_id, budget, experiment_deadline=None):
                 if len(field_reference) != oracle_policy["field_count"]:
                     raise RuntimeError("reference field count mismatch")
             result["preflight_record"]["oracle"] = dict(
-                policy_hash=oracle["policy_hash"], comparator_hash=file_hash(ROOT / "chilicrisp" / ("fields.py" if field_mode else "oracles.py")))
+                policy_hash=oracle["policy_hash"], comparator_hash=file_hash(ROOT / "chilicrisp" / ("build.py" if build_mode else "fields.py" if field_mode else "oracles.py")))
         from .seccomp import compile_filter
         import resource
-        with compile_filter() as seccomp:
+        with (compile_filter("pilot_build_v1") if manifest["isolation"]["seccomp"] == "pilot_build_v1" else compile_filter()) as seccomp:
             life.move("PREFLIGHT_VALIDATED")
             cgroup.mkdir()
             configured = True
@@ -381,7 +387,11 @@ def run_trial(manifest, workload_id, budget, experiment_deadline=None):
                     else:
                         from .oracles import check_ocean
                         try:
-                            if field_reference is not None:
+                            if build_mode:
+                                from .build import check_elf
+                                check_elf((directory / "stdout").read_bytes(), oracle_policy["maximum_bytes"])
+                                verification = dict(pass_checks=True, scope="bounded ELF export; not program correctness")
+                            elif field_reference is not None:
                                 from .fields import decode, compare
                                 actual = decode((directory / "stdout").read_bytes())
                                 error = compare(actual, field_reference, oracle_policy["atol"], oracle_policy["rtol"])

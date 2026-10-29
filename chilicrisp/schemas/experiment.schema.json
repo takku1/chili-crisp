@@ -20,6 +20,7 @@
       "properties": {
         "source_hash": {"$ref": "#/$defs/hash"},
         "build_identity": {"type": "string", "minLength": 1},
+        "build_record_sha256": {"$ref": "#/$defs/hash"},
         "rootfs": {"type": "string", "minLength": 1},
         "rootfs_hash": {"$ref": "#/$defs/hash"},
         "command": {"type": "array", "minItems": 1, "items": {"type": "string"}}
@@ -48,7 +49,7 @@
             "type": "object", "additionalProperties": false,
             "required": ["kind", "policy_path", "policy_hash"],
             "properties": {
-              "kind": {"enum": ["worldgame_ocean_v1", "worldgame_fields_v1"]},
+              "kind": {"enum": ["worldgame_ocean_v1", "worldgame_fields_v1", "build_elf_v1"]},
               "policy_path": {"type": "string", "minLength": 1},
               "policy_hash": {"$ref": "#/$defs/hash"}
             }
@@ -76,7 +77,7 @@
         "pids": {"type": "integer", "minimum": 1, "maximum": 1024},
         "file_descriptors": {"type": "integer", "minimum": 16, "maximum": 4096},
         "scratch_bytes": {"type": "integer", "minimum": 4096},
-        "seccomp": {"const": "pilot_allowlist_v1"}
+        "seccomp": {"enum": ["pilot_allowlist_v1", "pilot_build_v1"]}
       }
     },
     "search": {
