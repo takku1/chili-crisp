@@ -103,6 +103,21 @@ write outside their workspaces because local mode is unconfined.
 
 ## Measure under pressure
 
+The development controller also accepts an opt-in `evaluation` object with
+`backend: linux_cgroup`, an owner-provided experiment `manifest`,
+`benchmark_workload` ID and `initial_budget`. Use objective
+`enforced_budget_bytes` and explicitly page-aligned `quantum`/`minimum_target`.
+This native bridge rejects project builds and runs source only in a frozen
+runtime, mounted read-only at `/candidate`; all candidate correctness workloads
+and confirmation must pass at the new enforced limit. It records incumbent
+pressure diagnostics and derives subsequent limits from accepted survival budgets.
+Provision the runtime/oracles outside candidate source. Host benchmark/test argv
+are unused here; `dev run --trusted-local` still trusts the selected agent
+transport on the host. Native evaluation does not isolate an unrestricted agent
+or compile untrusted build scripts. Retention remains experimental, with sealed
+and production acceptance explicitly unset. See the installed framework's
+`docs/native-development.md` when working from its checkout.
+
 For supported Linux pressure trials, use an owner-prepared experiment manifest,
 frozen rootfs, public input/oracle, and delegated cgroup parent. These are distinct
 from the local project configuration. Do not construct a rootfs by mounting the

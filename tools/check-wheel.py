@@ -1,9 +1,11 @@
 """Validate the built wheel's schemas outside the source tree, without installing it."""
 import argparse
+import shutil
 from pathlib import Path
 import subprocess
 import sys
 import tarfile
+import uuid
 import zipfile
 
 root = Path(__file__).resolve().parents[1]
@@ -36,8 +38,6 @@ with zipfile.ZipFile(wheels[0]) as archive:
         raise SystemExit("Wheel unexpectedly includes workspace/development artifacts")
 # zipimport loads code from the wheel; JSON schemas need extraction because the
 # runner's contract also hashes real comparator files on disk.
-import shutil
-import uuid
 directory = root / ("test-artifacts-" + uuid.uuid4().hex)
 directory.mkdir()
 try:

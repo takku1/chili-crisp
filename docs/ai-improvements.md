@@ -19,11 +19,9 @@ Requests and per-command output already remain in session run directories.
 
 ## Next increments, in order
 
-1. Connect the native evaluator to the general controller. Pin evaluator, driver,
-   input and source identities; reserve costs before launch; propagate cancellation
-   and cleanup failures; reject unsupported backends before running candidate code.
-   Keep owner provisioning separate from agent-writable source. Demonstrate actual
-   shrinking enforced budgets as a distinct experiment from measured targets.
+1. Extend the [implemented source-only native bridge](native-development.md) with
+   isolated compilation and a bounded real-model two-generation experiment.
+   Shrinking enforced budgets now pass a deterministic controller fixture.
 2. Add sealed acceptance with an owner-controlled boundary and withheld workloads.
    Public feedback and agent context must not include sealed inputs or detailed
    failures. Keep experimental retention separate from verified acceptance.
@@ -48,9 +46,9 @@ need. Local JSON session history is sufficient for this bounded memory feature.
 
 ## Validation scope
 
-Tests cover bounded history, exclusion of unmeasured research claims, repeat
-labelling and actual remeasurement after identical-source rejection. This change
-does not run another model experiment, integrate native `dev run`, implement a
-sealed service or establish that compact memory improves optimization quality.
-Work was unguarded because this workspace exposes `.git` as read-only; existing
-uncommitted files were preserved.
+The original memory increment's tests cover bounded history, exclusion of unmeasured research claims, repeat
+labelling and actual remeasurement after identical-source rejection. That increment
+did not run another model experiment or establish that compact memory improves
+optimization quality. Its work was unguarded under the managed `.git` restriction.
+Subsequent [native bridge validation](../reports/native-development-validation.md)
+exercises `dev run` and shrinking enforced limits. Sealed acceptance remains open.

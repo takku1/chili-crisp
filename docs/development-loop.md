@@ -1,5 +1,9 @@
 # Measured development loop
 
+For enforced Linux memory targets through these same commands, see the
+[native backend](native-development.md). Its source-only execution contract
+requires an owner-provisioned runtime and oracles.
+
 Chili Crisp's default outer loop runs build, correctness and benchmark commands
 on the current machine. It does not create a VM or require a Linux rootfs. The
 AI agent owns research and source changes; the deterministic controller owns
@@ -186,7 +190,9 @@ hidden acceptance. No sealed-grader endpoint is implemented yet.
 The [bounded real model pilot](../reports/model-source-pilot.md) demonstrates a
 source-only proposal adapter followed by protected native evaluation. It remains
 a separate harness; generic `dev run` still uses the trusted local execution
-contract above. Full native-backend integration is the next controller increment.
+contract above unless the opt-in native backend is selected. The subsequent
+[native controller fixture](../reports/native-development-validation.md) exercises
+that bridge with scripted proposals and shrinking enforced budgets.
 
 ## Locus fit
 

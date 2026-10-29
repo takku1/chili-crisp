@@ -78,6 +78,11 @@ def provision(*, worker_name="native-worker.py", prepare=None):
             shutil.copy2(lab / name, destination / name)
     if (lab / "evidence").exists():
         shutil.copytree(lab / "evidence", destination / "evidence")
+    if (lab / "development-session").exists():
+        shutil.copytree(lab / "development-session", destination / "development-session")
+    for name in ("development-plan.json", "development-manifest.json"):
+        if (lab / name).exists():
+            shutil.copy2(lab / name, destination / name)
     print(json.dumps({"lab": str(lab), "evidence": str(destination),
                       "exit_code": completed.returncode}, indent=2))
     return completed.returncode

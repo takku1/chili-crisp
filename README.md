@@ -19,8 +19,10 @@ The [measured development loop](docs/development-loop.md) runs without a VM:
 baseline, research/proposal, build/test, repeated measurement, experimental
 retention, and a tighter next target. Run `python tools/demo-development.py`
 for a two-generation integration example.
+The opt-in [native development backend](docs/native-development.md) connects the
+same controller to enforced Linux memory budgets for source-only candidates.
 See [AI development priorities](docs/ai-improvements.md) for bounded experiment
-memory and the next native-evaluation, sealed-grading and comparison increments.
+memory and the next isolated-build, sealed-grading and comparison increments.
 
 The broader target includes CPU, time, storage, I/O, process, network, GPU, and
 energy constraints. See [resource capabilities and build sequence](docs/resources.md)

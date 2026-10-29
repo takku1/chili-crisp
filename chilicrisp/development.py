@@ -21,13 +21,13 @@ import psutil
 
 from .contracts import validate
 from .evidence import verify
-from .measure import METRICS, METRIC_QUALITY, environment, measure
+from .measure import METRIC_QUALITY, environment, measure
 from .project import EXCLUDED, compare, execute, initialize, load_project, protected_contract, snapshot
 from .runner import file_hash
+from . import evaluation
 
 
-class CleanupRequired(ValueError):
-    """An unresolved process/capture cleanup blocks further development runs."""
+CleanupRequired = evaluation.CleanupRequired
 
 
 def identity(root):
@@ -109,6 +109,9 @@ def _plan(path):
     project, root = load_project(path.parent / plan["project_config"])
     if not project["protected_paths"]:
         raise ValueError("Development sessions require explicit protected correctness files")
+    if evaluation.native(plan):
+        plan["evaluation"]["manifest"] = str((path.parent / plan["evaluation"]["manifest"]).resolve())
+    evaluation.prepare(plan, project)
     return plan, project, root
 
 
@@ -120,6 +123,8 @@ def _remaining(state):
 
 
 def _runtime_identities(plan, project):
+    if evaluation.native(plan):
+        return evaluation.identities(plan)
     result = {}
     for label, command in (("benchmark", plan["benchmark_command"]),
                            ("test", project["test"]), ("build", project["build"])):
@@ -181,6 +186,9 @@ def _experiment_memory(state, limit=8):
             if key in generation})
         attempts[-1]["measurements"] = {phase: values["medians"]
             for phase, values in generation.get("phases", {}).items() if "medians" in values}
+        if "pressure_probe" in generation:
+            attempts[-1]["pressure_probe"] = {key: generation["pressure_probe"][key]
+                for key in ("outcome", "requested_budget_bytes", "effective_budget_bytes", "metrics")}
     return {"scope": "public session observations only; research claims are not measured evidence",
         "total_attempts": len(state["generations"]), "omitted_attempts": max(0, len(state["generations"]) - limit),
         "attempts": attempts}
@@ -198,7 +206,8 @@ def request(directory):
         "concept": state["plan"]["concept"], "champion_source": str(root),
         "champion_source_hash": champion["source_hash"], "objective": state["plan"]["objective"],
         "measured_baseline": champion["metrics"], "target": state["target"],
-        "target_basis": "median local measurements; no scarcity limit is enforced",
+        "target_basis": ("enforced Linux cgroup memory budget; public correctness and repeated survival"
+            if evaluation.native(state["plan"]) else "median local measurements; no scarcity limit is enforced"),
         "regression_limits": state["plan"]["regression_limits"],
         "protected_paths": state["project"]["protected_paths"],
         "previous_attempt": state["generations"][-1] if state["generations"] else None,
@@ -211,6 +220,31 @@ def request(directory):
 
 def _correctness(directory, state, candidate, action):
     _, root = _champion(directory, state)
+    if evaluation.native(state["plan"]):
+        output = directory / "runs" / action
+        output.mkdir(parents=True, exist_ok=False)
+        records = []
+        for name, source in (("baseline", root), ("candidate", candidate)):
+            workspace = output / name
+            snapshot(source, workspace)
+            if protected_contract(workspace, state["project"]["protected_paths"]) != state["correctness_contract"]:
+                raise ValueError("Native candidate changed protected correctness files")
+            budget = (state["champions"][state["champion"]]["metrics"] or {}).get(
+                "enforced_budget_bytes", state["plan"]["evaluation"]["initial_budget"])
+            if name == "candidate" and (state.get("pending") or {}).get("action") == "candidate":
+                budget = state["target"]
+            for workload in evaluation.manifest(state["plan"])["workloads"]:
+                result = evaluation.trial(state["plan"], workspace,
+                    output / (name + "-" + str(len(records))), budget,
+                    time.monotonic() + _remaining(state), workload["id"], evidence_root=directory / "native-evidence")
+                records.append(result)
+                if result["outcome"] != "pass":
+                    record = output / "native-correctness.json"
+                    record.write_text(json.dumps(records, indent=2), encoding="utf-8")
+                    return record, {"decision": "correctness_failed"}
+        record = output / "native-correctness.json"
+        record.write_text(json.dumps(records, indent=2), encoding="utf-8")
+        return record, {"decision": "public_tests_passed"}
     config = initialize(root, state["project"]["test"], state["project"]["build"],
                         protected_paths=state["project"]["protected_paths"]) if not (root / ".chilicrisp/project.json").exists() else root / ".chilicrisp/project.json"
     # The immutable owner policy, including time/output limits, owns this config.
@@ -225,14 +259,19 @@ def _correctness(directory, state, candidate, action):
     return record, result
 
 
-def _bench(directory, state, workspace, output, expected_stdout=None, expected_source=None):
+def _bench(directory, state, workspace, output, expected_stdout=None, expected_source=None, budget=None):
     if expected_source is not None and identity(workspace) != expected_source:
         raise ValueError("Build/test changed source outside declared build/cache directories")
     before = protected_contract(workspace, state["project"]["protected_paths"])
     if before != state["correctness_contract"]:
         raise ValueError("Benchmark workspace correctness contract differs")
-    result = measure(state["plan"]["benchmark_command"], workspace, output,
-        state["project"], time.monotonic() + _remaining(state), state["plan"]["artifact_paths"])
+    if evaluation.native(state["plan"]):
+        result = evaluation.measurement(state["plan"], workspace, output,
+            budget or state["plan"]["evaluation"]["initial_budget"], time.monotonic() + _remaining(state),
+            evidence_root=directory / "native-evidence")
+    else:
+        result = measure(state["plan"]["benchmark_command"], workspace, output,
+            state["project"], time.monotonic() + _remaining(state), state["plan"]["artifact_paths"])
     if result["outcome"] == "cleanup_failure":
         raise CleanupRequired("Benchmark execution needs process cleanup before another attempt")
     if result["outcome"] != "pass":
@@ -257,10 +296,13 @@ def _bench(directory, state, workspace, output, expected_stdout=None, expected_s
 def _medians(records):
     return {metric: statistics.median(record["metrics"][metric] for record in records)
             if all(record["metrics"][metric] is not None for record in records) else None
-            for metric in METRICS}
+            for metric in records[0]["metrics"]}
 
 
 def _verification(plan, baseline=False):
+    if evaluation.native(plan):
+        return {"public": "native_baseline" if baseline else "native_budget_confirmation",
+                "sealed": "not_run", "production": "not_accepted"}
     sampled = METRIC_QUALITY[plan["objective"]]["tier"] == "screening_sample"
     public = ("baseline_sampled" if sampled else "baseline_public") if baseline else (
         "sampled_screening" if sampled else "public_confirmation")
@@ -281,10 +323,10 @@ def _finish(directory, state):
 
 
 def create(plan_path, directory, *, trusted_local=False):
-    if not trusted_local:
-        raise ValueError("Development runs need --trusted-local host execution")
     created = time.time()
     plan, project, root = _plan(plan_path)
+    if not trusted_local and not evaluation.native(plan):
+        raise ValueError("Development runs need --trusted-local host execution")
     directory = Path(directory).resolve()
     if directory == root or root.is_relative_to(directory) or (
             directory.is_relative_to(root) and directory.relative_to(root).parts[0] not in EXCLUDED):
@@ -303,7 +345,9 @@ def create(plan_path, directory, *, trusted_local=False):
         "correctness_contract": None}
     _save(directory, state)
     with _lock(directory):
-        _reserve(directory, state, 2 * (1 + (project["build"] is not None)) + plan["repetitions"], "baseline")
+        correctness_count = (2 * len(evaluation.manifest(plan)["workloads"]) if evaluation.native(plan)
+                             else 2 * (1 + (project["build"] is not None)))
+        _reserve(directory, state, correctness_count + plan["repetitions"], "baseline")
         try:
             source_hash = snapshot(root, source)
             state["champions"][0]["source_hash"] = source_hash
@@ -334,8 +378,6 @@ def create(plan_path, directory, *, trusted_local=False):
 
 def submit(directory, candidate, research_path, *, trusted_local=False,
            expected_generation=None, expected_parent=None):
-    if not trusted_local:
-        raise ValueError("Development runs need --trusted-local host execution")
     directory = Path(directory).resolve()
     if Path(research_path).stat().st_size > 1048576:
         raise ValueError("Research record exceeds 1 MiB")
@@ -343,6 +385,8 @@ def submit(directory, candidate, research_path, *, trusted_local=False,
     validate(research, "research")
     with _lock(directory):
         state = status(directory)
+        if not trusted_local and not evaluation.native(state["plan"]):
+            raise ValueError("Development runs need --trusted-local host execution")
         if state["state"] != "AWAITING_CANDIDATE" or state["pending"] is not None:
             raise ValueError("Session is not ready for a candidate")
         if environment() != state["environment"]:
@@ -354,7 +398,9 @@ def submit(directory, candidate, research_path, *, trusted_local=False,
                 or (expected_parent is not None and expected_parent != champion["source_hash"])):
             raise ValueError("Proposal belongs to an earlier session request")
         plan = state["plan"]
-        reserve = 2 * (1 + (state["project"]["build"] is not None)) + 2 * (
+        correctness_count = (2 * len(evaluation.manifest(plan)["workloads"]) + 1 if evaluation.native(plan)
+                             else 2 * (1 + (state["project"]["build"] is not None)))
+        reserve = correctness_count + 2 * (
             plan["repetitions"] + plan["confirmation_repetitions"])
         _reserve(directory, state, reserve, "candidate")
         generation = {"id": len(state["generations"]) + 1, "parent": champion["id"],
@@ -373,6 +419,11 @@ def submit(directory, candidate, research_path, *, trusted_local=False,
                 if previous.get("source_hash") == generation["source_hash"]]
             generation["source"] = str(frozen.relative_to(directory))
             _save(directory, state)
+            if evaluation.native(plan):
+                generation["pressure_probe"] = evaluation.trial(plan,
+                    directory / champion["source"], directory / "runs" / (action + "-pressure"),
+                    state["target"], time.monotonic() + _remaining(state), evidence_root=directory / "native-evidence")
+                _save(directory, state)
             record, comparison = _correctness(directory, state, frozen, action)
             generation["correctness_record"] = str(record.relative_to(directory))
             if comparison["decision"] != "public_tests_passed":
@@ -389,7 +440,8 @@ def submit(directory, candidate, research_path, *, trusted_local=False,
                     for name in order:
                         output = record.parent / f"{phase}-{block}-{name}"
                         result = _bench(directory, state, workspaces[name], output, state["stdout_hash"],
-                            expected_source=champion["source_hash"] if name == "baseline" else generation["source_hash"])
+                            expected_source=champion["source_hash"] if name == "baseline" else generation["source_hash"],
+                            budget=(state["target"] if name == "candidate" else champion["metrics"].get("enforced_budget_bytes")))
                         observations[name].append(result)
                         generation["phases"][phase]["records"].append(
                             {"variant": name, "block": block, "measurement": str((output / "measurement.json").relative_to(directory))})
@@ -411,7 +463,7 @@ def submit(directory, candidate, research_path, *, trusted_local=False,
                 "metrics": generation["phases"]["confirmation"]["medians"]["candidate"]})
             state["champion"] = len(state["champions"]) - 1
             state["stagnation"] = 0
-        except CleanupRequired as error:
+        except evaluation.CleanupRequired as error:
             state.update(state="INTERRUPTED", error=str(error))
             _save(directory, state)
             raise
@@ -433,6 +485,8 @@ def recover(directory, *, owner_stopped=False):
     if not owner_stopped:
         raise ValueError("Check that no executor owns this session, then supply --owner-stopped")
     directory = Path(directory).resolve()
+    if evaluation.native(status(directory)["plan"]):
+        evaluation.ensure_clean(directory / "native-evidence")
     stale = directory / "controller.lock"
     if stale.exists():
         stale.unlink()
@@ -457,11 +511,13 @@ def recover(directory, *, owner_stopped=False):
 
 
 def rollback(directory, champion_id, reason, *, trusted_local=False):
-    if not trusted_local or not reason.strip():
-        raise ValueError("Rollback requires --trusted-local and a recorded reason")
+    if not reason.strip():
+        raise ValueError("Rollback requires a recorded reason")
     directory = Path(directory).resolve()
     with _lock(directory):
         state = status(directory)
+        if not trusted_local and not evaluation.native(state["plan"]):
+            raise ValueError("Rollback requires --trusted-local for host execution")
         if state["pending"] is not None:
             raise ValueError("Recover the interrupted action before rollback")
         if environment() != state["environment"]:
@@ -475,7 +531,9 @@ def rollback(directory, champion_id, reason, *, trusted_local=False):
         target = copy.deepcopy(state)
         target["champion"] = selected
         champion, source = _champion(directory, target)
-        _reserve(directory, state, 2 * (1 + (state["project"]["build"] is not None))
+        correctness_count = (2 * len(evaluation.manifest(state["plan"])["workloads"])
+            if evaluation.native(state["plan"]) else 2 * (1 + (state["project"]["build"] is not None)))
+        _reserve(directory, state, correctness_count
                  + state["plan"]["repetitions"], "rollback")
         action = "rollback-" + state["pending"]["id"]
         try:
@@ -483,7 +541,8 @@ def rollback(directory, champion_id, reason, *, trusted_local=False):
             if result["decision"] != "public_tests_passed":
                 raise ValueError("Retained champion no longer passes correctness")
             observations = [_bench(directory, state, record.parent / "candidate",
-                record.parent / f"measure-{index}", state["stdout_hash"], champion["source_hash"])
+                record.parent / f"measure-{index}", state["stdout_hash"], champion["source_hash"],
+                budget=champion["metrics"].get("enforced_budget_bytes"))
                 for index in range(state["plan"]["repetitions"])]
             state["champions"].append({**champion, "id": action, "metrics": _medians(observations),
                                         "verification": _verification(state["plan"], baseline=True),

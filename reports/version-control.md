@@ -1,6 +1,11 @@
 # Local version-control baseline — 29 October 2026
 
-Chili Crisp has an initialized local Git repository with branch `main`, but
+This document records historical setup restrictions, not the current repository
+status. Commit `d1123af` was pushed to `origin/main` on 29 October 2026; local Git
+history is synchronized. Later native fixtures also supersede the WSL blocker
+described below. The original account is retained for provenance.
+
+Chili Crisp originally had an initialized local Git repository with branch `main`, but
 **no baseline commit exists yet**. `git init --initial-branch=main` succeeded;
 the subsequent `git add` failed with:
 

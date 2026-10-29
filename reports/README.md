@@ -1,5 +1,8 @@
 # Reports
 
+- [Native development bridge](native-development-validation.md): two retained
+  generations at 96 → 48 → 24 MiB enforced budgets, negative controls and rollback.
+
 - [Real model source pilot](model-source-pilot.md): two bounded model submissions,
   a retained public rejection, and protected heldout confirmation of a 4 MiB gain.
 

@@ -231,6 +231,20 @@ def run_trial(manifest, workload_id, budget, experiment_deadline=None):
         result["preflight_record"] = preflight(manifest, budget)
         if tree_hash(rootfs) != manifest["target"]["rootfs_hash"]:
             raise RuntimeError("rootfs identity mismatch")
+        source_mount = manifest["target"].get("source_mount")
+        if source_mount:
+            source = Path(source_mount["path"]).resolve()
+            if source.is_relative_to(rootfs) or rootfs.is_relative_to(source):
+                raise RuntimeError("source mount and runtime must be separate")
+            if tree_hash(source) != source_mount["tree_hash"] or any(p.is_symlink() for p in source.rglob("*")):
+                raise RuntimeError("source mount identity mismatch or unsupported link")
+            destination = rootfs / "candidate"
+            if destination.is_symlink() or not destination.is_dir() or any(destination.iterdir()):
+                raise RuntimeError("runtime needs an empty real /candidate directory")
+            result["preflight_record"]["source_mount"] = {
+                "tree_hash": source_mount["tree_hash"], "destination": "/candidate", "read_only": True}
+            result["candidate_hash"] = hashlib.sha256((manifest["target"]["rootfs_hash"] +
+                source_mount["tree_hash"]).encode()).hexdigest()
         for mountpoint in ("proc", "dev", "tmp"):
             item = rootfs / mountpoint
             if item.is_symlink() or not item.is_dir():
@@ -307,6 +321,9 @@ def run_trial(manifest, workload_id, budget, experiment_deadline=None):
                        "--setenv", "HOME", "/tmp", "--chdir", "/tmp",
                        "--seccomp", str(seccomp.fileno()), "--",
                        *manifest["target"]["command"], *workload["arguments"]]
+            if source_mount:
+                position = command.index("--proc")
+                command[position:position] = ["--ro-bind", str(source), "/candidate"]
             life.move("RUNNING")
             execution_started = time.monotonic()
             with input_path.open("rb") as input_stream:
@@ -380,6 +397,8 @@ def run_trial(manifest, workload_id, budget, experiment_deadline=None):
             result["cost"]["target_cpu_seconds"] = read_keys(cgroup / "cpu.stat")["usage_usec"] / 1e6
             if tree_hash(rootfs) != manifest["target"]["rootfs_hash"]:
                 raise RuntimeError("rootfs changed during trial")
+            if source_mount and tree_hash(source) != source_mount["tree_hash"]:
+                raise RuntimeError("source mount changed during trial")
     except BaseException as error:
         result["error"] = f"{type(error).__name__}: {error}"
         result["outcome"] = "runner_failure" if invoked or life is None else "unsupported"

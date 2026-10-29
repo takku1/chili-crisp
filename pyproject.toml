@@ -32,19 +32,7 @@ chilicrisp = ["schemas/*.schema.json", "skills/chili-dev/SKILL.md", "skills/chil
 [tool.ruff]
 target-version = "py312"
 line-length = 100
-include = [
-  "chilicrisp/integrations/*.py", "tests/test_integrations.py",
-  "chilicrisp/__main__.py", "chilicrisp/doctor.py", "chilicrisp/project.py",
-  "chilicrisp/pressure.py", "chilicrisp/resources.py",
-  "tests/test_project.py", "tests/test_pressure.py",
-  "tools/demo-local.py", "tools/native*.py",
-  "chilicrisp/contracts.py", "chilicrisp/evidence.py", "chilicrisp/skill.py", "tests/test_evidence.py",
-  "chilicrisp/cpu.py", "tests/test_cpu.py",
-  "tools/dogfood*.py", "tests/test_decoder_buffers.py",
-  "chilicrisp/measure.py", "chilicrisp/development.py", "tests/test_development.py", "tools/demo-development.py",
-  "tools/propose-codex.py", "tools/prepare-ai*.py", "tools/ai-pilot-workload.py",
-  "tests/test_source_proposals.py",
-]
+include = ["chilicrisp/**/*.py", "tests/**/*.py", "tools/**/*.py"]
 
 [tool.ruff.lint]
 select = ["E4", "E7", "E9", "F"]
