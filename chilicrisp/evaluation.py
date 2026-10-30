@@ -76,8 +76,9 @@ def prepare(plan, project):
         return
     if project["build"] is not None:
         raise ValueError("Native source evaluation does not support build commands")
-    if plan["objective"] != "enforced_budget_bytes" or plan["artifact_paths"]:
-        raise ValueError("Native development currently requires enforced_budget_bytes without artifacts")
+    # native_memory_peak_bytes is the conventional comparison arm: fixed ceiling, measured target.
+    if plan["objective"] not in {"enforced_budget_bytes", "native_memory_peak_bytes"} or plan["artifact_paths"]:
+        raise ValueError("Native development requires an enforced-budget or cgroup-peak objective without artifacts")
     if set(plan["regression_limits"]) - {"wall_seconds", "native_memory_peak_bytes"}:
         raise ValueError("Unsupported native regression metric")
     value = manifest(plan)

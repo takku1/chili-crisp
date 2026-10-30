@@ -66,6 +66,18 @@ class NativeEvaluationTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "require"):
                 evaluation.prepare(local, {"build": None})
 
+    def test_measured_peak_arm_keeps_fixed_ceiling_and_other_objectives_are_rejected(self):
+        from chilicrisp import development
+        with test_directory() as directory:
+            plan, _, _ = self.fixture(directory)
+            state = {"plan": plan, "target": 16777216}
+            self.assertEqual(development._candidate_budget(state), 16777216)
+            plan["objective"] = "native_memory_peak_bytes"
+            self.assertEqual(development._candidate_budget(state), 67108864)
+            plan["objective"] = "wall_seconds"
+            with self.assertRaisesRegex(ValueError, "objective"):
+                evaluation.prepare(plan, {"build": None})
+
     def test_expired_budget_prevents_runner_launch(self):
         with test_directory() as directory:
             plan, source, _ = self.fixture(directory)

@@ -169,6 +169,13 @@ def _champion(directory, state):
     return champion, root
 
 
+def _candidate_budget(state):
+    """Scarcity enforces the target; the measured-peak arm keeps one fixed ceiling."""
+    if state["plan"]["objective"] == "native_memory_peak_bytes":
+        return state["plan"]["evaluation"]["initial_budget"]
+    return state["target"]
+
+
 def _target(state):
     plan = state["plan"]
     champion = state["champions"][state["champion"]]
@@ -236,7 +243,7 @@ def _correctness(directory, state, candidate, action):
             budget = (state["champions"][state["champion"]]["metrics"] or {}).get(
                 "enforced_budget_bytes", state["plan"]["evaluation"]["initial_budget"])
             if name == "candidate" and (state.get("pending") or {}).get("action") == "candidate":
-                budget = state["target"]
+                budget = _candidate_budget(state)
             for workload in evaluation.manifest(state["plan"])["workloads"]:
                 result = evaluation.trial(state["plan"], workspace,
                     output / (name + "-" + str(len(records))), budget,
@@ -424,7 +431,7 @@ def submit(directory, candidate, research_path, *, trusted_local=False,
                 if previous.get("source_hash") == generation["source_hash"]]
             generation["source"] = str(frozen.relative_to(directory))
             _save(directory, state)
-            if evaluation.native(plan):
+            if evaluation.native(plan) and plan["objective"] == "enforced_budget_bytes":
                 generation["pressure_probe"] = evaluation.trial(plan,
                     directory / champion["source"], directory / "runs" / (action + "-pressure"),
                     state["target"], time.monotonic() + _remaining(state), evidence_root=directory / "native-evidence")
@@ -446,7 +453,7 @@ def submit(directory, candidate, research_path, *, trusted_local=False,
                         output = record.parent / f"{phase}-{block}-{name}"
                         result = _bench(directory, state, workspaces[name], output, state["stdout_hash"],
                             expected_source=champion["source_hash"] if name == "baseline" else generation["source_hash"],
-                            budget=(state["target"] if name == "candidate" else champion["metrics"].get("enforced_budget_bytes")))
+                            budget=(_candidate_budget(state) if name == "candidate" else champion["metrics"].get("enforced_budget_bytes")))
                         observations[name].append(result)
                         generation["phases"][phase]["records"].append(
                             {"variant": name, "block": block, "measurement": str((output / "measurement.json").relative_to(directory))})

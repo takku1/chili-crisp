@@ -71,6 +71,15 @@ recompiles both versions from its own vault copy of the compiler manifest and
 counts compiler trials against `max_trials`. Keep hidden policy content outside the
 public plan; the public fields pin its identity without publishing workloads.
 
+## Separate accounts
+
+`sudo python3 tools/native-trust.py` provisions `chili-agent`, `chili-runner`
+and `chili-grader` and runs the whole compiled flow with each phase under its own
+account and delegated cgroup; see [validation](../reports/trust-boundary-validation.md).
+Use `dev acceptance-request SESSION --export DIR` to hand the grader copies of the
+frozen sources and a relative request instead of access to the session. Keep
+installed code root-owned and not writable by any role account.
+
 ## Freeze, grade, import
 
 After public optimization stops, export a public request with `dev
