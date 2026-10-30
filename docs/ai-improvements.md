@@ -27,6 +27,9 @@ Requests and per-command output already remain in session run directories.
    [Three repository components are now qualified](../reports/repository-cohort.md),
    with a first sampled local archive-memory candidate; the native matched-arm
    study remains open.
+   The archive candidate now also passes [native sealed transfer](../reports/native-wilderbeast.md).
+   The [study checkpoint](real-repository-study.md) separates shared allocation
+   from actual consumed effort and records remaining launch gates.
 2. The [owner-operated sealed gate](sealed-acceptance.md) now runs across
    separate accounts and reproduces in CI ([validation](../reports/trust-boundary-validation.md)).
    Remaining: a separate grader host and network transport.

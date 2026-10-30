@@ -15,6 +15,8 @@ jobs:
         run: sudo python3 tools/native-build.py
       - name: Separate-account controller, agent and grader
         run: sudo python3 tools/native-trust.py
+      - name: Wilderbeast archive native transfer and sealed negative control
+        run: sudo python3 tools/native-wilderbeast.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:

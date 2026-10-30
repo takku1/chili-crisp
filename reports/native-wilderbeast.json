@@ -1,0 +1,111 @@
+{
+  "kind": "native transfer of owner-reviewed archive candidate; no model comparison",
+  "run_directory": "artifacts\\native-wilderbeast-420a40e3942d",
+  "records": [
+    {
+      "lab": "/srv/chili-trust/wb-good-2i63mven",
+      "control": "good",
+      "policy_minimum_memory_reduction": 0.05,
+      "transfer_budget": 134217728,
+      "scratch_bytes": 67108864,
+      "init": {
+        "state": "AWAITING_CANDIDATE",
+        "champion": 0,
+        "decisions": []
+      },
+      "submit": {
+        "state": "STOPPED",
+        "champion": 1,
+        "decisions": [
+          "accepted_experimental"
+        ]
+      },
+      "grade": {
+        "verdict": "passed",
+        "remaining_cgroups": []
+      },
+      "accept": {
+        "verdict": "passed"
+      },
+      "audit": [
+        {
+          "verdict": "passed",
+          "trials": 12,
+          "runtime_trials": 12,
+          "compiler_trials": 0,
+          "runtime_outcomes": {
+            "pass": 12
+          },
+          "medians": {
+            "baseline": {
+              "memory_peak": 50348032,
+              "elapsed": 0.3951778360060416
+            },
+            "candidate": {
+              "memory_peak": 43532288,
+              "elapsed": 0.39511521699023433
+            }
+          },
+          "transfer_budget": 134217728
+        }
+      ],
+      "status": "completed",
+      "receipt_sha256": "63f8a9d67342e6b8a247e2eca41b298925dc9cb21c305dad5848aa7ed31b4e9a",
+      "baseline_source_hash": "dd78be9b3409c826b51b457007842e630196efe1aaec108011e0717851349903",
+      "candidate_source_hash": "3d25c7a91ecab5598e2900e868f78b4a10120a9cbefabc154726717c9786ee19",
+      "production": "not_accepted",
+      "memory_reduction_fraction": 0.135372600065083
+    },
+    {
+      "lab": "/srv/chili-trust/wb-overfit-m3qawalr",
+      "control": "overfit",
+      "policy_minimum_memory_reduction": 0.05,
+      "transfer_budget": 134217728,
+      "scratch_bytes": 67108864,
+      "init": {
+        "state": "AWAITING_CANDIDATE",
+        "champion": 0,
+        "decisions": []
+      },
+      "submit": {
+        "state": "STOPPED",
+        "champion": 1,
+        "decisions": [
+          "accepted_experimental"
+        ]
+      },
+      "grade": {
+        "verdict": "rejected",
+        "remaining_cgroups": []
+      },
+      "accept": {
+        "verdict": "rejected"
+      },
+      "audit": [
+        {
+          "verdict": "rejected",
+          "trials": 4,
+          "runtime_trials": 4,
+          "compiler_trials": 0,
+          "runtime_outcomes": {
+            "pass": 3,
+            "wrong_output": 1
+          },
+          "medians": null,
+          "transfer_budget": 134217728
+        }
+      ],
+      "status": "completed",
+      "receipt_sha256": "6cc0342a5ba1e8c4da02e6dae68f6323afe9b929b0601d39a2a6f62d29a2335c",
+      "baseline_source_hash": "dd78be9b3409c826b51b457007842e630196efe1aaec108011e0717851349903",
+      "candidate_source_hash": "383b19a9ef672e19000f30298b17be7605587495db910aff92dffd80fa051bfa",
+      "production": "not_accepted"
+    }
+  ],
+  "limitations": [
+    "Unix accounts share a kernel; root owner remains trusted.",
+    "tmpfs output pages and runtime overhead are part of charged memory.peak.",
+    "In-process Python correctness drivers are not an adversarial oracle boundary.",
+    "The prior patch was known; this is transfer validation, not a discovery experiment."
+  ]
+}

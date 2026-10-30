@@ -1,6 +1,6 @@
 # Project status
 
-Updated 29 October 2026 (America/New_York). This page supersedes historical
+Updated 30 October 2026 (America/New_York). This page supersedes historical
 setup blockers in earlier reports.
 
 ## Delivered
@@ -21,14 +21,22 @@ setup blockers in earlier reports.
   first owner-reviewed Wilderbeast archive candidate retained after an 11.3%
   reduction in sampled peak RSS. [Evidence and scope](../reports/repository-cohort.md).
   This is local measurement, not a real-repository scarcity-arm comparison.
+- Native Wilderbeast transfer now passes signed sealed grading, with a 13.54%
+  charged-memory reduction and a public-passing negative control rejected by
+  the private grader. [Scope and audits](../reports/native-wilderbeast.md).
+  Explicit archive serializer regressions pass on local Python 3.12 and 3.14;
+  CI is configured for 3.12/3.13/3.14.
 
 The installed tool is usable for bounded owner-operated experiments. Retained
 candidates remain experimental; a signed policy verdict does not authorize
 production deployment.
 
-Latest validation: 103 portable tests (101 passed, two Linux-only skips), clean
-lint, successful package/wheel checks and four passing signed model-study
-verdicts with all 56 sealed trials independently audited.
+The model-study milestone passed 103 portable tests (101 passed, two Linux-only
+skips), lint/package checks and four signed verdicts with all 56 sealed trials
+audited. The native archive increment adds serializer regressions and 16 audited
+sealed trials: 12 for the passing candidate and four for the rejected control.
+Current portable suite: 109 tests (107 passed, two Linux-only skips), plus the
+six archive compatibility regressions also passing under local Linux Python 3.14.
 
 ## Evidence and operation
 
@@ -47,6 +55,8 @@ Rust toolchain provisioning in CI; representative repository tasks and adequatel
 powered comparisons; richer pressure maps and diagnostic probes; additional
 resource backends and joint-axis search. See [the roadmap](roadmap.md) and
 [resource capabilities](resources.md).
+The [real-repository study checkpoint](real-repository-study.md) makes the next
+token-budget enforcement and adversarial oracle launch gates explicit.
 
 There is no automatic production promotion or deployment. One synthetic task
 cannot establish that scarcity improves model optimization quality. Generated

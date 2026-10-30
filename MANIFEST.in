@@ -6,4 +6,4 @@ recursive-include examples/local-project *.py
 recursive-include chilicrisp/skills *.md *.yaml
 recursive-include tests *.py
 recursive-include tools *.py *.ps1 *.sh
-recursive-include verification *.py *.md *.rs *.toml
+recursive-include verification *.py *.md *.rs *.toml *.json

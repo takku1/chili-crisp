@@ -1,5 +1,8 @@
 # Reports
 
+- [Native Wilderbeast transfer](native-wilderbeast.md): signed native archive
+  improvement, private negative-control rejection and serializer compatibility.
+
 - [Real-repository cohort and first pilot](repository-cohort.md): Wilderbeast,
   MochiOS and Worldgame baselines, plus a retained archive-memory candidate.
 

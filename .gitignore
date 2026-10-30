@@ -2,6 +2,7 @@ __pycache__/
 *.pyc
 .venv/
 evidence/
+!verification/wilderbeast/frozen/wilderbeast/evidence/
 artifacts/
 test-artifacts-*/
 build/

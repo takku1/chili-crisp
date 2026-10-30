@@ -1,0 +1,22 @@
+{
+  "project": "Z:/Wilderbeast",
+  "parent_commit": "6188870",
+  "includes_uncommitted_archive": true,
+  "source": "repository-cohort-20261030T015159Z",
+  "files_sha256": {
+    "__init__.py": "91447944015cec709e8aa7655f7e9d64e1e4508e7023a57fe3746911c0fc6fed",
+    "evidence/__init__.py": "ade2249b6a3df4a5929249c90c3133851d815b753bf7a51e34869a5fc5542835",
+    "evidence/archive.py": "69318bb72b6c41a9efae695e78def1bd115daaed070c6561bcb725f409188603",
+    "evidence/discovery.py": "8cd3461f642724028531885540065837949ba9ebbee7ce0b15b98ce6b9a8d733",
+    "evidence/finding.py": "c498de6f3430c4cd6b7a83ff234acd076dd2cde51a639340b67aa45bf3891e72"
+  },
+  "scope": "minimal unchanged standard-library archive fixture; not the complete Wilderbeast project",
+  "upstream_files_sha256": {
+    "__init__.py": "41362a5ea4931c546433d4c48290c5707bf02dbbea1c3aafa9f43d1225e47003",
+    "evidence/__init__.py": "ade2249b6a3df4a5929249c90c3133851d815b753bf7a51e34869a5fc5542835",
+    "evidence/archive.py": "e5c6acf2a90a99106586e5122918c6d83bbd8b29a7d3647937e171418e6fd009",
+    "evidence/discovery.py": "8cd3461f642724028531885540065837949ba9ebbee7ce0b15b98ce6b9a8d733",
+    "evidence/finding.py": "c498de6f3430c4cd6b7a83ff234acd076dd2cde51a639340b67aa45bf3891e72"
+  },
+  "hashing": "files_sha256 identifies UTF-8 text with CRLF normalized to LF; upstream_files_sha256 retains original source byte hashes"
+}

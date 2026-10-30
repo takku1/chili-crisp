@@ -22,7 +22,10 @@ with tarfile.open(sdists[0]) as archive:
     source_names = {name.split('/', 1)[1] for name in archive.getnames() if '/' in name}
     required = {"pyproject.toml", "requirements.txt", "verification/worldgame/check.py",
                 "tools/native-fixtures.py", "tests/test_evidence.py",
-                "chilicrisp/skills/chili-dev/SKILL.md", "chilicrisp/schemas/project.schema.json"}
+                "chilicrisp/skills/chili-dev/SKILL.md", "chilicrisp/schemas/project.schema.json",
+                "verification/wilderbeast/frozen/provenance.json",
+                "verification/wilderbeast/frozen/wilderbeast/evidence/archive.py",
+                "verification/wilderbeast/native_workload.py"}
     if not required.issubset(source_names):
         raise SystemExit(f"Source distribution is missing: {sorted(required - source_names)}")
     if any(name.startswith(('artifacts/', '.git/')) for name in source_names):

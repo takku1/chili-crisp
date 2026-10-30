@@ -11,6 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from chilicrisp import development as dev  # noqa: E402
 from chilicrisp.project import EXCLUDED, initialize  # noqa: E402
+from verification.wilderbeast.streaming import rewrite  # noqa: E402
 
 
 def main():
@@ -51,22 +52,7 @@ subprocess.run([sys.executable, '-B', 'tests/chili_archive_workload.py', '--sour
     shutil.copytree(baseline, candidate, ignore=shutil.ignore_patterns('.chilicrisp'))
     archive = candidate / editable
     text = archive.read_text(encoding='utf-8')
-    original = '        data = [rec.to_dict() for rec in self._records.values()]'
-    if text.count(original) != 1:
-        raise ValueError('Frozen archive no longer matches reviewed edit boundary')
-    replacement = '''        records = self._records
-
-        class RecordStream(list):
-            # json.dump iterates list subclasses lazily. Preserve its exact
-            # array formatting while materializing only one record at a time.
-            def __len__(self):
-                return len(records)
-
-            def __iter__(self):
-                return (record.to_dict() for record in records.values())
-
-        data = RecordStream()'''
-    archive.write_text(text.replace(original, replacement), encoding='utf-8')
+    archive.write_text(rewrite(text), encoding='utf-8')
     research = {'hypothesis': 'Streaming record dictionaries lowers median sampled process peak RSS by at least 10%.',
         'mechanism': 'The allocation probe observes all serialized receipt and wrapper dictionaries live at encoder entry; yield one at a time.',
         'falsification': 'Existing tests or independent roundtrip fail, memory target is missed, or median wall time regresses by more than 25%.',
