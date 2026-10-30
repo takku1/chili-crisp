@@ -586,6 +586,24 @@ def acceptance_request(directory):
             "candidate_source": str(source), "expected": expected}
 
 
+def export_acceptance_request(directory, destination):
+    """Copy frozen sources beside a relative request for a grader on another account or host.
+
+    The copies carry no trust: the grader re-snapshots them against the pinned hashes.
+    """
+    from .project import snapshot
+    request = acceptance_request(directory)
+    destination = Path(destination)
+    destination.mkdir()
+    for name in ("baseline", "candidate"):
+        if snapshot(Path(request[name + "_source"]), destination / name) != request["expected"][name + "_source_hash"]:
+            raise ValueError("Exported source differs from its frozen identity")
+        request[name + "_source"] = name
+    with (destination / "request.json").open("x", encoding="utf-8") as stream:
+        json.dump(request, stream, indent=2)
+    return request
+
+
 def accept(directory, receipt_path):
     from .acceptance import verify_receipt
     directory = Path(directory).resolve()

@@ -260,7 +260,12 @@ def main():
             raise ValueError("Receipt destination already exists")
         if args.request.stat().st_size > 32768:
             raise ValueError("Acceptance request exceeds 32 KiB")
-        receipt = grade(json.loads(args.request.read_text()), args.policy, args.key, args.vault)
+        request = json.loads(args.request.read_text())
+        # Exported requests name their sources relative to the request file.
+        for name in ("baseline_source", "candidate_source"):
+            if isinstance(request.get(name), str):
+                request[name] = str((args.request.parent / request[name]).resolve())
+        receipt = grade(request, args.policy, args.key, args.vault)
         with args.receipt.open("x", encoding="utf-8") as stream:
             json.dump(receipt, stream, indent=2)
         print(json.dumps({"verdict": receipt["body"]["verdict"]}))

@@ -56,6 +56,19 @@ class AcceptanceTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "terminal"):
                 development.rollback(root, "initial", "Cannot learn from sealed feedback", trusted_local=True)
 
+    def test_exported_request_is_relative_and_matches_frozen_identities(self):
+        with test_directory() as directory:
+            root, _, request, _ = self.fixture(directory)
+            destination = root / "export"
+            exported = development.export_acceptance_request(root, destination)
+            self.assertEqual((exported["baseline_source"], exported["candidate_source"]), ("baseline", "candidate"))
+            self.assertEqual(exported["expected"], request["expected"])
+            self.assertEqual(json.loads((destination / "request.json").read_text()), exported)
+            for name in ("baseline", "candidate"):
+                self.assertEqual(development.identity(destination / name), request["expected"][name + "_source_hash"])
+            with self.assertRaises(FileExistsError):
+                development.export_acceptance_request(root, destination)
+
     def test_signature_tampering_wrong_key_and_all_binding_changes_are_rejected(self):
         with test_directory() as directory:
             root, key, _, body = self.fixture(directory)

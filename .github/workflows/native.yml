@@ -1,0 +1,23 @@
+name: Native fixtures
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+jobs:
+  native:
+    # Independent reproduction host: different kernel, distro release, GCC and Python than the WSL lab.
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - run: bash tools/ci-native-host.sh
+      - name: Isolated C compilation, controller and sealed gate
+        run: sudo python3 tools/native-build.py
+      - name: Separate-account controller, agent and grader
+        run: sudo python3 tools/native-trust.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-evidence
+          path: artifacts/
+          retention-days: 30

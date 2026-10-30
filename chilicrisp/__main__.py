@@ -65,6 +65,8 @@ def main(argv=None):
     for name in ("request", "status", "acceptance-request"):
         action = actions.add_parser(name)
         action.add_argument("session", type=Path)
+        if name == "acceptance-request":
+            action.add_argument("--export", type=Path, help="Copy sources and a relative request here for a separate grader")
     acceptance = actions.add_parser("accept")
     acceptance.add_argument("session", type=Path)
     acceptance.add_argument("receipt", type=Path)
@@ -129,7 +131,8 @@ def main(argv=None):
             elif args.action == "status":
                 result = development.status(args.session)
             elif args.action == "acceptance-request":
-                result = development.acceptance_request(args.session)
+                result = (development.export_acceptance_request(args.session, args.export) if args.export
+                          else development.acceptance_request(args.session))
             elif args.action == "accept":
                 result = development.accept(args.session, args.receipt)
                 exit_code = 0 if result["acceptances"][-1]["body"]["verdict"] == "passed" else 1

@@ -14,23 +14,8 @@ import sys
 import tempfile
 
 
-def provision(*, worker_name="native-worker.py", prepare=None, extra_requirements=()):
-    if sys.platform != "linux" or os.geteuid() != 0:
-        raise SystemExit("Run as root inside the disposable Ubuntu research VM")
-    source = Path(__file__).resolve().parents[1]
-    account = pwd.getpwnam("chili-runner")
-    lab = Path(tempfile.mkdtemp(prefix="fixture-", dir="/home/chili-runner/chili-lab"))
-    checkout = lab / "source"
-    checkout.mkdir()
-    for name in ("chilicrisp", "tests", "examples"):
-        shutil.copytree(source / name, checkout / name,
-                        ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
-    for name in ("pyproject.toml", "README.md", "MANIFEST.in"):
-        shutil.copy2(source / name, checkout / name)
-    venv = lab / "venv"
-    subprocess.run([sys.executable, "-m", "venv", "--system-site-packages", str(venv)], check=True)
-    python = venv / "bin/python"
-    subprocess.run([str(python), "-m", "pip", "install", "jsonschema>=4.26,<5", "psutil>=7.2,<8", *extra_requirements], check=True)
+def runtime_rootfs(source, lab):
+    """Copy the running Python and its libraries into a minimal frozen program root."""
     rootfs = lab / "rootfs"
     for name in ("usr/bin", "fixtures", "proc", "dev", "tmp"):
         (rootfs / name).mkdir(parents=True)
@@ -50,6 +35,27 @@ def provision(*, worker_name="native-worker.py", prepare=None, extra_requirement
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(library, target)
     shutil.copy2(source / "tests/workload.py", rootfs / "fixtures/workload.py")
+    return rootfs
+
+
+def provision(*, worker_name="native-worker.py", prepare=None, extra_requirements=()):
+    if sys.platform != "linux" or os.geteuid() != 0:
+        raise SystemExit("Run as root inside the disposable Ubuntu research VM")
+    source = Path(__file__).resolve().parents[1]
+    account = pwd.getpwnam("chili-runner")
+    lab = Path(tempfile.mkdtemp(prefix="fixture-", dir="/home/chili-runner/chili-lab"))
+    checkout = lab / "source"
+    checkout.mkdir()
+    for name in ("chilicrisp", "tests", "examples"):
+        shutil.copytree(source / name, checkout / name,
+                        ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
+    for name in ("pyproject.toml", "README.md", "MANIFEST.in"):
+        shutil.copy2(source / name, checkout / name)
+    venv = lab / "venv"
+    subprocess.run([sys.executable, "-m", "venv", "--system-site-packages", str(venv)], check=True)
+    python = venv / "bin/python"
+    subprocess.run([str(python), "-m", "pip", "install", "jsonschema>=4.26,<5", "psutil>=7.2,<8", *extra_requirements], check=True)
+    rootfs = runtime_rootfs(source, lab)
     (lab / "empty-input").write_bytes(b"")
     shutil.copy2(source / "tools" / worker_name, lab / "worker.py")
     frozen_roots = [rootfs]
