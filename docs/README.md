@@ -1,5 +1,7 @@
 # Chili Crisp design
 
+See [current project status](STATUS.md) for the latest implementation and evidence.
+
 Start with [system constraints and current capabilities](resources.md) for the
 multi-resource direction, common CLI, and observed pressure-map reports.
 Use [getting started](getting-started.md) for installation and agent workflows,
@@ -8,8 +10,9 @@ and [package organization](frameworks.md) for maintained source boundaries.
 Chili Crisp is a proposed experimental framework for finding useful software designs through artificial resource pressure. An AI agent proposes hypotheses and code changes; an independent runner decides whether they preserve behavior and improve measured outcomes. Scarcity is a discovery instrument, not a production requirement.
 
 **Status:** schemas, public frontier control, Linux runner, local candidate workflow,
-and AI coding skill are implemented. Native fixtures pass on one Ubuntu WSL host;
-see [validation evidence](../reports/native-validation.md) and
+and AI coding skill are implemented. Native C/trust fixtures also reproduce on
+a fresh CI host; see [account-boundary validation](../reports/trust-boundary-validation.md),
+[native validation evidence](../reports/native-validation.md) and
 [implementation limits](implementation.md). A [decoder self-test](../reports/dogfood-decoder.md)
 now provides one narrowly scoped measured candidate improvement; it is not
 production acceptance. Other design numbers remain proposed defaults or labeled examples.

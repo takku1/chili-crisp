@@ -1,0 +1,410 @@
+{
+  "study": "artifacts\\model-study-20261030T012506Z",
+  "protocol": {
+    "kind": "bounded_comparison_pilot",
+    "seed": 29026,
+    "order": [
+      [
+        0,
+        "scarcity"
+      ],
+      [
+        1,
+        "scarcity"
+      ],
+      [
+        0,
+        "conventional"
+      ],
+      [
+        1,
+        "conventional"
+      ]
+    ],
+    "generations_per_run": 2,
+    "maximum_model_calls": 8,
+    "maximum_usd_per_call": null,
+    "maximum_seconds_per_call": 600,
+    "provider": "codex",
+    "model_alias": "gpt-6.1-sol",
+    "primary_outcome": "signed sealed verdict and matched-transfer memory",
+    "limits": "One trivial synthetic task; two repetitions per arm; descriptive evidence only.",
+    "source_hashes": {
+      "propose-model.py": "af529c28b8b7d5f84a0d565a1a5a16c9a89812586b853e9e1f9c87e7a6cc056a",
+      "model-study-linux.py": "f59cb332537a304d2f4880fe9f2de632b21673cb62753292b63dbc621f174c83",
+      "run-model-study.py": "91bd0cb8160117b19630245fdfbc944a444722856d2981da457bee3dd0fe38bd"
+    }
+  },
+  "protocol_sha256": "ce2f04cd076494ded9a315118023f2cc7af9f2261fa398412af005df787aa4f6",
+  "records": [
+    {
+      "repeat": 0,
+      "arm": "scarcity",
+      "lab": "/srv/chili-trust/model-20261030t012506z-0-scarcity",
+      "decisions": [
+        "accepted_experimental",
+        "accepted_experimental"
+      ],
+      "champion": 2,
+      "grade": {
+        "verdict": "passed",
+        "remaining_cgroups": []
+      },
+      "accept": {
+        "verdict": "passed"
+      },
+      "status": "completed",
+      "wall_seconds": 63.0,
+      "audit": [
+        {
+          "verdict": "passed",
+          "trials": 14,
+          "runtime_trials": 10,
+          "compiler_trials": 4,
+          "runtime_outcomes": {
+            "pass": 10
+          },
+          "medians": {
+            "baseline": {
+              "memory_peak": 35864576,
+              "elapsed": 0.11559147899970412
+            },
+            "candidate": {
+              "memory_peak": 4722688,
+              "elapsed": 0.040986263018567115
+            }
+          },
+          "transfer_budget": 268435456
+        }
+      ],
+      "stop_reason": "final_acceptance_passed",
+      "development_stop_reason": "generation_cap",
+      "source_hashes": [
+        "efe0ba646ff762516d4231469dcca2406cab8082b22cfe2644401afb25282d27",
+        "5b0432511d308cd41c0f895425e141634996a94393f8385be1069a97594b4d85"
+      ],
+      "repeat_of": [
+        [],
+        []
+      ],
+      "production": "not_accepted",
+      "receipt_sha256": "930ca6f3f20ba70cf59574c8589c543c9f0a119280e4603010d32928b22abca0",
+      "memory_reduction_fraction": 0.8683188670625857
+    },
+    {
+      "repeat": 1,
+      "arm": "scarcity",
+      "lab": "/srv/chili-trust/model-20261030t012506z-1-scarcity",
+      "decisions": [
+        "accepted_experimental",
+        "accepted_experimental"
+      ],
+      "champion": 2,
+      "grade": {
+        "verdict": "passed",
+        "remaining_cgroups": []
+      },
+      "accept": {
+        "verdict": "passed"
+      },
+      "status": "completed",
+      "wall_seconds": 74.687,
+      "audit": [
+        {
+          "verdict": "passed",
+          "trials": 14,
+          "runtime_trials": 10,
+          "compiler_trials": 4,
+          "runtime_outcomes": {
+            "pass": 10
+          },
+          "medians": {
+            "baseline": {
+              "memory_peak": 35868672,
+              "elapsed": 0.1052619710098952
+            },
+            "candidate": {
+              "memory_peak": 4456448,
+              "elapsed": 0.04858129899366759
+            }
+          },
+          "transfer_budget": 268435456
+        }
+      ],
+      "stop_reason": "final_acceptance_passed",
+      "development_stop_reason": "generation_cap",
+      "source_hashes": [
+        "efe0ba646ff762516d4231469dcca2406cab8082b22cfe2644401afb25282d27",
+        "d3512ae9ba2802cd765b83a3519cb95361925e5c200e1e8e1318a5e8b329fc9f"
+      ],
+      "repeat_of": [
+        [],
+        []
+      ],
+      "production": "not_accepted",
+      "receipt_sha256": "a645e63536c3d7d144e6cef8496e6a74418a6efe28edf3340cb1bc8b64c92e9e",
+      "memory_reduction_fraction": 0.8757565376270412
+    },
+    {
+      "repeat": 0,
+      "arm": "conventional",
+      "lab": "/srv/chili-trust/model-20261030t012506z-0-conventional",
+      "decisions": [
+        "accepted_experimental"
+      ],
+      "champion": 1,
+      "grade": {
+        "verdict": "passed",
+        "remaining_cgroups": []
+      },
+      "accept": {
+        "verdict": "passed"
+      },
+      "status": "completed",
+      "wall_seconds": 40.484,
+      "audit": [
+        {
+          "verdict": "passed",
+          "trials": 14,
+          "runtime_trials": 10,
+          "compiler_trials": 4,
+          "runtime_outcomes": {
+            "pass": 10
+          },
+          "medians": {
+            "baseline": {
+              "memory_peak": 35872768,
+              "elapsed": 0.10469724400900304
+            },
+            "candidate": {
+              "memory_peak": 4452352,
+              "elapsed": 0.04456003301311284
+            }
+          },
+          "transfer_budget": 268435456
+        }
+      ],
+      "stop_reason": "final_acceptance_passed",
+      "development_stop_reason": "minimum_or_resolution_reached",
+      "source_hashes": [
+        "efe0ba646ff762516d4231469dcca2406cab8082b22cfe2644401afb25282d27"
+      ],
+      "repeat_of": [
+        []
+      ],
+      "production": "not_accepted",
+      "receipt_sha256": "fdc2d67bffd9ef8724cd7ede77bb280271418cbd12ce867af656aed14647787f",
+      "memory_reduction_fraction": 0.8758849052295045
+    },
+    {
+      "repeat": 1,
+      "arm": "conventional",
+      "lab": "/srv/chili-trust/model-20261030t012506z-1-conventional",
+      "decisions": [
+        "accepted_experimental"
+      ],
+      "champion": 1,
+      "grade": {
+        "verdict": "passed",
+        "remaining_cgroups": []
+      },
+      "accept": {
+        "verdict": "passed"
+      },
+      "status": "completed",
+      "wall_seconds": 31.25,
+      "audit": [
+        {
+          "verdict": "passed",
+          "trials": 14,
+          "runtime_trials": 10,
+          "compiler_trials": 4,
+          "runtime_outcomes": {
+            "pass": 10
+          },
+          "medians": {
+            "baseline": {
+              "memory_peak": 35864576,
+              "elapsed": 0.10784680399228819
+            },
+            "candidate": {
+              "memory_peak": 4448256,
+              "elapsed": 0.04563380000763573
+            }
+          },
+          "transfer_budget": 268435456
+        }
+      ],
+      "stop_reason": "final_acceptance_passed",
+      "development_stop_reason": "minimum_or_resolution_reached",
+      "source_hashes": [
+        "efe0ba646ff762516d4231469dcca2406cab8082b22cfe2644401afb25282d27"
+      ],
+      "repeat_of": [
+        []
+      ],
+      "production": "not_accepted",
+      "receipt_sha256": "8fc811cacf593d6406bc8a767bbd9965b50564125067db2d5034d09b3802bb00",
+      "memory_reduction_fraction": 0.8759707629054363
+    }
+  ],
+  "calls": [
+    {
+      "run": "model-20261030t012506z-0-conventional",
+      "generation": 1,
+      "usage": {
+        "provider": "openai/codex-cli",
+        "models": [
+          "gpt-6.1-sol"
+        ],
+        "input_tokens": 15928,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": null,
+        "output_tokens": 381,
+        "cost_usd": null,
+        "cost_basis": null,
+        "turns": null,
+        "tool_denials": null,
+        "tool_events": 0,
+        "wall_seconds": 15.844
+      },
+      "prompt_sha256": "9e2143a16e5e48f6d0975b55412f21ae33f9ea8e310a34fa011daebc183486a9",
+      "program_sha256": "bfaeb0750cc22ce643407d80487d3f3497a3f17bceac66f44444fd6be68bc220",
+      "events_sha256": "6d8323872d47316239bfb50f7bb4be332c5f5716eaff6d17ae019aaf303488c8"
+    },
+    {
+      "run": "model-20261030t012506z-0-scarcity",
+      "generation": 1,
+      "usage": {
+        "provider": "openai/codex-cli",
+        "models": [
+          "gpt-6.1-sol"
+        ],
+        "input_tokens": 16783,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": null,
+        "output_tokens": 319,
+        "cost_usd": null,
+        "cost_basis": null,
+        "turns": null,
+        "tool_denials": null,
+        "tool_events": 0,
+        "wall_seconds": 13.141
+      },
+      "prompt_sha256": "1b5a900a6a1645ad0dedf686b923b77fe8900b0b557e8214f77758faaa92c296",
+      "program_sha256": "bfaeb0750cc22ce643407d80487d3f3497a3f17bceac66f44444fd6be68bc220",
+      "events_sha256": "d365c51726106cb6e5cc60cd64bd523205228a54360260265a82a8bc88d87914"
+    },
+    {
+      "run": "model-20261030t012506z-0-scarcity",
+      "generation": 2,
+      "usage": {
+        "provider": "openai/codex-cli",
+        "models": [
+          "gpt-6.1-sol"
+        ],
+        "input_tokens": 20215,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": null,
+        "output_tokens": 555,
+        "cost_usd": null,
+        "cost_basis": null,
+        "turns": null,
+        "tool_denials": null,
+        "tool_events": 0,
+        "wall_seconds": 20.828
+      },
+      "prompt_sha256": "b341efbb13ba13ed7362705178323651a0e060aa2da335f007a9758354eb2512",
+      "program_sha256": "e6907f33ad8742a890757d4fe3771d996bbffd7f3edb3ac0dcbd3d71dcae39cd",
+      "events_sha256": "b26127b25796083b5088a289e37f7fa1b126ecd7513e145327bd456cd21962b7"
+    },
+    {
+      "run": "model-20261030t012506z-1-conventional",
+      "generation": 1,
+      "usage": {
+        "provider": "openai/codex-cli",
+        "models": [
+          "gpt-6.1-sol"
+        ],
+        "input_tokens": 15863,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": null,
+        "output_tokens": 314,
+        "cost_usd": null,
+        "cost_basis": null,
+        "turns": null,
+        "tool_denials": null,
+        "tool_events": 0,
+        "wall_seconds": 11.922
+      },
+      "prompt_sha256": "70eff4603dcf0fd54ed87c54a07ee073a06ee9920ad3f2ea85b04e1d3a84a0f3",
+      "program_sha256": "bfaeb0750cc22ce643407d80487d3f3497a3f17bceac66f44444fd6be68bc220",
+      "events_sha256": "6cf9d8465cfa8c901fef0a90a73ef259250d62924b3b9de5c68ffc398bbf2885"
+    },
+    {
+      "run": "model-20261030t012506z-1-scarcity",
+      "generation": 1,
+      "usage": {
+        "provider": "openai/codex-cli",
+        "models": [
+          "gpt-6.1-sol"
+        ],
+        "input_tokens": 16783,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": null,
+        "output_tokens": 391,
+        "cost_usd": null,
+        "cost_basis": null,
+        "turns": null,
+        "tool_denials": null,
+        "tool_events": 0,
+        "wall_seconds": 19.984
+      },
+      "prompt_sha256": "ef0da5fc27483d6afae86cb98de1535dba059e7c2fd9eb5bb03f566828788113",
+      "program_sha256": "bfaeb0750cc22ce643407d80487d3f3497a3f17bceac66f44444fd6be68bc220",
+      "events_sha256": "50888b8be5652d09a8c91e03a295415bd0602f11ed589b77efcaaaea2d65702d"
+    },
+    {
+      "run": "model-20261030t012506z-1-scarcity",
+      "generation": 2,
+      "usage": {
+        "provider": "openai/codex-cli",
+        "models": [
+          "gpt-6.1-sol"
+        ],
+        "input_tokens": 19285,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": null,
+        "output_tokens": 927,
+        "cost_usd": null,
+        "cost_basis": null,
+        "turns": null,
+        "tool_denials": null,
+        "tool_events": 0,
+        "wall_seconds": 25.219
+      },
+      "prompt_sha256": "3d82d2d2df1cea917db16901045a56f3b3c1cde32b8e8c42bf552e1961f15a70",
+      "program_sha256": "e318a4bae37a55adef87e672baeaab273c898174bc5dac9e4c48055ed798bb08",
+      "events_sha256": "ad1815d101f9819f03a8d80d1838aaba2aa3188395f2def79f8930db17ecaa17"
+    }
+  ],
+  "totals": {
+    "calls": 6,
+    "distinct_programs": 3,
+    "input_tokens": 104857,
+    "cache_read_tokens": 0,
+    "output_tokens": 2887,
+    "model_wall_seconds": 106.938,
+    "cost_usd": null,
+    "observed_tool_events": 0
+  },
+  "model_identity_basis": "gpt-6.1-sol was explicitly configured; CLI events do not report resolved model",
+  "limitations": [
+    "One synthetic task; descriptive pilot only.",
+    "Same per-run caps, unequal consumed effort due to the controller minimum target.",
+    "Both arms use the same controller and public history; no ordinary-profiler baseline.",
+    "Two runs per arm, randomized run order, same host and frozen compiler/runtime.",
+    "Separate Unix accounts share a kernel; owner exports public prompts to a tool-disabled CLI on Windows.",
+    "No automatic production promotion."
+  ]
+}

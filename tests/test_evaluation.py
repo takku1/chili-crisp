@@ -72,8 +72,12 @@ class NativeEvaluationTests(unittest.TestCase):
             plan, _, _ = self.fixture(directory)
             state = {"plan": plan, "target": 16777216}
             self.assertEqual(development._candidate_budget(state), 16777216)
+            self.assertIn('enforced Linux cgroup memory budget', development._target_basis(plan))
             plan["objective"] = "native_memory_peak_bytes"
             self.assertEqual(development._candidate_budget(state), 67108864)
+            basis = development._target_basis(plan)
+            self.assertIn('memory.peak', basis)
+            self.assertIn('fixed 67108864-byte ceiling', basis)
             plan["objective"] = "wall_seconds"
             with self.assertRaisesRegex(ValueError, "objective"):
                 evaluation.prepare(plan, {"build": None})

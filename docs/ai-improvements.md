@@ -19,15 +19,19 @@ Requests and per-command output already remain in session run directories.
 
 ## Next increments, in order
 
-1. Run a bounded real-model two-generation experiment on the
-   [native bridge](native-development.md). Isolated C and Rust/Cargo compilation
-   pass [native fixtures](../reports/isolated-build-validation.md).
+1. The bounded real-model two-generation experiment and a small conventional
+   comparison now pass on the [native bridge](native-development.md).
+   [Results and limits](../reports/model-comparison.md): both arms found the
+   same main transformation; four signed verdicts and 56 sealed trials audited.
+   Next: representative repository tasks and matched consumed search budgets.
 2. The [owner-operated sealed gate](sealed-acceptance.md) now runs across
    separate accounts and reproduces in CI ([validation](../reports/trust-boundary-validation.md)).
    Remaining: a separate grader host and network transport.
-3. Normalize provider traces and usage. Record model identity when actually
-   reported, prompt/configuration identities, observed tool events and usage;
-   represent unavailable cost explicitly. Never reconstruct private reasoning.
+3. Provider-neutral proposal tooling now retains prompts, structured responses,
+   events and normalized usage. The comparison records configured model identity
+   separately from resolved identity, which the Codex events did not report;
+   unavailable cost is explicitly null. Extend this across more providers and
+   preserve failures. Never reconstruct private reasoning.
 4. Compare scarcity feedback with conventional optimization using matched tasks,
    identical model/configuration and budgets, randomized arm order and repeated
    independent runs. Measure correctness, wall time, tokens, resource improvement

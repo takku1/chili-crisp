@@ -56,8 +56,11 @@ Full time-series maps, generalized resource-axis manifests, I/O enforcement
 backends and joint-axis search remain open. Local measured iteration does not
 advance independent native or production-acceptance gates.
 
-Current priority is one source-changing optimization generation after native
-Linux fixtures pass. Two-tier public Worldgame verification is implemented;
+Two real-model scarcity generations and a bounded conventional comparison now
+pass; [the results](../reports/model-comparison.md) establish workflow completion
+on a synthetic task, not a benefit from scarcity. Current priority is a
+representative repository comparison with matched consumed budgets.
+Two-tier public Worldgame verification is implemented;
 its compiled negative-control pilot demonstrates early numerical rejection.
 See [the pilot evidence and remaining blockers](../reports/screening-20261029T043608Z/REPORT.md).
 Linux access is now available through elevated WSL execution. The fixture suite
@@ -66,15 +69,11 @@ supersede earlier Linux-access blockers. No SSH research VM target is configured
 BenchExec replacement and generation/promotion work remain gated on native
 compatibility, protected build transport, and independent acceptance evidence.
 
-The framework now has an initialized local Git repository on `main`, but its
-initial commit is blocked: this session cannot create `.git/index.lock` under
-the managed read-only `.git` policy. Prepared tracking rules include source,
-contracts, tests, and textual reports while excluding generated numerical arrays,
-portable ZIP bundles, build outputs, and candidate workspaces. Complete the
-[baseline commit](../reports/version-control.md) outside this restricted session
-before repeated source modifications. Then use a separate branch or worktree for subsequent source changes,
-record the parent commit with each experiment, and retain artifact hashes in
-evidence. Earlier reports correctly describe their own runs as unguarded.
+The framework is versioned and published to `origin/main`; the original
+index-lock and Linux-access blockers are historical. See the
+[current status](STATUS.md) for completed delivery gates and remaining research.
+Candidate experiments retain separate frozen source copies, source identities,
+and raw evidence; Git history does not archive ignored run artifacts.
 
 Package/framework cleanup now provides installable metadata, wheel schema assets,
 portable CI, a BenchExec trusted-fixture probe, and a frozen-candidate OpenEvolve

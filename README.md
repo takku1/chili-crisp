@@ -12,6 +12,7 @@ A subsequent [real model pilot](reports/model-source-pilot.md) retained a public
 rejection and confirmed a 4 MiB peak-memory reduction on fresh heldout input.
 
 Read the [design index](docs/README.md) and [implementation guide](docs/implementation.md).
+See [current project status](docs/STATUS.md) for delivered milestones and remaining research.
 
 For the CLI and AI coding workflow, start with [getting started](docs/getting-started.md).
 The reusable skill is [chili-dev](chilicrisp/skills/chili-dev/SKILL.md).

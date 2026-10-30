@@ -205,6 +205,15 @@ def _experiment_memory(state, limit=8):
         "attempts": attempts}
 
 
+def _target_basis(plan):
+    if not evaluation.native(plan):
+        return "median local measurements; no scarcity limit is enforced"
+    if plan["objective"] == "native_memory_peak_bytes":
+        return (f"median measured cgroup memory.peak under a fixed {plan['evaluation']['initial_budget']}-byte "
+                "ceiling; public correctness and repeated measurement")
+    return "enforced Linux cgroup memory budget; public correctness and repeated survival"
+
+
 def request(directory):
     directory = Path(directory).resolve()
     state = status(directory)
@@ -217,8 +226,7 @@ def request(directory):
         "concept": state["plan"]["concept"], "champion_source": str(root),
         "champion_source_hash": champion["source_hash"], "objective": state["plan"]["objective"],
         "measured_baseline": champion["metrics"], "target": state["target"],
-        "target_basis": ("enforced Linux cgroup memory budget; public correctness and repeated survival"
-            if evaluation.native(state["plan"]) else "median local measurements; no scarcity limit is enforced"),
+        "target_basis": _target_basis(state["plan"]),
         "regression_limits": state["plan"]["regression_limits"],
         "protected_paths": state["project"]["protected_paths"],
         "previous_attempt": state["generations"][-1] if state["generations"] else None,

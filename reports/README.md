@@ -1,5 +1,8 @@
 # Reports
 
+- [Bounded real-model comparison](model-comparison.md): two scarcity generations,
+  conventional comparison, provider usage, four signed verdicts and raw-trial audits.
+
 - [Owner-operated sealed acceptance](sealed-acceptance-validation.md): signed
   final decisions, overfitting rejection and identical bounded transfer conditions.
 
