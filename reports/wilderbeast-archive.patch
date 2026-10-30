@@ -1,0 +1,22 @@
+--- a/src/wilderbeast/evidence/archive.py
++++ b/src/wilderbeast/evidence/archive.py
+@@ -186,7 +186,18 @@
+         if not self.storage_path:
+             return
+         self.storage_path.parent.mkdir(parents=True, exist_ok=True)
+-        data = [rec.to_dict() for rec in self._records.values()]
++        records = self._records
++
++        class RecordStream(list):
++            # json.dump iterates list subclasses lazily. Preserve its exact
++            # array formatting while materializing only one record at a time.
++            def __len__(self):
++                return len(records)
++
++            def __iter__(self):
++                return (record.to_dict() for record in records.values())
++
++        data = RecordStream()
+         # Atomic write via temp file + rename
+         fd, tmp_path = tempfile.mkstemp(
+             dir=self.storage_path.parent, suffix=".tmp", prefix=".wb_archive_"

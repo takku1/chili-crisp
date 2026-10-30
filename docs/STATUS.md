@@ -17,6 +17,10 @@ setup blockers in earlier reports.
 - Provider-neutral structured proposal transport and a bounded real-model
   comparison harness. See the [comparison report](../reports/model-comparison.md)
   for actual outcomes, usage, failed attempts and limitations.
+- Qualified frozen components from Wilderbeast, MochiOS and Worldgame, with a
+  first owner-reviewed Wilderbeast archive candidate retained after an 11.3%
+  reduction in sampled peak RSS. [Evidence and scope](../reports/repository-cohort.md).
+  This is local measurement, not a real-repository scarcity-arm comparison.
 
 The installed tool is usable for bounded owner-operated experiments. Retained
 candidates remain experimental; a signed policy verdict does not authorize

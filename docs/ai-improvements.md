@@ -24,6 +24,9 @@ Requests and per-command output already remain in session run directories.
    [Results and limits](../reports/model-comparison.md): both arms found the
    same main transformation; four signed verdicts and 56 sealed trials audited.
    Next: representative repository tasks and matched consumed search budgets.
+   [Three repository components are now qualified](../reports/repository-cohort.md),
+   with a first sampled local archive-memory candidate; the native matched-arm
+   study remains open.
 2. The [owner-operated sealed gate](sealed-acceptance.md) now runs across
    separate accounts and reproduces in CI ([validation](../reports/trust-boundary-validation.md)).
    Remaining: a separate grader host and network transport.

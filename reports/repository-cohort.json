@@ -1,0 +1,210 @@
+{
+  "stage": "baseline qualification only; no model proposals or optimization acceptance",
+  "cohort": "artifacts\\repository-cohort-20261030T015159Z",
+  "environment": {
+    "platform": "Windows-11-10.0.26200-SP0",
+    "machine": "AMD64",
+    "cpu_count": 32,
+    "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+    "psutil": "7.2.2",
+    "collector_sha256": "02a575fe33d93690abddc069a6f498025ae51122397665a887caa331519eff97"
+  },
+  "enforcement": "none",
+  "measurement_order": [
+    "wilderbeast",
+    "wilderbeast",
+    "worldgame",
+    "worldgame",
+    "wilderbeast",
+    "mochios",
+    "mochios",
+    "mochios",
+    "worldgame"
+  ],
+  "projects": {
+    "wilderbeast": {
+      "source": "Z:\\Wilderbeast",
+      "parent_commit": "6188870ec28f62c4252e58a865316a0187fc034e",
+      "includes_uncommitted_files": true,
+      "source_manifest_sha256": "174705f455d84cd563d515b3fb32ac00854e103129d6dcad5f4204b2324e6a43",
+      "file_count": 45,
+      "build_adapter_changes": [],
+      "post_resolution_lockfile_sha256": null,
+      "tests": {
+        "passed": 41,
+        "ignored": 0
+      },
+      "ready": true,
+      "repetitions": 3,
+      "all_measurements_passed": true,
+      "sample_counts": [
+        9,
+        9,
+        8
+      ],
+      "medians": {
+        "wall_seconds": 0.25,
+        "sampled_peak_rss_bytes": 38166528,
+        "sampled_cpu_seconds": 0.203125
+      },
+      "limitations": [
+        "Trusted host execution; no resource scarcity is enforced.",
+        "RSS is a sampled sum across observed processes and may double-count shared pages.",
+        "Short-lived processes and CPU/I/O after their last sample can be missed.",
+        "I/O counters have platform-specific semantics; artifact bytes are logical file sizes."
+      ],
+      "evidence": "artifacts\\repository-cohort-20261030T015159Z\\wilderbeast\\qualification-owner"
+    },
+    "mochios": {
+      "source": "Z:\\mochios",
+      "parent_commit": "b3f44a407a583bf126130523b032ee0c2d1d861a",
+      "includes_uncommitted_files": true,
+      "source_manifest_sha256": "80ee24b1c35cb82e3a8ab61782dd9747edd033bcc19fab74f31444ca99160f1b",
+      "file_count": 7,
+      "build_adapter_changes": [
+        "Owner narrows workspace membership to selected unchanged crate; retains workspace package, dependency, lint and profile declarations."
+      ],
+      "post_resolution_lockfile_sha256": "b134b0257a50965e444a75309bdda82959a21a6fe9942f281f1bcf27989b5148",
+      "tests": {
+        "passed": 7,
+        "ignored": 0
+      },
+      "ready": true,
+      "repetitions": 3,
+      "all_measurements_passed": true,
+      "sample_counts": [
+        9,
+        9,
+        9
+      ],
+      "medians": {
+        "wall_seconds": 0.23499999998603016,
+        "sampled_peak_rss_bytes": 5677056,
+        "sampled_cpu_seconds": 0.21875
+      },
+      "limitations": [
+        "Trusted host execution; no resource scarcity is enforced.",
+        "RSS is a sampled sum across observed processes and may double-count shared pages.",
+        "Short-lived processes and CPU/I/O after their last sample can be missed.",
+        "I/O counters have platform-specific semantics; artifact bytes are logical file sizes."
+      ],
+      "evidence": "artifacts\\repository-cohort-20261030T015159Z\\mochios\\qualification-owner"
+    },
+    "worldgame": {
+      "source": "Z:\\worldgame",
+      "parent_commit": "86718e350cb2e81312603e3b095bb325685fedd2",
+      "includes_uncommitted_files": true,
+      "source_manifest_sha256": "1fe4b4fbc5dc4358db6717d95c2882b5025082eb992c90a2d883b5bcf4d27818",
+      "file_count": 46,
+      "build_adapter_changes": [
+        "Owner narrows workspace membership to selected unchanged crate; retains workspace package, dependency, lint and profile declarations."
+      ],
+      "post_resolution_lockfile_sha256": "759f534fb1407fa81380eca44231b0b0a8b6bf994fbdaeb60a492530c74aeecb",
+      "tests": {
+        "passed": 201,
+        "ignored": 2
+      },
+      "ready": true,
+      "repetitions": 3,
+      "all_measurements_passed": true,
+      "sample_counts": [
+        104,
+        104,
+        105
+      ],
+      "medians": {
+        "wall_seconds": 2.5939999999827705,
+        "sampled_peak_rss_bytes": 63418368,
+        "sampled_cpu_seconds": 24.796875
+      },
+      "limitations": [
+        "Trusted host execution; no resource scarcity is enforced.",
+        "RSS is a sampled sum across observed processes and may double-count shared pages.",
+        "Short-lived processes and CPU/I/O after their last sample can be missed.",
+        "I/O counters have platform-specific semantics; artifact bytes are logical file sizes."
+      ],
+      "evidence": "artifacts\\repository-cohort-20261030T015159Z\\worldgame\\qualification-owner"
+    }
+  },
+  "wilderbeast_pilot": {
+    "kind": "one owner-reviewed candidate; not a model-arm comparison",
+    "session": "artifacts\\repository-cohort-20261030T015159Z\\wilderbeast\\local-pilot-2\\session",
+    "decision": "accepted_experimental",
+    "baseline_source_hash": "13e24f6c6c3e282641cf9d93ca26ac2651f40a1751a579ee78807d2ba738319c",
+    "candidate_source_hash": "805edbc9979c7320954c097b548259ba24325dde29f81e167b439aae67d7f43e",
+    "confirmation_medians": {
+      "baseline": {
+        "wall_seconds": 0.25,
+        "sampled_peak_rss_bytes": 38277120,
+        "sampled_cpu_seconds": 0.21875,
+        "sampled_io_read_bytes": 3256979,
+        "sampled_io_write_bytes": 5803612,
+        "artifact_bytes": null
+      },
+      "candidate": {
+        "wall_seconds": 0.25,
+        "sampled_peak_rss_bytes": 33951744,
+        "sampled_cpu_seconds": 0.21875,
+        "sampled_io_read_bytes": 3257350,
+        "sampled_io_write_bytes": 5803612,
+        "artifact_bytes": null
+      }
+    },
+    "sampled_rss_reduction_fraction": 0.11300160513643664,
+    "verification": {
+      "public": "sampled_screening",
+      "sealed": "not_run",
+      "production": "not_accepted"
+    },
+    "size_checks": [
+      {
+        "records": 0,
+        "baseline": {
+          "logical_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "records": 0
+        },
+        "candidate": {
+          "logical_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "records": 0
+        },
+        "matched": true
+      },
+      {
+        "records": 1,
+        "baseline": {
+          "logical_sha256": "c52a14f9c4e873f5d710d96936e9e565c79dfcaae067941fd4b52512345bbdfb",
+          "records": 1
+        },
+        "candidate": {
+          "logical_sha256": "c52a14f9c4e873f5d710d96936e9e565c79dfcaae067941fd4b52512345bbdfb",
+          "records": 1
+        },
+        "matched": true
+      },
+      {
+        "records": 257,
+        "baseline": {
+          "logical_sha256": "36dbfbdcb7e7d05a4ba1321b18728473b4f7b7413f06e753775e6a523b853f25",
+          "records": 257
+        },
+        "candidate": {
+          "logical_sha256": "36dbfbdcb7e7d05a4ba1321b18728473b4f7b7413f06e753775e6a523b853f25",
+          "records": 257
+        },
+        "matched": true
+      },
+      {
+        "records": 20000,
+        "baseline": {
+          "logical_sha256": "16b5b0ff69188454ceaf0ecc15155ce5ec212975207cdba9b655c4c113f166df",
+          "records": 20000
+        },
+        "candidate": {
+          "logical_sha256": "16b5b0ff69188454ceaf0ecc15155ce5ec212975207cdba9b655c4c113f166df",
+          "records": 20000
+        },
+        "matched": true
+      }
+    ]
+  }
+}

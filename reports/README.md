@@ -1,5 +1,8 @@
 # Reports
 
+- [Real-repository cohort and first pilot](repository-cohort.md): Wilderbeast,
+  MochiOS and Worldgame baselines, plus a retained archive-memory candidate.
+
 - [Bounded real-model comparison](model-comparison.md): two scarcity generations,
   conventional comparison, provider usage, four signed verdicts and raw-trial audits.
 
