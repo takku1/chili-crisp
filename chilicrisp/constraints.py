@@ -20,6 +20,7 @@ import psutil
 from .contracts import validate
 from .measure import Monitor, artifact_size, environment
 from .project import EXCLUDED, execute, persist
+from .where import where as breakdown
 
 
 # Brief budget name -> (measurement key, unit, label, measurement quality).
@@ -274,7 +275,7 @@ def scan(brief, workspace):
 
 
 def check(spec, command, workspace, out, *, baseline_workspace=None, repeat=3, timeout=300.0,
-          same_output=False):
+          same_output=False, where=False):
     """Measure `command` against a brief. Returns a report; verdict 'fits' means every check passed."""
     brief = load(spec)
     if not command:
@@ -293,6 +294,7 @@ def check(spec, command, workspace, out, *, baseline_workspace=None, repeat=3, t
     initial = {arm: _fingerprint(roots[arm], skip) for arm in arms}
     changed = {arm: set() for arm in arms}
     declared = brief.get("inputs")
+    inputs_args = [item["args"] for item in declared or [{"args": []}]]
     inputs = []
     for number, item in enumerate(declared or [{"args": []}], 1):
         hidden = item.get("hidden", False)
@@ -340,16 +342,16 @@ def check(spec, command, workspace, out, *, baseline_workspace=None, repeat=3, t
     output_ok, failed = True, []
     for entry in inputs:
         own, base = entry["candidate"], entry["baseline"]
-        where = f"{entry['label']}: " if entry["label"] else ""
+        label = f"{entry['label']}: " if entry["label"] else ""
         if own["passed"] < own["runs"] or (base and base["passed"] < base["runs"]):
-            failed.append(f"{where}Command failed: candidate {own['outcomes']}"
+            failed.append(f"{label}Command failed: candidate {own['outcomes']}"
                           + (f", baseline {base['outcomes']}" if base else ""))
         if not own["stdout_stable"]:
             output_ok = False
-            findings.append(f"{where}Candidate stdout differs between runs")
+            findings.append(f"{label}Candidate stdout differs between runs")
         if same_output and base is not None and own["stdout_sha256"] != base["stdout_sha256"]:
             output_ok = False
-            findings.append(f"{where}Candidate stdout differs from the baseline")
+            findings.append(f"{label}Candidate stdout differs from the baseline")
     allowed = brief.get("writes", [])
     # Paths the baseline also changes are the program's normal output, not a cache.
     written = sorted(path for path in changed["candidate"] - changed.get("baseline", set())
@@ -371,6 +373,12 @@ def check(spec, command, workspace, out, *, baseline_workspace=None, repeat=3, t
         verdict = "incomplete"
     else:
         verdict = "fits"
+    located = None
+    if where:
+        # Separate, unmeasured run: tracing slows the program and adds memory of its own.
+        located = breakdown([*command, *inputs_args[-1]], workspace, out / "where", timeout)
+        if "error" in located:
+            findings.append(f"Memory breakdown unavailable: {located['error']}")
     shared = deepcopy(brief)
     for item in shared.get("inputs", []):
         if item.get("hidden"):
@@ -378,7 +386,7 @@ def check(spec, command, workspace, out, *, baseline_workspace=None, repeat=3, t
     report = {"kind": "constraint_check", "verdict": verdict, "brief": shared, "command": command,
               "workspace": str(workspace), "baseline_workspace": str(roots["baseline"]) if baseline else None,
               "repeat": repeat, "budgets": budgets, "candidate": candidate, "baseline": baseline,
-              "inputs": inputs if declared else None, "changed_files": written,
+              "inputs": inputs if declared else None, "changed_files": written, "where": located,
               "rule_violations": violations, "findings": findings, "environment": environment(),
               "enforcement": "none: measured after the fact on this machine",
               "measurement_notes": {name: METRICS[name][3] for name in budgets}}
@@ -430,6 +438,18 @@ def _limits(budgets):
     return [line for note in notes for line in ("", note)]
 
 
+def _where_lines(located, peak):
+    if not located or not located.get("sites"):
+        return []
+    lines = ["", "## Where memory goes", "",
+             f"Python allocations still alive near the traced peak ({_format(located['snapshot_bytes'], 'bytes')}"
+             + (f"; the measured process peak was {_format(peak, 'bytes')}" if peak else "")
+             + "). Interpreter overhead and memory held by C extensions aren't included.", "",
+             "| Site | Size | Blocks |", "| --- | --- | --- |"]
+    lines += [f"| `{s['file']}:{s['line']}` | {_format(s['bytes'], 'bytes')} | {s['count']} |" for s in located["sites"]]
+    return lines
+
+
 def render(spec, report=None):
     """Agent-facing markdown for a brief, optionally filled in with a previous check's numbers."""
     brief = load(spec)
@@ -466,6 +486,7 @@ def render(spec, report=None):
     if report:
         findings = [f"- {f}" for f in report["findings"]] or ["- Everything fits."]
         lines += ["", f"## Last check: {report['verdict']}", "", *findings]
+        lines += _where_lines(report.get("where"), report["candidate"]["metrics"].get("peak_memory_bytes"))
     return "\n".join(lines) + "\n"
 
 

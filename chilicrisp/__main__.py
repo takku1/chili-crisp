@@ -74,6 +74,8 @@ def main(argv=None):
     checking.add_argument("--timeout", type=float, default=300.0, help="Seconds per run")
     checking.add_argument("--same-output", action="store_true", help="Require stdout identical to the baseline")
     checking.add_argument("--out", type=Path, help="Report directory (default: .chilicrisp/checks/TIMESTAMP)")
+    checking.add_argument("--where", action="store_true",
+                          help="Python only: one extra traced run listing the top allocation sites")
     commands.add_parser("capabilities", help="List implementation capabilities")
     doctor = commands.add_parser("doctor", help="Check setup without executing workloads")
     doctor.add_argument("--manifest", type=Path)
@@ -152,7 +154,8 @@ def main(argv=None):
             out = args.out or Path(".chilicrisp", "checks", time.strftime("%Y%m%dT%H%M%S"))
             result = constraints.check(args.spec, command, args.workspace, out,
                                        baseline_workspace=args.baseline, repeat=args.repeat,
-                                       timeout=args.timeout, same_output=args.same_output)
+                                       timeout=args.timeout, same_output=args.same_output,
+                                       where=args.where)
             exit_code = 0 if result["verdict"] == "fits" else 1
         elif args.command == "capabilities":
             result = capabilities()

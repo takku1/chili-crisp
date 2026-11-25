@@ -8,7 +8,7 @@ chilicrisp brief quarter                  # print the agent-facing brief (markdo
 chilicrisp brief my-brief.json --report .chilicrisp/checks/<stamp>/report.json
 chilicrisp brief quarter --out brief.md     # save it instead of printing
 chilicrisp check BRIEF [--workspace DIR] [--baseline DIR] [--same-output]
-                       [--repeat 3] [--timeout 300] [--out DIR] -- COMMAND [ARGS...]
+                       [--repeat 3] [--timeout 300] [--out DIR] [--where] -- COMMAND [ARGS...]
 ```
 
 `check` runs `COMMAND` with the candidate directory (`--workspace`, default `.`)
@@ -17,6 +17,13 @@ the original directory, alternating the order on each repetition. It takes the
 median of each metric and writes `report.json`, plus per-run stdout, stderr and
 measurements, to `--out` (default `.chilicrisp/checks/<timestamp>`). Exit code 0
 means `fits`.
+
+`--where` (Python commands only) adds one unmeasured diagnostic run under
+`tracemalloc` and lists the top allocation sites close to the traced peak (within
+about 10%). `brief --report` shows them as a "Where memory goes" table so the agent
+starts from what actually holds the memory. It misses interpreter overhead and
+memory held by C extensions, and tracing makes that run slower, so its numbers
+are never used for budgets.
 
 | Verdict | Meaning |
 | --- | --- |

@@ -175,6 +175,31 @@ class CheckTests(unittest.TestCase):
                 self.assertNotIn("secret-arg", path.read_text(encoding="utf-8"), path)
             self.assertNotIn("secret-arg", c.render(spec, report))
 
+    def test_where_names_the_allocating_line(self):
+        hog = "import sys\nkeep = [bytes(1000) for _ in range(20000)]\nprint(len(keep), sys.argv[1:])\n"
+        with test_directory() as root:
+            candidate = Path(root) / "candidate"
+            candidate.mkdir()
+            (candidate / "hog.py").write_text(hog, encoding="utf-8")
+            spec = {"schema_version": "1.0", "name": "t", "story": "s", "budgets": {"wall_seconds": 60},
+                    "inputs": [{"args": ["x"]}]}
+            report = c.check(spec, [sys.executable, "hog.py"], candidate, Path(root) / "out",
+                             repeat=1, timeout=60, where=True)
+            self.assertEqual(report["verdict"], "fits")
+            top = report["where"]["sites"][0]
+            self.assertEqual((top["file"], top["line"]), ("hog.py", 2))
+            self.assertIn("`hog.py:2`", c.render(spec, report))
+            report = c.check(spec, ["git", "--version"], candidate, Path(root) / "out-2", repeat=1,
+                             timeout=60, where=True)
+            self.assertTrue(any("needs a Python command" in f for f in report["findings"]))
+
+    def test_instrument_finds_script_or_module(self):
+        from chilicrisp.where import instrument, WRAPPER
+        self.assertEqual(instrument(["python3", "-u", "a.py", "x"]), ["python3", "-u", "-c", WRAPPER, "a.py", "x"])
+        self.assertEqual(instrument(["py", "-3", "-m", "pkg", "x"]), ["py", "-3", "-c", WRAPPER, "-m", "pkg", "x"])
+        self.assertIsNone(instrument(["node", "a.js"]))
+        self.assertIsNone(instrument(["python", "-c", "print(1)"]))
+
     def test_zero_budget_on_sampled_counter_is_flagged(self):
         with test_directory() as root:
             candidate = project(root, "candidate", 1024)
