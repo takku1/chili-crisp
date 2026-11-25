@@ -15,14 +15,42 @@ from .project import compare, initialize
 from .resources import capabilities
 from . import constraints, development
 
+# Optional Linux cgroup tier. Reached as `chilicrisp enforced COMMAND`; the old
+# top-level names still work but are hidden from the main help.
+ENFORCED = {
+    "runner": "Validate a manifest or run one enforced trial",
+    "frontier": "Search the memory frontier of public workloads",
+    "recover": "Recover one named unfinished trial",
+    "build": "Compile offline in isolation; artifacts never run on the host",
+    "cpu-sweep": "Run a declared CPU quota grid at fixed memory",
+    "pressure-map": "Summarize recorded pressure trials",
+}
+_FORWARDED = {"runner", "frontier", "recover", "build"}
+
+
+def _enforced_help():
+    rows = "\n".join(f"  {name:<14}{text}" for name, text in ENFORCED.items())
+    return ("usage: chilicrisp enforced COMMAND [ARGS...]\n\n"
+            "Optional Linux tier: kernel-enforced limits (cgroups, seccomp, isolated builds).\n"
+            "Constraint briefs do not need it. See docs/current/enforced/.\n\n"
+            f"commands:\n{rows}\n")
+
 
 def main(argv=None):
     argv = list(sys.argv[1:] if argv is None else argv)
-    if argv and argv[0] in {"runner", "frontier", "recover", "build"}:
+    prog = "chilicrisp"
+    if argv[:1] == ["enforced"]:
+        if len(argv) < 2 or argv[1] not in ENFORCED:
+            unknown = len(argv) >= 2 and argv[1] not in {"-h", "--help"}
+            print((f"unknown enforced command: {argv[1]}\n\n" if unknown else "") + _enforced_help(),
+                  end="", file=sys.stderr if unknown else sys.stdout)
+            return 2 if unknown else 0
+        argv, prog = argv[1:], "chilicrisp enforced"
+    if argv and argv[0] in _FORWARDED:
         from . import controller, recovery, runner, build
         old = sys.argv
         try:
-            sys.argv = [f"chilicrisp {argv[0]}", *argv[1:]]
+            sys.argv = [f"{prog} {argv[0]}", *argv[1:]]
             return {"runner": runner.main, "frontier": controller.main, "recover": recovery.main, "build": build.main}[argv[0]]()
         finally:
             sys.argv = old
@@ -30,9 +58,9 @@ def main(argv=None):
     if argv[:1] == ["check"] and "--" in argv:
         split = argv.index("--")
         argv, trailing = argv[:split], argv[split + 1:]
-    parser = argparse.ArgumentParser(description=__doc__,
+    parser = argparse.ArgumentParser(prog="chilicrisp", description=__doc__,
                                      epilog="check usage: chilicrisp check BRIEF [options] -- COMMAND [ARGS...]")
-    commands = parser.add_subparsers(dest="command", required=True)
+    commands = parser.add_subparsers(dest="command", required=True, metavar="COMMAND")
     commands.add_parser("profiles", help="List built-in constraint profiles")
     brief = commands.add_parser("brief", help="Print the agent-facing constraint brief")
     brief.add_argument("spec", help="Profile name or brief JSON file")
@@ -49,9 +77,11 @@ def main(argv=None):
     commands.add_parser("capabilities", help="List implementation capabilities")
     doctor = commands.add_parser("doctor", help="Check setup without executing workloads")
     doctor.add_argument("--manifest", type=Path)
-    report = commands.add_parser("pressure-map", help="Summarize recorded pressure trials")
+    # Enforced-tier parsers get no `help=`, which keeps them out of the main listing.
+    report = commands.add_parser("pressure-map", prog=f"{prog} pressure-map",
+                                 description=ENFORCED["pressure-map"])
     report.add_argument("directory", type=Path)
-    cpu = commands.add_parser("cpu-sweep", help="Run a declared CPU quota grid at fixed memory")
+    cpu = commands.add_parser("cpu-sweep", prog=f"{prog} cpu-sweep", description=ENFORCED["cpu-sweep"])
     cpu.add_argument("manifest", type=Path)
     cpu.add_argument("--quotas", nargs="+", type=int, required=True)
     cpu.add_argument("--period", type=int, default=100000)
@@ -101,8 +131,8 @@ def main(argv=None):
     undo.add_argument("champion")
     undo.add_argument("--reason", required=True)
     undo.add_argument("--trusted-local", action="store_true")
-    for name in ("runner", "frontier", "recover", "build"):
-        commands.add_parser(name, help="Forward to existing experiment command")
+    commands.add_parser("enforced", help="Optional Linux cgroup tier: " + ", ".join(ENFORCED)
+                        + " (chilicrisp enforced -h)")
     args = parser.parse_args(argv)
     exit_code = 0
     try:

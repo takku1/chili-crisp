@@ -154,5 +154,39 @@ class CheckTests(unittest.TestCase):
             self.assertEqual(json.loads(stdout.getvalue())["verdict"], "fits")
 
 
+
+class EnforcedNamespaceTests(unittest.TestCase):
+    def run_cli(self, argv):
+        out, err = io.StringIO(), io.StringIO()
+        with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+            try:
+                code = main(argv)
+            except SystemExit as stop:
+                code = stop.code
+        return code, out.getvalue(), err.getvalue()
+
+    def test_main_help_hides_enforced_commands(self):
+        _, text, _ = self.run_cli(["-h"])
+        self.assertIn("enforced", text)
+        for name in ("pressure-map", "cpu-sweep", "frontier"):
+            self.assertNotIn(f"\n    {name}", text)
+
+    def test_enforced_lists_its_commands(self):
+        code, text, _ = self.run_cli(["enforced"])
+        self.assertEqual(code, 0)
+        for name in ("runner", "frontier", "recover", "build", "cpu-sweep", "pressure-map"):
+            self.assertIn(name, text)
+        code, _, err = self.run_cli(["enforced", "check"])
+        self.assertEqual(code, 2)
+        self.assertIn("unknown enforced command: check", err)
+
+    def test_enforced_and_legacy_names_both_dispatch(self):
+        with test_directory() as root:
+            for argv in (["enforced", "pressure-map", root], ["pressure-map", root]):
+                code, text, _ = self.run_cli(argv)
+                self.assertEqual(code, 0, argv)
+                self.assertIsInstance(json.loads(text), dict)
+
+
 if __name__ == "__main__":
     unittest.main()

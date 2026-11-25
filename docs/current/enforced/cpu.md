@@ -45,7 +45,7 @@ Run ordinary `runner trial` with this manifest to collect one point, or declare
 a complete quota grid:
 
 ```text
-python -m chilicrisp cpu-sweep MANIFEST --quotas 100000 50000 20000 --period 100000 --budget 67108864 --repetitions 3 --seed 7
+python -m chilicrisp enforced cpu-sweep MANIFEST --quotas 100000 50000 20000 --period 100000 --budget 67108864 --repetitions 3 --seed 7
 ```
 
 The example uses a fixed 64 MiB memory cap; choose a known adequate cap for the

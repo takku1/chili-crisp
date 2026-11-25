@@ -115,7 +115,7 @@ mounted read-only at `/candidate` in the program runtime. Builds are cached per
 source and compiler manifest under the session; a cache entry is re-verified
 before reuse and a tampered entry rejects rather than rebuilding. Compilation
 reserves four extra trials per baseline/candidate evaluation. Run
-`chilicrisp build MANIFEST SOURCE OUTPUT --budget BYTES` to compile standalone.
+`chilicrisp enforced build MANIFEST SOURCE OUTPUT --budget BYTES` to compile standalone.
 
 Validated toolchains are GCC C (`tools/native-build.py`) and Rust/Cargo
 (`tools/native-cargo.py`); see [validation](../../archive/2026-11-25-enforcement-first-era/reports/isolated-build-validation.md).

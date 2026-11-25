@@ -34,7 +34,7 @@ evidence supports a more specific classification.
 
 ## Observed pressure maps
 
-`python -m chilicrisp pressure-map EVIDENCE_DIRECTORY` prints JSON from recursively
+`python -m chilicrisp enforced pressure-map EVIDENCE_DIRECTORY` prints JSON from recursively
 discovered `result.json` records. Redirect it to a file outside the raw evidence
 tree when a persistent report is needed. Malformed records and duplicate trial
 identities stop aggregation. The command never executes target code.

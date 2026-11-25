@@ -43,6 +43,10 @@ enforced tier.
   OpenEvolve/BenchExec bridges, separate-account trust fixtures and the
   Wilderbeast transfer pilot. Dependencies are now just jsonschema and psutil.
 - 2026-11-25: Deleted local untracked `artifacts/` (old run output) and `.claude-flow/`.
+- 2026-11-25: Enforced-tier commands (`runner`, `frontier`, `recover`, `build`,
+  `cpu-sweep`, `pressure-map`) moved under `chilicrisp enforced`. The old
+  top-level names still work but are hidden from `--help`, so scripts and the
+  hash-checked `chili-dev` skill flows keep working.
 
 ## Deprecated/Legacy
 
