@@ -74,6 +74,10 @@ def main(argv=None):
     checking.add_argument("--timeout", type=float, default=300.0, help="Seconds per run")
     checking.add_argument("--same-output", action="store_true", help="Require stdout identical to the baseline")
     checking.add_argument("--out", type=Path, help="Report directory (default: .chilicrisp/checks/TIMESTAMP)")
+    checking.add_argument("--ratchet", type=Path,
+                          help="Fail if a budgeted metric grows past this file's saved values; tighten it on fits")
+    checking.add_argument("--tolerance", type=float, default=10.0,
+                          help="Percent a metric may grow past the ratchet (default 10)")
     checking.add_argument("--where", action="store_true",
                           help="Python only: one extra traced run listing the top allocation sites")
     commands.add_parser("capabilities", help="List implementation capabilities")
@@ -155,7 +159,8 @@ def main(argv=None):
             result = constraints.check(args.spec, command, args.workspace, out,
                                        baseline_workspace=args.baseline, repeat=args.repeat,
                                        timeout=args.timeout, same_output=args.same_output,
-                                       where=args.where)
+                                       where=args.where, ratchet=args.ratchet,
+                                       tolerance=args.tolerance / 100)
             exit_code = 0 if result["verdict"] == "fits" else 1
         elif args.command == "capabilities":
             result = capabilities()

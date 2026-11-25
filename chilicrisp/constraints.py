@@ -275,13 +275,15 @@ def scan(brief, workspace):
 
 
 def check(spec, command, workspace, out, *, baseline_workspace=None, repeat=3, timeout=300.0,
-          same_output=False, where=False):
+          same_output=False, where=False, ratchet=None, tolerance=0.10):
     """Measure `command` against a brief. Returns a report; verdict 'fits' means every check passed."""
     brief = load(spec)
     if not command:
         raise ValueError("Give the command to measure after `--`")
     if repeat < 1:
         raise ValueError("--repeat must be at least 1")
+    if tolerance < 0:
+        raise ValueError("--tolerance can't be negative")
     if same_output and baseline_workspace is None:
         raise ValueError("--same-output needs --baseline")
     workspace = Path(workspace).resolve()
@@ -361,18 +363,36 @@ def check(spec, command, workspace, out, *, baseline_workspace=None, repeat=3, t
         findings.append(f"The candidate changed files in its directory during the check ({shown}). If a later "
                         "run reads them back, the measurements can't be trusted. Declare expected output "
                         "files under `writes` in the brief.")
+    saved = _load_ratchet(ratchet, brief) if ratchet else {}
+    regressed = []
+    for name, entry in budgets.items():
+        previous, value = saved.get(name), entry.get("measured")
+        if previous is not None and value is not None and value > previous * (1 + tolerance):
+            regressed.append(name)
+            findings.append(f"{name}: {_format(value, entry['unit'])} regressed past the ratchet "
+                            f"({_format(previous, entry['unit'])} + {tolerance:.0%})")
     statuses = {entry["status"] for entry in budgets.values()}
     if failed:
         verdict = "broken"
         findings[:0] = failed
     elif not output_ok or violations:
         verdict = "broken"
-    elif "over" in statuses:
+    elif "over" in statuses or regressed:
         verdict = "over_budget"
     elif statuses - {"within"} or written:
         verdict = "incomplete"
     else:
         verdict = "fits"
+    ratchet_state = None
+    if ratchet:
+        tightened = dict(saved)
+        if verdict == "fits":
+            for name, entry in budgets.items():
+                if entry.get("measured") is not None:
+                    tightened[name] = min(saved.get(name, entry["measured"]), entry["measured"])
+            persist(Path(ratchet), {"kind": "chilicrisp_ratchet", "brief": brief["name"], "metrics": tightened})
+        ratchet_state = {"file": str(ratchet), "previous": saved or None, "tolerance": tolerance,
+                         "regressed": regressed, "updated": verdict == "fits"}
     located = None
     if where:
         # Separate, unmeasured run: tracing slows the program and adds memory of its own.
@@ -387,12 +407,23 @@ def check(spec, command, workspace, out, *, baseline_workspace=None, repeat=3, t
               "workspace": str(workspace), "baseline_workspace": str(roots["baseline"]) if baseline else None,
               "repeat": repeat, "budgets": budgets, "candidate": candidate, "baseline": baseline,
               "inputs": inputs if declared else None, "changed_files": written, "where": located,
+              "ratchet": ratchet_state,
               "rule_violations": violations, "findings": findings, "environment": environment(),
               "enforcement": "none: measured after the fact on this machine",
               "measurement_notes": {name: METRICS[name][3] for name in budgets}}
     persist(out / "report.json", report)
     report["report"] = str(out / "report.json")
     return report
+
+
+def _load_ratchet(path, brief):
+    path = Path(path)
+    if not path.is_file():
+        return {}
+    saved = json.loads(path.read_text(encoding="utf-8"))
+    if saved.get("kind") != "chilicrisp_ratchet" or saved.get("brief") != brief["name"]:
+        raise ValueError(f"{path} is not a ratchet for brief {brief['name']!r}")
+    return saved["metrics"]
 
 
 def _format(value, unit):

@@ -50,16 +50,20 @@ def finish():
     with open(out, "w", encoding="utf-8") as handle:
         json.dump({"traced_peak_bytes": peak, "snapshot_bytes": size, "sites": sites}, handle)
 args = sys.argv[1:]
+# Hold the script's globals until the final snapshot: runpy drops them on
+# return, which would free module-level data before it is seen.
+namespace = None
 try:
     if args[:1] == ["-m"]:
         sys.argv = [args[1], *args[2:]]
-        runpy.run_module(args[1], run_name="__main__", alter_sys=True)
+        namespace = runpy.run_module(args[1], run_name="__main__", alter_sys=True)
     else:
         sys.argv = args
         sys.path.insert(0, os.path.dirname(os.path.abspath(args[0])))
-        runpy.run_path(args[0], run_name="__main__")
+        namespace = runpy.run_path(args[0], run_name="__main__")
 finally:
     finish()
+    del namespace
 """ % {"top": TOP}
 
 

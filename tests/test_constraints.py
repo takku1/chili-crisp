@@ -200,6 +200,27 @@ class CheckTests(unittest.TestCase):
         self.assertIsNone(instrument(["node", "a.js"]))
         self.assertIsNone(instrument(["python", "-c", "print(1)"]))
 
+    def test_ratchet_saves_tightens_and_catches_regressions(self):
+        spec = {"schema_version": "1.0", "name": "t", "story": "s", "budgets": {"wall_seconds": 60}}
+        with test_directory() as root:
+            candidate = project(root, "candidate", 1024)
+            ratchet = Path(root) / "ratchet.json"
+            first = c.check(spec, [sys.executable, "work.py"], candidate, Path(root) / "out-1", repeat=1,
+                            timeout=60, ratchet=ratchet)
+            self.assertEqual(first["verdict"], "fits")
+            saved = json.loads(ratchet.read_text(encoding="utf-8"))
+            self.assertGreater(saved["metrics"]["wall_seconds"], 0)
+            saved["metrics"]["wall_seconds"] = 0.0001
+            ratchet.write_text(json.dumps(saved), encoding="utf-8")
+            second = c.check(spec, [sys.executable, "work.py"], candidate, Path(root) / "out-2", repeat=1,
+                             timeout=60, ratchet=ratchet)
+            self.assertEqual(second["verdict"], "over_budget")
+            self.assertEqual(second["ratchet"]["regressed"], ["wall_seconds"])
+            self.assertEqual(json.loads(ratchet.read_text(encoding="utf-8"))["metrics"]["wall_seconds"], 0.0001)
+            with self.assertRaisesRegex(ValueError, "not a ratchet"):
+                c.check({**spec, "name": "other"}, [sys.executable, "work.py"], candidate, Path(root) / "out-3",
+                        repeat=1, timeout=60, ratchet=ratchet)
+
     def test_zero_budget_on_sampled_counter_is_flagged(self):
         with test_directory() as root:
             candidate = project(root, "candidate", 1024)

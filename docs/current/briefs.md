@@ -8,7 +8,8 @@ chilicrisp brief quarter                  # print the agent-facing brief (markdo
 chilicrisp brief my-brief.json --report .chilicrisp/checks/<stamp>/report.json
 chilicrisp brief quarter --out brief.md     # save it instead of printing
 chilicrisp check BRIEF [--workspace DIR] [--baseline DIR] [--same-output]
-                       [--repeat 3] [--timeout 300] [--out DIR] [--where] -- COMMAND [ARGS...]
+                       [--repeat 3] [--timeout 300] [--out DIR] [--where]
+                       [--ratchet FILE [--tolerance 10]] -- COMMAND [ARGS...]
 ```
 
 `check` runs `COMMAND` with the candidate directory (`--workspace`, default `.`)
@@ -24,6 +25,14 @@ about 10%). `brief --report` shows them as a "Where memory goes" table so the ag
 starts from what actually holds the memory. It misses interpreter overhead and
 memory held by C extensions, and tracing makes that run slower, so its numbers
 are never used for budgets.
+
+`--ratchet FILE` keeps a fixed result fixed. After a `fits`, it saves each
+budgeted metric to `FILE`, keeping only a value that is lower than the one
+already saved. On later checks, a metric that grows past its saved value by more than
+`--tolerance` percent (default 10) is reported, and the verdict becomes
+`over_budget` even if the budget still holds. Commit the file and run the same
+check in CI to catch regressions. Only compare ratchets taken on the same
+machine or runner type.
 
 | Verdict | Meaning |
 | --- | --- |
