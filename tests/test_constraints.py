@@ -69,6 +69,19 @@ class BriefTests(unittest.TestCase):
         self.assertIn("16.0 MiB", text)
         self.assertIn("(checked)", text)
 
+    def test_render_states_measurement_limits(self):
+        text = c.render("edge-function")
+        self.assertIn("Peak memory across several processes is approximate", text)
+        self.assertIn("A zero budget (bytes written) means none at all", text)
+        self.assertNotIn("zero budget", c.render("floppy"))
+
+    def test_brief_out_writes_markdown(self):
+        with test_directory() as root:
+            target = Path(root) / "nested" / "brief.md"
+            with contextlib.redirect_stdout(io.StringIO()):
+                self.assertEqual(main(["brief", "quarter", "--out", str(target)]), 0)
+            self.assertTrue(target.read_text(encoding="utf-8").startswith("# Constraint brief: quarter"))
+
     def test_scan_finds_forbidden_patterns(self):
         with test_directory() as root:
             (Path(root) / "net.py").write_text("import socket\n", encoding="utf-8")
@@ -117,6 +130,15 @@ class CheckTests(unittest.TestCase):
                 report = c.check(spec, [sys.executable, "work.py"], directory, Path(root) / ("out-" + directory.name),
                                  baseline_workspace=baseline, repeat=1, timeout=60, same_output=True)
                 self.assertEqual(report["verdict"], "broken", directory.name)
+
+    def test_zero_budget_on_sampled_counter_is_flagged(self):
+        with test_directory() as root:
+            candidate = project(root, "candidate", 1024)
+            spec = {"schema_version": "1.0", "name": "t", "story": "s", "budgets": {"io_write_bytes": "0B"}}
+            report = c.check(spec, [sys.executable, "work.py"], candidate, Path(root) / "out", repeat=1, timeout=60)
+            entry = report["budgets"]["io_write_bytes"]
+            if entry["status"] == "within":
+                self.assertTrue(any("counter is sampled" in f for f in report["findings"]))
 
     def test_cli_splits_command_after_double_dash(self):
         with test_directory() as root:

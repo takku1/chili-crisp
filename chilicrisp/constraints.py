@@ -288,6 +288,10 @@ def check(spec, command, workspace, out, *, baseline_workspace=None, repeat=3, t
             if entry["status"] == "over":
                 findings.append(f"{name}: {_format(value, entry['unit'])} is over "
                                 f"{_format(entry['limit'], entry['unit'])}")
+            elif entry["limit"] == 0 and METRICS[name][0].startswith("sampled_"):
+                findings.append(f"{name}: measured 0 against a zero budget, but this counter is sampled; "
+                                "activity between samples can be missed. Use the enforced tier if "
+                                "zero must be guaranteed.")
     sampled = any(METRICS[name][0].startswith("sampled_") or name == "peak_memory_bytes" for name in budgets)
     if sampled and candidate["min_samples"] < 3:
         findings.append("Few samples were taken; the command finishes too fast for reliable sampling. "
@@ -336,6 +340,21 @@ def _format(value, unit):
     return f"{value * 1000:.0f} ms" if value < 1 else f"{value:.2f} s"
 
 
+def _limits(budgets):
+    """Measurement caveats the agent should know, so it neither over-trusts nor games the numbers."""
+    notes = []
+    if "peak_memory_bytes" in budgets:
+        notes.append("Peak memory across several processes is approximate: shared pages can be counted "
+                     "twice, and peaks in short-lived child processes can be missed. Fit the budget for "
+                     "real; don't rely on splitting work across processes.")
+    zero = [METRICS[name][2].lower() for name, entry in budgets.items()
+            if entry["limit"] == 0 and METRICS[name][0].startswith("sampled_")]
+    if zero:
+        notes.append(f"A zero budget ({', '.join(zero)}) means none at all, even though a brief burst "
+                     "between samples might not be measured.")
+    return [line for note in notes for line in ("", note)]
+
+
 def render(spec, report=None):
     """Agent-facing markdown for a brief, optionally filled in with a previous check's numbers."""
     brief = load(spec)
@@ -362,6 +381,7 @@ def render(spec, report=None):
               "and output must match the original exactly. Nothing is emulated: the budgets are a design "
               "target, not a sandbox. Don't game the measurement (for example by moving work outside the "
               "measured command); that defeats the exercise.",
+              *_limits(budgets),
               "", "## Design pressure", "",
               "These budgets are set below what the current design needs on purpose. Small trims "
               "usually won't close the gap. Find what actually consumes the resource, then change the "

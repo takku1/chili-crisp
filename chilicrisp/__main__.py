@@ -37,6 +37,7 @@ def main(argv=None):
     brief = commands.add_parser("brief", help="Print the agent-facing constraint brief")
     brief.add_argument("spec", help="Profile name or brief JSON file")
     brief.add_argument("--report", type=Path, help="Fill in numbers from a previous check report.json")
+    brief.add_argument("--out", type=Path, help="Write the markdown to this file instead of stdout")
     checking = commands.add_parser("check", help="Measure a command against a constraint brief")
     checking.add_argument("spec", help="Profile name or brief JSON file")
     checking.add_argument("--workspace", type=Path, default=Path("."), help="Candidate directory (default: .)")
@@ -109,8 +110,13 @@ def main(argv=None):
             result = constraints.profiles()
         elif args.command == "brief":
             report = json.loads(args.report.read_text(encoding="utf-8")) if args.report else None
-            print(constraints.render(args.spec, report), end="")
-            return 0
+            text = constraints.render(args.spec, report)
+            if args.out is None:
+                print(text, end="")
+                return 0
+            args.out.parent.mkdir(parents=True, exist_ok=True)
+            args.out.write_text(text, encoding="utf-8")
+            result = {"brief": str(args.out)}
         elif args.command == "check":
             command = trailing
             out = args.out or Path(".chilicrisp", "checks", time.strftime("%Y%m%dT%H%M%S"))

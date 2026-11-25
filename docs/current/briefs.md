@@ -6,6 +6,7 @@
 chilicrisp profiles                       # built-in briefs
 chilicrisp brief quarter                  # print the agent-facing brief (markdown)
 chilicrisp brief my-brief.json --report .chilicrisp/checks/<stamp>/report.json
+chilicrisp brief quarter --out brief.md     # save it instead of printing
 chilicrisp check BRIEF [--workspace DIR] [--baseline DIR] [--same-output]
                        [--repeat 3] [--timeout 300] [--out DIR] -- COMMAND [ARGS...]
 ```
@@ -86,6 +87,12 @@ needs about 10 MiB, so `handheld` suits small programs or compiled code.
   and the largest single-process OS lifetime peak (`peak_wset` on Windows,
   `VmHWM` on Linux). Shared pages can be double counted. Spikes that are split
   across short-lived processes can be missed.
+- CPU and I/O counters are sampled too. A `0B` budget (such as `edge-function`'s
+  disk writes) can pass when a write happens between samples, so the report
+  adds a finding whenever a zero budget on a sampled counter passes. Use the
+  [enforced tier](enforced/resources.md) when zero must be guaranteed.
+- The rendered brief states these limits so agents neither over-trust the
+  numbers nor try to slip under them.
 - Commands that finish in under ~30 ms get too few samples. The report flags
   this; batch more work per run.
 - All numbers come from this machine. Compare a candidate only with a baseline
