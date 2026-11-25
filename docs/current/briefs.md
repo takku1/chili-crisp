@@ -1,0 +1,92 @@
+# Constraint briefs: format and commands
+
+## Commands
+
+```text
+chilicrisp profiles                       # built-in briefs
+chilicrisp brief quarter                  # print the agent-facing brief (markdown)
+chilicrisp brief my-brief.json --report .chilicrisp/checks/<stamp>/report.json
+chilicrisp check BRIEF [--workspace DIR] [--baseline DIR] [--same-output]
+                       [--repeat 3] [--timeout 300] [--out DIR] -- COMMAND [ARGS...]
+```
+
+`check` runs `COMMAND` with the candidate directory (`--workspace`, default `.`)
+as its working directory. With `--baseline`, it also runs the same command in
+the original directory, alternating the order on each repetition. It takes the
+median of each metric and writes `report.json`, plus per-run stdout, stderr and
+measurements, to `--out` (default `.chilicrisp/checks/<timestamp>`). Exit code 0
+means `fits`.
+
+| Verdict | Meaning |
+| --- | --- |
+| `fits` | Every run passed, the output is stable (and matches the baseline with `--same-output`), no `forbid` rule matched, and every budget is met |
+| `over_budget` | Correct, but at least one budget is exceeded |
+| `broken` | A run failed, the output changed, or a `forbid` rule matched |
+| `incomplete` | A budget couldn't be judged: a relative budget had no `--baseline`, or a metric was unavailable |
+
+## Brief file
+
+```json
+{
+  "schema_version": "1.0",
+  "name": "sensor-hub",
+  "extends": "quarter",
+  "story": "This aggregator moves onto a sensor hub that also runs three other services...",
+  "budgets": {"peak_memory_bytes": "25%", "wall_seconds": "150%"},
+  "artifacts": ["build/app.bin"],
+  "rules": ["Totals per sensor must be exactly the same."],
+  "forbid": [{"pattern": "import (pandas|numpy)", "glob": "*.py", "why": "no heavy dependencies"}],
+  "hints": ["The readings arrive one line at a time."]
+}
+```
+
+- **budgets**: `peak_memory_bytes`, `wall_seconds`, `cpu_seconds`,
+  `artifact_bytes`, `io_read_bytes`, `io_write_bytes`. Values are numbers,
+  units (`16MiB`, `1.5MB`, `250ms`, `2s`, `0B`) or percentages of the baseline
+  (`25%`).
+- **extends**: inherit a built-in profile. Budgets are overridden by key;
+  rules, forbid, hints and artifacts are appended.
+- **artifacts**: files or directories under the workspace whose logical size
+  counts toward `artifact_bytes`. They are measured after the command runs, so
+  a build command can produce them.
+- **rules**: shown to the agent; not checked (the *imagined* level).
+- **forbid**: regex patterns that must not appear in matching source files.
+  This is a cheap approximation of a rule, not a security boundary.
+- **hints**: shown to the agent before the general design-pressure hints.
+
+The schema is `chilicrisp/schemas/brief.schema.json`. A worked example lives in
+`examples/brief-demo/`:
+
+```text
+python -m chilicrisp check examples/brief-demo/brief.json \
+  --workspace examples/brief-demo/candidate --baseline examples/brief-demo/baseline \
+  --same-output -- python aggregate.py
+```
+
+On the reference Windows machine (2026-11-25), the baseline peaked at about
+210 MiB. The streaming candidate peaked at about 21 MiB, against a 52 MiB
+budget. Verdict: `fits`.
+
+## Built-in profiles
+
+| Profile | Story | Budgets |
+| --- | --- | --- |
+| `half` | Another tenant took half the memory | memory 50%, time 110% |
+| `quarter` | One of four copies on the box | memory 25%, time 150% |
+| `handheld` | Battery handheld, 16 MiB, no network | 16 MiB, 1 s wall, 1 s CPU; network imports forbidden |
+| `edge-function` | Cold-started edge function | 128 MiB, 250 ms, no disk writes |
+| `floppy` | Fits on a 1.44 MB disk, 32 MiB RAM | artifact 1,474,560 B, 32 MiB |
+
+Absolute profiles include the runtime itself. A Python interpreter alone
+needs about 10 MiB, so `handheld` suits small programs or compiled code.
+
+## Measurement limits
+
+- Peak memory is the larger of the sampled process-tree RSS sum (every 10 ms)
+  and the largest single-process OS lifetime peak (`peak_wset` on Windows,
+  `VmHWM` on Linux). Shared pages can be double counted. Spikes that are split
+  across short-lived processes can be missed.
+- Commands that finish in under ~30 ms get too few samples. The report flags
+  this; batch more work per run.
+- All numbers come from this machine. Compare a candidate only with a baseline
+  measured in the same check.

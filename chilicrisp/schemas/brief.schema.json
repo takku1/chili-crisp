@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Chili Crisp constraint brief",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "name", "story", "budgets"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "name": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]{0,63}$"},
+    "extends": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]{0,63}$"},
+    "story": {"type": "string", "minLength": 1, "maxLength": 4000},
+    "budgets": {
+      "type": "object", "additionalProperties": false, "minProperties": 1,
+      "properties": {
+        "peak_memory_bytes": {"$ref": "#/$defs/quantity"},
+        "wall_seconds": {"$ref": "#/$defs/quantity"},
+        "cpu_seconds": {"$ref": "#/$defs/quantity"},
+        "artifact_bytes": {"$ref": "#/$defs/quantity"},
+        "io_read_bytes": {"$ref": "#/$defs/quantity"},
+        "io_write_bytes": {"$ref": "#/$defs/quantity"}
+      }
+    },
+    "artifacts": {"type": "array", "maxItems": 100, "items": {"type": "string", "minLength": 1}},
+    "rules": {"type": "array", "maxItems": 50, "items": {"type": "string", "minLength": 1}},
+    "forbid": {"type": "array", "maxItems": 50, "items": {
+      "type": "object", "additionalProperties": false, "required": ["pattern", "why"],
+      "properties": {
+        "pattern": {"type": "string", "minLength": 1},
+        "glob": {"type": "string", "minLength": 1},
+        "why": {"type": "string", "minLength": 1}
+      }
+    }},
+    "hints": {"type": "array", "maxItems": 50, "items": {"type": "string", "minLength": 1}}
+  },
+  "$defs": {
+    "quantity": {"oneOf": [
+      {"type": "number", "minimum": 0},
+      {"type": "string", "pattern": "^\\s*[0-9]+(\\.[0-9]+)?\\s*(%|[KMGT]i?B|B|ms|s)?\\s*$"}
+    ]}
+  }
+}

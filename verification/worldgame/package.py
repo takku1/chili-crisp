@@ -13,7 +13,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 def main():
     kit = ROOT / "artifacts/worldgame-portable"
-    report = ROOT / "reports/worldgame"
+    report = ROOT / "artifacts/worldgame"
     snapshot = json.loads((report / "snapshot.json").read_text())
     with zipfile.ZipFile(report / snapshot["archive"]) as archive:
         for name in archive.namelist():

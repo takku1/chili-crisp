@@ -60,7 +60,7 @@ def main():
     source = args.source.resolve()
     started = time.monotonic()
     source_hash = tree_hash(source / "crates/mote-core")
-    destination = ROOT / "reports/worldgame/field-checks" / datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
+    destination = ROOT / "artifacts/worldgame/field-checks" / datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
     destination.mkdir(parents=True)
     build = ROOT / "artifacts" / ("field-driver-" + destination.name)
     build.mkdir()

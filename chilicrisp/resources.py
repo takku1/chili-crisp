@@ -26,6 +26,9 @@ RESOURCES = {
 
 def capabilities():
     return {"backend": "bubblewrap", "host_preflight": "not_run",
+            "constraint_briefs": {"backend": "host_measurement", "requires_vm": False,
+                                  "enforcement": "none; budgets checked after each run",
+                                  "commands": ["profiles", "brief", "check"]},
             "development_loop": {"backend": "trusted_local_measurement", "requires_vm": False,
                                  "agent_interface": "request/submit or external command",
                                  "acceptance": "experimental retention; no production promotion"},

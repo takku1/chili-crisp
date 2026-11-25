@@ -20,12 +20,10 @@ if len(sdists) != 1:
     raise SystemExit(f"Expected exactly one Chili Crisp source distribution in {args.dist}")
 with tarfile.open(sdists[0]) as archive:
     source_names = {name.split('/', 1)[1] for name in archive.getnames() if '/' in name}
-    required = {"pyproject.toml", "requirements.txt", "verification/worldgame/check.py",
-                "tools/native-fixtures.py", "tests/test_evidence.py",
+    required = {"pyproject.toml", "verification/worldgame/check.py",
+                "tools/native-fixtures.py", "tests/test_evidence.py", "tests/test_constraints.py",
                 "chilicrisp/skills/chili-dev/SKILL.md", "chilicrisp/schemas/project.schema.json",
-                "verification/wilderbeast/frozen/provenance.json",
-                "verification/wilderbeast/frozen/wilderbeast/evidence/archive.py",
-                "verification/wilderbeast/native_workload.py"}
+                "chilicrisp/schemas/brief.schema.json", "examples/brief-demo/brief.json"}
     if not required.issubset(source_names):
         raise SystemExit(f"Source distribution is missing: {sorted(required - source_names)}")
     if any(name.startswith(('artifacts/', '.git/')) for name in source_names):
@@ -91,14 +89,6 @@ session = Path(sys.argv[1]) / 'development-session'
 state = create(plan, session, trusted_local=True)
 assert state['state'] == 'AWAITING_CANDIDATE', state
 assert request(session)['target_basis'].startswith('median local measurements')
-from chilicrisp.acceptance import sign, verify_receipt
-from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
-key = Ed25519PrivateKey.generate()
-body = {'schema_version': '0.1', 'campaign': 'wheel-smoke', 'lineage_id': '0'*32,
-    'baseline_source_hash': '1'*64, 'candidate_source_hash': '2'*64,
-    'policy_sha256': '3'*64, 'evaluator_sha256': '4'*64, 'verdict': 'passed'}
-expected_receipt = {**body, 'public_key': key.public_key().public_bytes_raw().hex()}
-assert verify_receipt(sign(body, key), expected_receipt) == 'passed'
 print('Wheel schemas, comparison, evidence verification and skill export passed')
 """
     subprocess.run([sys.executable, "-P", "-c", script, str(directory),

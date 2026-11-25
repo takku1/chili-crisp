@@ -92,7 +92,7 @@ def main():
     spec = importlib.util.spec_from_file_location("fixtures", Path(__file__).with_name("native-fixtures.py"))
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
-    return module.provision(worker_name="native-build-worker.py", prepare=prepare, extra_requirements=("cryptography>=46,<51",))
+    return module.provision(worker_name="native-build-worker.py", prepare=prepare)
 
 
 if __name__ == "__main__":

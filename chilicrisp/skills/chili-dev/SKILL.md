@@ -1,7 +1,28 @@
 ---
 name: chili-dev
-description: Run resource-guided software development with Chili Crisp's measured baselines, moving targets, research/proposals, correctness gates and retained candidates. Use for progressively smaller or faster implementations; not ordinary feature development without a resource objective.
+description: Redesign code to fit a constraint brief (an imagined target machine with memory/time/CPU/size budgets) and verify it with Chili Crisp's measured checks, baselines and moving targets. Use for making code fit tighter resources; not ordinary feature development without a resource objective.
 ---
+
+## Fastest path: constraint briefs
+
+1. Pick a brief: `python -m chilicrisp profiles`, or write a JSON brief that
+   `extends` one (format: `docs/current/briefs.md` in the framework checkout).
+2. Copy the original into a separate candidate directory. Never edit the baseline.
+3. Read `python -m chilicrisp brief BRIEF` and treat it as the design target.
+   Measure first: run `python -m chilicrisp check BRIEF --workspace ORIGINAL
+   --baseline ORIGINAL -- COMMAND` to see where today's design stands.
+4. Find what actually consumes the over-budget resource. Write down the
+   change you will make, the saving you expect, and what would prove you wrong.
+   Prefer structural changes (streaming, layout, algorithm) over tweaks.
+5. Verify: `python -m chilicrisp check BRIEF --workspace CANDIDATE --baseline
+   ORIGINAL --same-output -- COMMAND`, then run the project's own tests.
+   Iterate with `brief BRIEF --report REPORT` until the verdict is `fits`.
+6. Report measured numbers and the verdict. Budgets are checked after the run on
+   this machine, not enforced. Do not claim enforcement. Do not game the
+   measurement, weaken tests, or move work outside the command.
+
+Use the measured development loop below for many automated rounds with moving
+targets. Use the enforced tier only when the task requires hard limits.
 
 Use Chili Crisp to turn a resource objective into a tested source change with
 traceable evidence. The coding agent proposes and edits candidates; the tool
@@ -115,15 +136,9 @@ Provision the runtime/oracles outside candidate source. Host benchmark/test argv
 are unused here; `dev run --trusted-local` still trusts the selected agent
 transport on the host. Native evaluation does not isolate an unrestricted agent
 or compile untrusted build scripts. Retention remains experimental, with sealed
-and production acceptance explicitly unset until an owner final gate is invoked.
-An owner may pin `acceptance` campaign/public-key/policy/evaluator identities in
-the initial native plan, export `dev acceptance-request`, privately run the
-separate sealed grader, then import its signed verdict with `dev accept`.
-Do not give the agent the vault or signing key. Final attempts are one-shot per
-campaign; a verdict ends the lineage. Policy-verified champions are not deployed
-or production-approved. See `docs/sealed-acceptance.md` in the framework checkout.
-See the installed framework's
-`docs/native-development.md` when working from its checkout.
+and production acceptance explicitly unset. Retained champions are not deployed
+or production-approved. See the installed framework's
+`docs/current/enforced/native-development.md` when working from its checkout.
 
 For supported Linux pressure trials, use an owner-prepared experiment manifest,
 frozen rootfs, public input/oracle, and delegated cgroup parent. These are distinct

@@ -1,0 +1,10 @@
+{
+  "schema_version": "1.0",
+  "name": "sensor-hub",
+  "extends": "quarter",
+  "story": "This aggregator moves onto a sensor hub that also runs three other services. It gets a quarter of the memory it uses today, and the readings it summarizes keep growing.",
+  "budgets": {"peak_memory_bytes": "25%", "wall_seconds": "150%"},
+  "rules": ["Totals per sensor must be exactly the same."],
+  "forbid": [{"pattern": "import (pandas|numpy)", "glob": "*.py", "why": "no heavy dependencies on the hub"}],
+  "hints": ["The readings arrive one line at a time; nothing needs all of them at once."]
+}

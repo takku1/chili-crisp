@@ -90,8 +90,7 @@ sys.stdout.buffer.write(Path(executables[0]).read_bytes())
 
 
 def main():
-    return _load("native-fixtures").provision(worker_name="native-cargo-worker.py", prepare=prepare,
-                                              extra_requirements=("cryptography>=46,<51",))
+    return _load("native-fixtures").provision(worker_name="native-cargo-worker.py", prepare=prepare)
 
 
 if __name__ == "__main__":

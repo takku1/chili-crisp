@@ -49,7 +49,7 @@ normal-hardware transplant tests for finalists. Full acceptance orchestration
 and the protected generation-to-build worker remain unimplemented. The existing
 frontier controller is not changed by selecting a verification tier.
 
-The [negative-control pilot](../../reports/screening-20261029T043608Z/REPORT.md)
+The [negative-control pilot](../../docs/archive/2026-11-25-enforcement-first-era/reports/screening-20261029-REPORT.md)
 compiled a source-changed solver that falsely retained its success report after
 scaling solved values by 0.99. The independent manufactured oracle rejected it
 on its first case. This is a test of rejection, not an optimization result.
@@ -60,9 +60,9 @@ Use oracle kind `worldgame_fields_v1` with an owner-controlled policy matching `
 
 ## Offline component build kit
 
-`python verification/worldgame/package.py` prepares a kit from the frozen source and the trusted driver, vendors its seven registry crates, pins Rust, and verifies a frozen/offline build with an initially empty Cargo home and fresh target directory. `reports/worldgame/worldgame-portable-kit.zip` contains build inputs, source licenses, Cargo lock/configuration, and dependencies. It does not include compiler binaries, system linkers, libc, or a kernel.
+`python verification/worldgame/package.py` prepares a kit from the frozen source and the trusted driver, vendors its seven registry crates, pins Rust, and verifies a frozen/offline build with an initially empty Cargo home and fresh target directory. `artifacts/worldgame/worldgame-portable-kit.zip` contains build inputs, source licenses, Cargo lock/configuration, and dependencies. It does not include compiler binaries, system linkers, libc, or a kernel.
 
-On Linux, install Rust 1.98.0 for the Linux target and a compatible system toolchain, extract the kit, then run `cargo +1.98.0 build --frozen --offline --release` from its root. Record the actual compiler/target, linker/libc, base-image digest or VM image identity, kernel and isolation tool versions before trials. No Linux image or native enforcement result has been produced in this session. Use the kernel fixture gate in `docs/implementation.md` before attempting a pressure experiment.
+On Linux, install Rust 1.98.0 for the Linux target and a compatible system toolchain, extract the kit, then run `cargo +1.98.0 build --frozen --offline --release` from its root. Record the actual compiler/target, linker/libc, base-image digest or VM image identity, kernel and isolation tool versions before trials. No Linux image or native enforcement result has been produced in this session. Use the kernel fixture gate in `docs/current/enforced/engineering-contract.md` before attempting a pressure experiment.
 
 ## Coverage limits
 

@@ -1,8 +1,9 @@
-"""Chili Crisp project workflows and isolated experiment tools."""
+"""Chili Crisp: design against an imagined machine, verify on a real one."""
 import argparse
 import json
 from pathlib import Path
 import sys
+import time
 
 from jsonschema import ValidationError
 
@@ -12,7 +13,7 @@ from .evidence import verify
 from .pressure import summarize
 from .project import compare, initialize
 from .resources import capabilities
-from . import development
+from . import constraints, development
 
 
 def main(argv=None):
@@ -25,8 +26,25 @@ def main(argv=None):
             return {"runner": runner.main, "frontier": controller.main, "recover": recovery.main, "build": build.main}[argv[0]]()
         finally:
             sys.argv = old
-    parser = argparse.ArgumentParser(description=__doc__)
+    trailing = []
+    if argv[:1] == ["check"] and "--" in argv:
+        split = argv.index("--")
+        argv, trailing = argv[:split], argv[split + 1:]
+    parser = argparse.ArgumentParser(description=__doc__,
+                                     epilog="check usage: chilicrisp check BRIEF [options] -- COMMAND [ARGS...]")
     commands = parser.add_subparsers(dest="command", required=True)
+    commands.add_parser("profiles", help="List built-in constraint profiles")
+    brief = commands.add_parser("brief", help="Print the agent-facing constraint brief")
+    brief.add_argument("spec", help="Profile name or brief JSON file")
+    brief.add_argument("--report", type=Path, help="Fill in numbers from a previous check report.json")
+    checking = commands.add_parser("check", help="Measure a command against a constraint brief")
+    checking.add_argument("spec", help="Profile name or brief JSON file")
+    checking.add_argument("--workspace", type=Path, default=Path("."), help="Candidate directory (default: .)")
+    checking.add_argument("--baseline", type=Path, help="Original directory; resolves relative budgets")
+    checking.add_argument("--repeat", type=int, default=3)
+    checking.add_argument("--timeout", type=float, default=300.0, help="Seconds per run")
+    checking.add_argument("--same-output", action="store_true", help="Require stdout identical to the baseline")
+    checking.add_argument("--out", type=Path, help="Report directory (default: .chilicrisp/checks/TIMESTAMP)")
     commands.add_parser("capabilities", help="List implementation capabilities")
     doctor = commands.add_parser("doctor", help="Check setup without executing workloads")
     doctor.add_argument("--manifest", type=Path)
@@ -62,14 +80,9 @@ def main(argv=None):
     start.add_argument("plan", type=Path)
     start.add_argument("session", type=Path)
     start.add_argument("--trusted-local", action="store_true")
-    for name in ("request", "status", "acceptance-request"):
+    for name in ("request", "status"):
         action = actions.add_parser(name)
         action.add_argument("session", type=Path)
-        if name == "acceptance-request":
-            action.add_argument("--export", type=Path, help="Copy sources and a relative request here for a separate grader")
-    acceptance = actions.add_parser("accept")
-    acceptance.add_argument("session", type=Path)
-    acceptance.add_argument("receipt", type=Path)
     submission = actions.add_parser("submit")
     submission.add_argument("session", type=Path)
     submission.add_argument("candidate", type=Path)
@@ -92,7 +105,20 @@ def main(argv=None):
     args = parser.parse_args(argv)
     exit_code = 0
     try:
-        if args.command == "capabilities":
+        if args.command == "profiles":
+            result = constraints.profiles()
+        elif args.command == "brief":
+            report = json.loads(args.report.read_text(encoding="utf-8")) if args.report else None
+            print(constraints.render(args.spec, report), end="")
+            return 0
+        elif args.command == "check":
+            command = trailing
+            out = args.out or Path(".chilicrisp", "checks", time.strftime("%Y%m%dT%H%M%S"))
+            result = constraints.check(args.spec, command, args.workspace, out,
+                                       baseline_workspace=args.baseline, repeat=args.repeat,
+                                       timeout=args.timeout, same_output=args.same_output)
+            exit_code = 0 if result["verdict"] == "fits" else 1
+        elif args.command == "capabilities":
             result = capabilities()
         elif args.command == "doctor":
             manifest = json.loads(args.manifest.read_text(encoding="utf-8")) if args.manifest else None
@@ -130,12 +156,6 @@ def main(argv=None):
                 result = development.request(args.session)
             elif args.action == "status":
                 result = development.status(args.session)
-            elif args.action == "acceptance-request":
-                result = (development.export_acceptance_request(args.session, args.export) if args.export
-                          else development.acceptance_request(args.session))
-            elif args.action == "accept":
-                result = development.accept(args.session, args.receipt)
-                exit_code = 0 if result["acceptances"][-1]["body"]["verdict"] == "passed" else 1
             elif args.action == "rollback":
                 result = development.rollback(args.session, args.champion, args.reason,
                                               trusted_local=args.trusted_local)
