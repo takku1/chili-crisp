@@ -131,6 +131,50 @@ class CheckTests(unittest.TestCase):
                                  baseline_workspace=baseline, repeat=1, timeout=60, same_output=True)
                 self.assertEqual(report["verdict"], "broken", directory.name)
 
+    def test_files_left_between_runs_are_flagged(self):
+        cache = ("from pathlib import Path\np = Path('cache.txt')\n"
+                 "p.write_text(str(int(p.read_text()) + 1) if p.exists() else '1')\n")
+        spec = {"schema_version": "1.0", "name": "t", "story": "s", "budgets": {"wall_seconds": 60}}
+        with test_directory() as root:
+            baseline = project(root, "baseline", 1024)
+            caching = project(root, "caching", 1024, cache)
+            report = c.check(spec, [sys.executable, "work.py"], caching, Path(root) / "out-a",
+                             baseline_workspace=baseline, repeat=2, timeout=60)
+            self.assertEqual(report["verdict"], "incomplete")
+            self.assertEqual(report["changed_files"], ["cache.txt"])
+            allowed = {**spec, "writes": ["cache.*"]}
+            report = c.check(allowed, [sys.executable, "work.py"], caching, Path(root) / "out-b",
+                             baseline_workspace=baseline, repeat=1, timeout=60)
+            self.assertEqual(report["verdict"], "fits")
+            # A file the baseline writes too is normal output, not a cache.
+            both = project(root, "both", 1024, cache)
+            (Path(root) / "baseline" / "work.py").write_text(
+                (both / "work.py").read_text(encoding="utf-8"), encoding="utf-8")
+            report = c.check(spec, [sys.executable, "work.py"], both, Path(root) / "out-c",
+                             baseline_workspace=baseline, repeat=1, timeout=60)
+            self.assertEqual(report["changed_files"], [])
+
+    def test_inputs_are_all_checked_and_hidden_ones_stay_hidden(self):
+        echo = "import sys\nprint(sys.argv[1:])\n"
+        with test_directory() as root:
+            baseline = project(root, "baseline", 1024, echo)
+            same = project(root, "same", 1024, echo)
+            wrong = project(root, "wrong", 1024, echo + "import sys\nif 'secret-arg' in sys.argv: print('x')\n")
+            spec = {"schema_version": "1.0", "name": "t", "story": "s", "budgets": {"wall_seconds": 60},
+                    "inputs": [{"args": ["a"]}, {"args": ["secret-arg"], "hidden": True}]}
+            report = c.check(spec, [sys.executable, "work.py"], same, Path(root) / "out-same",
+                             baseline_workspace=baseline, repeat=1, timeout=60, same_output=True)
+            self.assertEqual(report["verdict"], "fits")
+            self.assertEqual([i["label"] for i in report["inputs"]], ["input 1", "input 2 (hidden)"])
+            out = Path(root) / "out-wrong"
+            report = c.check(spec, [sys.executable, "work.py"], wrong, out,
+                             baseline_workspace=baseline, repeat=1, timeout=60, same_output=True)
+            self.assertEqual(report["verdict"], "broken")
+            self.assertIn("input 2 (hidden): Candidate stdout differs from the baseline", report["findings"])
+            for path in out.rglob("*.json"):
+                self.assertNotIn("secret-arg", path.read_text(encoding="utf-8"), path)
+            self.assertNotIn("secret-arg", c.render(spec, report))
+
     def test_zero_budget_on_sampled_counter_is_flagged(self):
         with test_directory() as root:
             candidate = project(root, "candidate", 1024)

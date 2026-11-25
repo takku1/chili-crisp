@@ -125,7 +125,7 @@ def load(spec):
             raise ValueError(f"Unknown profile to extend: {parent_name}")
         parent = deepcopy(PROFILES[parent_name])
         merged = {**parent, **brief, "budgets": {**parent["budgets"], **brief["budgets"]}}
-        for key in ("rules", "forbid", "hints", "artifacts"):
+        for key in ("rules", "forbid", "hints", "artifacts", "writes"):
             merged[key] = [*parent.get(key, []), *brief.get(key, [])]
         brief = merged
     for name, value in brief["budgets"].items():
@@ -191,10 +191,35 @@ class PeakMonitor(Monitor):
         return values
 
 
-def _run_once(command, workspace, directory, timeout, artifacts):
+def _fingerprint(root, skip):
+    """Size and modification time of every file, to notice runs that leave state behind."""
+    state = {}
+    for current, directories, files in os.walk(root):
+        current = Path(current)
+        directories[:] = [d for d in directories
+                          if d not in {".git", ".chilicrisp", "__pycache__"} and (current / d) != skip]
+        for name in files:
+            path = current / name
+            try:
+                stat = path.stat()
+            except OSError:
+                continue
+            state[path.relative_to(root).as_posix()] = (stat.st_size, stat.st_mtime_ns)
+    return state
+
+
+def _changes(before, after):
+    return {path for path in before.keys() | after.keys() if before.get(path) != after.get(path)}
+
+
+def _run_once(command, workspace, directory, timeout, artifacts, shown=None):
     monitor = PeakMonitor()
     config = {"command_seconds": timeout, "output_bytes_per_stream": 4 * 1024 * 1024}
     result = execute(command, workspace, directory, config, time.monotonic() + timeout, observer=monitor)
+    if shown is not None:
+        # Hidden input: keep its arguments out of everything written next to the report.
+        result["command"] = shown
+        persist(directory / "command.json", {k: v for k, v in result.items() if k != "metrics"})
     values = {"wall_seconds": result["elapsed_seconds"], **monitor.metrics()}
     try:
         values["artifact_bytes"] = artifact_size(workspace, artifacts) if artifacts else None
@@ -262,15 +287,29 @@ def check(spec, command, workspace, out, *, baseline_workspace=None, repeat=3, t
     out = Path(out)
     out.mkdir(parents=True, exist_ok=False)
     artifacts = brief.get("artifacts", [])
-    runs = {"candidate": [], "baseline": []}
     arms = ["candidate"] + (["baseline"] if baseline_workspace is not None else [])
     roots = {"candidate": workspace, "baseline": Path(baseline_workspace).resolve() if baseline_workspace else None}
-    for index in range(repeat):
-        # Alternate the order so drift (thermal, cache, background load) does not favour one side.
-        for arm in (arms if index % 2 == 0 else list(reversed(arms))):
-            runs[arm].append(_run_once(command, roots[arm], out / f"{arm}-{index}", timeout, artifacts))
-    candidate = _summarize(runs["candidate"])
-    baseline = _summarize(runs["baseline"]) if runs["baseline"] else None
+    skip = out.resolve()
+    initial = {arm: _fingerprint(roots[arm], skip) for arm in arms}
+    changed = {arm: set() for arm in arms}
+    declared = brief.get("inputs")
+    inputs = []
+    for number, item in enumerate(declared or [{"args": []}], 1):
+        hidden = item.get("hidden", False)
+        runs = {arm: [] for arm in arms}
+        prefix = f"in{number}-" if declared else ""
+        for index in range(repeat):
+            # Alternate the order so drift (thermal, cache, background load) does not favour one side.
+            for arm in (arms if index % 2 == 0 else list(reversed(arms))):
+                runs[arm].append(_run_once([*command, *item["args"]], roots[arm], out / f"{prefix}{arm}-{index}",
+                                           timeout, artifacts, shown=[*command, "<hidden>"] if hidden else None))
+                changed[arm].update(_changes(initial[arm], _fingerprint(roots[arm], skip)))
+        inputs.append({"label": (f"input {number}" + (" (hidden)" if hidden else "")) if declared else None,
+                       "hidden": hidden, "args": None if hidden else item["args"],
+                       "candidate": _summarize(runs["candidate"]),
+                       "baseline": _summarize(runs["baseline"]) if "baseline" in runs else None})
+    # Budgets are judged on the last (largest) input; correctness on every input.
+    candidate, baseline = inputs[-1]["candidate"], inputs[-1]["baseline"]
     budgets = resolve(brief, baseline["metrics"] if baseline else None)
     findings = []
     for name, entry in budgets.items():
@@ -298,29 +337,48 @@ def check(spec, command, workspace, out, *, baseline_workspace=None, repeat=3, t
                         "Batch more work per run.")
     violations = scan(brief, workspace)
     findings += [f"{v['file']}:{v['line']} breaks a rule ({v['why']})" for v in violations]
-    output_ok = True
-    if not candidate["stdout_stable"]:
-        output_ok = False
-        findings.append("Candidate stdout differs between runs")
-    if same_output and baseline is not None and candidate["stdout_sha256"] != baseline["stdout_sha256"]:
-        output_ok = False
-        findings.append("Candidate stdout differs from the baseline")
+    output_ok, failed = True, []
+    for entry in inputs:
+        own, base = entry["candidate"], entry["baseline"]
+        where = f"{entry['label']}: " if entry["label"] else ""
+        if own["passed"] < own["runs"] or (base and base["passed"] < base["runs"]):
+            failed.append(f"{where}Command failed: candidate {own['outcomes']}"
+                          + (f", baseline {base['outcomes']}" if base else ""))
+        if not own["stdout_stable"]:
+            output_ok = False
+            findings.append(f"{where}Candidate stdout differs between runs")
+        if same_output and base is not None and own["stdout_sha256"] != base["stdout_sha256"]:
+            output_ok = False
+            findings.append(f"{where}Candidate stdout differs from the baseline")
+    allowed = brief.get("writes", [])
+    # Paths the baseline also changes are the program's normal output, not a cache.
+    written = sorted(path for path in changed["candidate"] - changed.get("baseline", set())
+                     if not any(fnmatch.fnmatch(path, glob) for glob in allowed))
+    if written:
+        shown = ", ".join(written[:5]) + (f" and {len(written) - 5} more" if len(written) > 5 else "")
+        findings.append(f"The candidate changed files in its directory during the check ({shown}). If a later "
+                        "run reads them back, the measurements can't be trusted. Declare expected output "
+                        "files under `writes` in the brief.")
     statuses = {entry["status"] for entry in budgets.values()}
-    if candidate["passed"] < candidate["runs"] or (baseline and baseline["passed"] < baseline["runs"]):
+    if failed:
         verdict = "broken"
-        findings.insert(0, f"Command failed: candidate {candidate['outcomes']}"
-                        + (f", baseline {baseline['outcomes']}" if baseline else ""))
+        findings[:0] = failed
     elif not output_ok or violations:
         verdict = "broken"
     elif "over" in statuses:
         verdict = "over_budget"
-    elif statuses - {"within"}:
+    elif statuses - {"within"} or written:
         verdict = "incomplete"
     else:
         verdict = "fits"
-    report = {"kind": "constraint_check", "verdict": verdict, "brief": brief, "command": command,
+    shared = deepcopy(brief)
+    for item in shared.get("inputs", []):
+        if item.get("hidden"):
+            item["args"] = ["<hidden>"]
+    report = {"kind": "constraint_check", "verdict": verdict, "brief": shared, "command": command,
               "workspace": str(workspace), "baseline_workspace": str(roots["baseline"]) if baseline else None,
               "repeat": repeat, "budgets": budgets, "candidate": candidate, "baseline": baseline,
+              "inputs": inputs if declared else None, "changed_files": written,
               "rule_violations": violations, "findings": findings, "environment": environment(),
               "enforcement": "none: measured after the fact on this machine",
               "measurement_notes": {name: METRICS[name][3] for name in budgets}}
@@ -338,6 +396,23 @@ def _format(value, unit):
                 return f"{value / size:.1f} {suffix}"
         return f"{value:.0f} B"
     return f"{value * 1000:.0f} ms" if value < 1 else f"{value:.2f} s"
+
+
+def _judging(brief):
+    """How inputs and leftover files are judged, without revealing hidden inputs."""
+    writes = brief.get("writes", [])
+    notes = ["Every run must start from the same files. Don't keep results between runs: files the "
+             "command creates or changes in the project are flagged"
+             + (f", except declared outputs ({', '.join(f'`{w}`' for w in writes)})." if writes else ".")]
+    inputs = brief.get("inputs")
+    if inputs:
+        shown = [f"`{' '.join(i['args']) or '(no arguments)'}`" for i in inputs if not i.get("hidden")]
+        hidden = len(inputs) - len(shown)
+        parts = shown + ([f"{hidden} hidden input{'s' if hidden > 1 else ''} you won't see"] if hidden else [])
+        notes.append(f"It runs on {len(inputs)} inputs, smallest first: {', '.join(parts)}. The command must "
+                     "succeed and the output must match on every one of them. Budgets are judged on the last "
+                     "(largest) input.")
+    return [line for note in notes for line in ("", note)]
 
 
 def _limits(budgets):
@@ -381,6 +456,7 @@ def render(spec, report=None):
               "and output must match the original exactly. Nothing is emulated: the budgets are a design "
               "target, not a sandbox. Don't game the measurement (for example by moving work outside the "
               "measured command); that defeats the exercise.",
+              *_judging(brief),
               *_limits(budgets),
               "", "## Design pressure", "",
               "These budgets are set below what the current design needs on purpose. Small trims "

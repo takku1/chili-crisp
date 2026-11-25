@@ -23,7 +23,7 @@ means `fits`.
 | `fits` | Every run passed, the output is stable (and matches the baseline with `--same-output`), no `forbid` rule matched, and every budget is met |
 | `over_budget` | Correct, but at least one budget is exceeded |
 | `broken` | A run failed, the output changed, or a `forbid` rule matched |
-| `incomplete` | A budget couldn't be judged: a relative budget had no `--baseline`, or a metric was unavailable |
+| `incomplete` | A budget couldn't be judged (a relative budget had no `--baseline`, or a metric was unavailable), or the candidate left changed files behind that a later run could read back |
 
 ## Brief file
 
@@ -35,6 +35,8 @@ means `fits`.
   "story": "This aggregator moves onto a sensor hub that also runs three other services...",
   "budgets": {"peak_memory_bytes": "25%", "wall_seconds": "150%"},
   "artifacts": ["build/app.bin"],
+  "writes": ["out/*.csv"],
+  "inputs": [{"args": ["data/small.csv"]}, {"args": ["/data/held-out.csv"], "hidden": true}],
   "rules": ["Totals per sensor must be exactly the same."],
   "forbid": [{"pattern": "import (pandas|numpy)", "glob": "*.py", "why": "no heavy dependencies"}],
   "hints": ["The readings arrive one line at a time."]
@@ -50,6 +52,23 @@ means `fits`.
 - **artifacts**: files or directories under the workspace whose logical size
   counts toward `artifact_bytes`. They are measured after the command runs, so
   a build command can produce them.
+- **writes**: globs (relative to the workspace) for files the command is
+  expected to create or change. Before the first run and after each run,
+  `check` records the size and modification time of every file in the
+  candidate directory, skipping `.git`, `.chilicrisp`, `__pycache__` and the
+  report folder. Any other change is reported and makes the verdict
+  `incomplete`, because a later run could read it back as a cache. A file the
+  baseline also changes counts as normal output. Writes outside the directory
+  (home caches, temp) are not seen.
+- **inputs**: argument lists appended to the command, smallest first. Every
+  input runs `--repeat` times per arm. The command must succeed, and the output
+  must be stable (and match the baseline with `--same-output`) on every input.
+  Budgets are judged on the last input, because on small inputs the runtime's
+  own startup dominates. Without `inputs`, the command runs as given.
+- **hidden** inputs are left out of the rendered brief, findings, `report.json`
+  and each run's `command.json`. The program's own stdout and stderr on them
+  are still saved in the report folder. For a real held-out check, keep the
+  data and `--out` where the agent can't read them.
 - **rules**: shown to the agent; not checked (the *imagined* level).
 - **forbid**: regex patterns that must not appear in matching source files.
   This is a cheap approximation of a rule, not a security boundary.
