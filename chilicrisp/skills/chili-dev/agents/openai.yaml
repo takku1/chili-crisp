@@ -1,4 +1,4 @@
 interface:
   display_name: "Chili Dev"
-  short_description: "Develop software against progressively tighter targets"
-  default_prompt: "Use $chili-dev to develop and verify an implementation against progressively tighter measured resource targets."
+  short_description: "Redesign code to fit an imagined machine's resource budgets"
+  default_prompt: "Use $chili-dev to redesign this code to fit a constraint brief and verify the fit with Chili Crisp's measured checks."

@@ -1,0 +1,30 @@
+{
+  "format": "skillwren-build-1",
+  "mode": "fragments",
+  "entry": "SKILL.md",
+  "checked_fragments": [
+    "flows/dev-loop.md",
+    "flows/enforced.md",
+    "SKILL.md"
+  ],
+  "expanded_sha256": "fecae278992a413c0aaca3064609fcd206eb9565578049b19c92246391442c0f",
+  "expanded_bytes": 17695,
+  "tree_sha256": "f7de163b43ae6b660edb253e68b7107d13b8d37264f42e6879f78deac767e2bf",
+  "sources": {
+    "flows/dev-loop.md": {
+      "sha256": "388249ba7b53373a019bee07110a04fc85b938bf974fd41f2f0a2c25a213681f",
+      "bytes": 6954
+    },
+    "flows/enforced.md": {
+      "sha256": "07bac66b4a6a4f321fbe7ad21342b0e8b5a7be9fdfc5359fd848133a619087ec",
+      "bytes": 3602
+    },
+    "SKILL.md": {
+      "sha256": "9260e9a15bb46ee0cd9939f0f5ce8dc6242150def08ef054a94225413dce6dba",
+      "bytes": 7049
+    }
+  },
+  "contexts": [],
+  "deferred_contexts": [],
+  "warnings": []
+}

@@ -24,7 +24,7 @@ include = ["chilicrisp*"]
 namespaces = false
 
 [tool.setuptools.package-data]
-chilicrisp = ["schemas/*.schema.json", "skills/chili-dev/SKILL.md", "skills/chili-dev/agents/*.yaml"]
+chilicrisp = ["schemas/*.schema.json", "skills/chili-dev/SKILL.md", "skills/chili-dev/manifest.json", "skills/chili-dev/flows/*.md", "skills/chili-dev/agents/*.yaml"]
 
 [tool.ruff]
 target-version = "py312"

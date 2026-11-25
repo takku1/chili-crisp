@@ -1,4 +1,5 @@
 import copy
+import hashlib
 import json
 from pathlib import Path
 import sys
@@ -96,5 +97,10 @@ class ToolPolicyTests(unittest.TestCase):
             export(destination)
             self.assertIn("name: chili-dev", (destination / "SKILL.md").read_text())
             self.assertTrue((destination / "agents/openai.yaml").is_file())
+            # The SkillWren build manifest pins each checked file's exact bytes.
+            manifest = json.loads((destination / "manifest.json").read_text(encoding="utf-8"))
+            for name, pinned in manifest["sources"].items():
+                data = (destination / name).read_bytes()
+                self.assertEqual(hashlib.sha256(data).hexdigest(), pinned["sha256"], name)
             with self.assertRaises(FileExistsError):
                 export(destination)

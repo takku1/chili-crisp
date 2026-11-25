@@ -16,3 +16,4 @@ tmp*/
 reports/**/*.bin
 reports/**/*.zip
 reports/**/*.exe
+.claude-flow/
