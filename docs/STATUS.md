@@ -12,17 +12,18 @@ Crisp checks the result on the ordinary machine. No VM is required.
 
 - `chilicrisp profiles | brief | check` and brief files
   ([concept](current/concept.md), [format](current/briefs.md)).
-- Next: let the [development loop](current/development-loop.md) take a brief
-  directly (budgets become its objective and guards). Then run a small A/B: a
-  brief versus a plain "use less memory" prompt on real repositories.
+- Next: run the [A/B study](current/ab-study.md) (brief versus plain prompt,
+  hidden inputs, hack rate per arm). Then let the
+  [development loop](current/development-loop.md) take a brief directly.
 
 ## Architecture Summary
 
 A brief (JSON or a built-in profile) declares a story, budgets (absolute or
 relative to the baseline) and rules. `constraints.check` runs the candidate and
 baseline alternately on the host, measures memory, time, CPU, I/O and artifact
-size with psutil plus OS peak counters, and returns `fits`, `over_budget`,
-`broken` or `incomplete`. The measured development loop (`chilicrisp dev`)
+size with psutil plus OS peak counters (or, opt-in on Linux, a systemd scope's
+cgroup `memory.peak`), checks correctness on every declared input, flags files
+left between runs, and returns `fits`, `over_budget`, `broken` or `incomplete`. The measured development loop (`chilicrisp dev`)
 handles multi-round work with moving targets, checkpoints and rollback. The
 Linux cgroup runner, isolated C/Rust builds and CPU sweeps remain as an optional
 enforced tier.
@@ -47,6 +48,11 @@ enforced tier.
   `cpu-sweep`, `pressure-map`) moved under `chilicrisp enforced`. The old
   top-level names still work but are hidden from `--help`, so scripts and the
   hash-checked `chili-dev` skill flows keep working.
+- 2026-11-25: Trusting `fits` comes before new features. Following the reward-hacking
+  findings (Sakana's AI CUDA Engineer, GSO), `check` flags files changed between runs and
+  supports hidden held-out `inputs`. Added `--where` (tracemalloc sites near
+  the peak), `--ratchet` (fail on regressions against saved numbers) and
+  `--exact-memory` (cgroup peak through `systemd-run --user --scope`, no root).
 
 ## Deprecated/Legacy
 
@@ -63,5 +69,6 @@ enforced tier.
 
 - [concept.md](current/concept.md): why and how
 - [briefs.md](current/briefs.md): brief format, CLI, profiles, measurement limits
+- [ab-study.md](current/ab-study.md): planned brief-versus-plain-prompt study
 - [getting-started.md](current/getting-started.md) and [development-loop.md](current/development-loop.md): multi-round loop
 - [enforced/](current/enforced/native-development.md): Linux cgroup runner, isolated builds, CPU
