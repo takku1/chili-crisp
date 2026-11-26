@@ -221,6 +221,29 @@ class CheckTests(unittest.TestCase):
                 c.check({**spec, "name": "other"}, [sys.executable, "work.py"], candidate, Path(root) / "out-3",
                         repeat=1, timeout=60, ratchet=ratchet)
 
+    @unittest.skipIf(sys.platform.startswith("linux"), "checks the refusal off Linux")
+    def test_exact_memory_refuses_off_linux(self):
+        with self.assertRaisesRegex(ValueError, "needs Linux"):
+            c.exact_memory_prefix()
+
+    @unittest.skipUnless(sys.platform.startswith("linux"), "needs Linux")
+    def test_exact_memory_reads_the_cgroup_peak(self):
+        try:
+            c.exact_memory_prefix()
+        except (ValueError, OSError) as error:
+            self.skipTest(str(error))
+        hog = "b = bytearray(100 * 1024 * 1024)\nb[::4096] = b'x' * len(b[::4096])\nprint('ok')\n"
+        spec = {"schema_version": "1.0", "name": "t", "story": "s", "budgets": {"peak_memory_bytes": "1GiB"}}
+        with test_directory() as root:
+            candidate = Path(root) / "candidate"
+            candidate.mkdir()
+            (candidate / "hog.py").write_text(hog, encoding="utf-8")
+            report = c.check(spec, [sys.executable, "hog.py"], candidate, Path(root) / "out", repeat=1,
+                             timeout=60, exact_memory=True)
+        self.assertEqual(report["verdict"], "fits")
+        self.assertGreaterEqual(report["budgets"]["peak_memory_bytes"]["measured"], 100 * 1024 * 1024)
+        self.assertEqual(report["measurement_notes"]["peak_memory_bytes"], c.EXACT_NOTE)
+
     def test_zero_budget_on_sampled_counter_is_flagged(self):
         with test_directory() as root:
             candidate = project(root, "candidate", 1024)

@@ -9,7 +9,8 @@ chilicrisp brief my-brief.json --report .chilicrisp/checks/<stamp>/report.json
 chilicrisp brief quarter --out brief.md     # save it instead of printing
 chilicrisp check BRIEF [--workspace DIR] [--baseline DIR] [--same-output]
                        [--repeat 3] [--timeout 300] [--out DIR] [--where]
-                       [--ratchet FILE [--tolerance 10]] -- COMMAND [ARGS...]
+                       [--ratchet FILE [--tolerance 10]] [--exact-memory]
+                       -- COMMAND [ARGS...]
 ```
 
 `check` runs `COMMAND` with the candidate directory (`--workspace`, default `.`)
@@ -128,6 +129,15 @@ needs about 10 MiB, so `handheld` suits small programs or compiled code.
   [enforced tier](enforced/resources.md) when zero must be guaranteed.
 - The rendered brief states these limits so agents neither over-trust the
   numbers nor try to slip under them.
+- `--exact-memory` (Linux with cgroup v2 and a systemd user manager) runs each
+  run in its own `systemd-run --user --scope` and reads the scope's
+  `memory.peak`: the whole process tree, counted once by the kernel, exact
+  except for growth in the last ~10 ms before exit. It also counts page cache
+  charged to the run, so file-heavy programs read higher than their RSS. It
+  needs no root and sets no limit. On WSL (2026-11-25), 8 short-lived 60 MiB
+  child processes measured 435 MiB this way and 469 MiB with the default
+  estimate, which counts shared pages twice. The default estimate stays in each
+  run's `measurement.json` as `estimated_peak_memory_bytes`.
 - Commands that finish in under ~30 ms get too few samples. The report flags
   this; batch more work per run.
 - All numbers come from this machine. Compare a candidate only with a baseline

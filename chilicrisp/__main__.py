@@ -78,6 +78,8 @@ def main(argv=None):
                           help="Fail if a budgeted metric grows past this file's saved values; tighten it on fits")
     checking.add_argument("--tolerance", type=float, default=10.0,
                           help="Percent a metric may grow past the ratchet (default 10)")
+    checking.add_argument("--exact-memory", action="store_true",
+                          help="Linux + systemd: exact tree peak from a cgroup (counts page cache too)")
     checking.add_argument("--where", action="store_true",
                           help="Python only: one extra traced run listing the top allocation sites")
     commands.add_parser("capabilities", help="List implementation capabilities")
@@ -160,7 +162,8 @@ def main(argv=None):
                                        baseline_workspace=args.baseline, repeat=args.repeat,
                                        timeout=args.timeout, same_output=args.same_output,
                                        where=args.where, ratchet=args.ratchet,
-                                       tolerance=args.tolerance / 100)
+                                       tolerance=args.tolerance / 100,
+                                       exact_memory=args.exact_memory)
             exit_code = 0 if result["verdict"] == "fits" else 1
         elif args.command == "capabilities":
             result = capabilities()

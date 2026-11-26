@@ -13,6 +13,7 @@ import os
 from pathlib import Path
 import re
 import statistics
+import sys
 import time
 
 import psutil
@@ -161,15 +162,60 @@ def _lifetime_peak(process):
     return None
 
 
-class PeakMonitor(Monitor):
-    """Adds OS-recorded per-process peaks so short spikes between samples still count."""
+EXACT_NOTE = ("cgroup memory.peak of a systemd user scope: the whole process tree, exact except growth in "
+              "the last ~10 ms; includes page cache charged to the run")
 
-    def __init__(self):
+
+def exact_memory_prefix():
+    """Command prefix that runs a command in its own systemd user scope, or raise why it can't."""
+    import shutil
+    import subprocess
+    if not sys.platform.startswith("linux"):
+        raise ValueError("--exact-memory needs Linux with cgroup v2 and a systemd user manager")
+    if not shutil.which("systemd-run"):
+        raise ValueError("--exact-memory needs systemd-run")
+    probe = subprocess.run(["systemd-run", "--user", "--scope", "--quiet", "--", "cat", "/proc/self/cgroup"],
+                           capture_output=True, text=True, timeout=30)
+    if probe.returncode != 0 or ".scope" not in probe.stdout:
+        raise ValueError("--exact-memory could not start a systemd user scope: "
+                         + (probe.stderr.strip() or probe.stdout.strip() or "no output"))
+    return ["systemd-run", "--user", "--scope", "--quiet", "--"]
+
+
+class PeakMonitor(Monitor):
+    """Adds OS-recorded per-process peaks so short spikes between samples still count.
+
+    With `exact`, the command runs in its own systemd user scope and the scope's
+    cgroup memory.peak (a high-water mark of the whole tree) replaces the estimate.
+    """
+
+    def __init__(self, exact=False):
         super().__init__()
         self.lifetime = {}
+        self.exact = exact
+        self.peak_file = None
+        self.cgroup_peak = None
+
+    def _read_cgroup_peak(self, pid):
+        if self.peak_file is None:
+            try:
+                line = Path(f"/proc/{pid}/cgroup").read_text(encoding="ascii").strip().splitlines()[-1]
+            except OSError:
+                return
+            path = line.split("::", 1)[-1]
+            if not path.endswith(".scope") or "/user@" not in path:
+                return  # systemd-run has not moved itself into the scope yet
+            self.peak_file = Path("/sys/fs/cgroup" + path) / "memory.peak"
+        try:
+            value = int(self.peak_file.read_text(encoding="ascii"))
+        except (OSError, ValueError):
+            return
+        self.cgroup_peak = max(self.cgroup_peak or 0, value)
 
     def sample(self, process):
         super().sample(process)
+        if self.exact:
+            self._read_cgroup_peak(process.pid)
         try:
             root = psutil.Process(process.pid)
             processes = [root, *root.children(recursive=True)]
@@ -189,6 +235,9 @@ class PeakMonitor(Monitor):
         candidates = [v for v in (values["sampled_peak_rss_bytes"], max(self.lifetime.values(), default=None))
                       if v is not None]
         values["peak_memory_bytes"] = max(candidates) if candidates else None
+        if self.exact:
+            values["estimated_peak_memory_bytes"] = values["peak_memory_bytes"]
+            values["peak_memory_bytes"] = self.cgroup_peak
         return values
 
 
@@ -213,8 +262,9 @@ def _changes(before, after):
     return {path for path in before.keys() | after.keys() if before.get(path) != after.get(path)}
 
 
-def _run_once(command, workspace, directory, timeout, artifacts, shown=None):
-    monitor = PeakMonitor()
+def _run_once(command, workspace, directory, timeout, artifacts, shown=None, prefix=()):
+    monitor = PeakMonitor(exact=bool(prefix))
+    command = [*prefix, *command]
     config = {"command_seconds": timeout, "output_bytes_per_stream": 4 * 1024 * 1024}
     result = execute(command, workspace, directory, config, time.monotonic() + timeout, observer=monitor)
     if shown is not None:
@@ -275,7 +325,7 @@ def scan(brief, workspace):
 
 
 def check(spec, command, workspace, out, *, baseline_workspace=None, repeat=3, timeout=300.0,
-          same_output=False, where=False, ratchet=None, tolerance=0.10):
+          same_output=False, where=False, ratchet=None, tolerance=0.10, exact_memory=False):
     """Measure `command` against a brief. Returns a report; verdict 'fits' means every check passed."""
     brief = load(spec)
     if not command:
@@ -284,6 +334,7 @@ def check(spec, command, workspace, out, *, baseline_workspace=None, repeat=3, t
         raise ValueError("--repeat must be at least 1")
     if tolerance < 0:
         raise ValueError("--tolerance can't be negative")
+    scope = exact_memory_prefix() if exact_memory else ()
     if same_output and baseline_workspace is None:
         raise ValueError("--same-output needs --baseline")
     workspace = Path(workspace).resolve()
@@ -306,7 +357,8 @@ def check(spec, command, workspace, out, *, baseline_workspace=None, repeat=3, t
             # Alternate the order so drift (thermal, cache, background load) does not favour one side.
             for arm in (arms if index % 2 == 0 else list(reversed(arms))):
                 runs[arm].append(_run_once([*command, *item["args"]], roots[arm], out / f"{prefix}{arm}-{index}",
-                                           timeout, artifacts, shown=[*command, "<hidden>"] if hidden else None))
+                                           timeout, artifacts, shown=[*command, "<hidden>"] if hidden else None,
+                                           prefix=scope))
                 changed[arm].update(_changes(initial[arm], _fingerprint(roots[arm], skip)))
         inputs.append({"label": (f"input {number}" + (" (hidden)" if hidden else "")) if declared else None,
                        "hidden": hidden, "args": None if hidden else item["args"],
@@ -410,7 +462,8 @@ def check(spec, command, workspace, out, *, baseline_workspace=None, repeat=3, t
               "ratchet": ratchet_state,
               "rule_violations": violations, "findings": findings, "environment": environment(),
               "enforcement": "none: measured after the fact on this machine",
-              "measurement_notes": {name: METRICS[name][3] for name in budgets}}
+              "measurement_notes": {name: EXACT_NOTE if exact_memory and name == "peak_memory_bytes"
+                                    else METRICS[name][3] for name in budgets}}
     persist(out / "report.json", report)
     report["report"] = str(out / "report.json")
     return report
