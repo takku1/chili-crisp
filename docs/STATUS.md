@@ -23,8 +23,8 @@ relative to the baseline) and rules. `constraints.check` runs the candidate and
 baseline alternately on the host, measures memory, time, CPU, I/O and artifact
 size with psutil plus OS peak counters (or, opt-in on Linux, a systemd scope's
 cgroup `memory.peak`), checks correctness on every declared input, flags files
-left between runs, and returns `fits`, `over_budget`, `broken` or `incomplete`. The measured development loop (`chilicrisp dev`)
-handles multi-round work with moving targets, checkpoints and rollback. The
+left between runs, and returns `fits`, `over_budget`, `broken` or `incomplete`.
+The measured development loop (`chilicrisp dev`) handles multi-round work with moving targets, checkpoints and rollback. The
 Linux cgroup runner, isolated C/Rust builds and CPU sweeps remain as an optional
 enforced tier.
 
